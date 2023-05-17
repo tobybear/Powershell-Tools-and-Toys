@@ -74,3 +74,5 @@ foreach ($result in $output) {
 }
 
 $results | Remove-Job
+
+Read-Host "Press any key to exit..."

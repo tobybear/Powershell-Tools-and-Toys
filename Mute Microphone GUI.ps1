@@ -9,10 +9,7 @@ USAGE
 
 #>
 
-
-
 Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName Microsoft.VisualBasic
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
@@ -26,7 +23,6 @@ $ShowHelp={
 $tooltip1.SetToolTip($this,$tip)
 }
 
-
 $MainWindow = New-Object System.Windows.Forms.Form
 $MainWindow.ClientSize = '180,60'
 $MainWindow.Text = "| Montools | Mic Mute"
@@ -36,7 +32,7 @@ $MainWindow.TopMost = $true
 $MainWindow.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon("C:\Windows\System32\SndVol.exe")
 
 $mutebutton = New-Object System.Windows.Forms.Button
-$mutebutton.Text = "MUTE"
+$mutebutton.Text = "ACTIVE"
 $mutebutton.Width = 120
 $mutebutton.Height = 40
 $mutebutton.Location = New-Object System.Drawing.Point(30, 10)
@@ -64,9 +60,11 @@ $handle = (Get-Process -PID $PID).MainWindowHandle
 
 if($mutebutton.BackColor -eq $defaultColour){
     $mutebutton.BackColor = $altColour
+    $mutebutton.Text = "ACTIVE"
 } 
 else{
     $mutebutton.BackColor = $defaultColour
+    $mutebutton.Text = "MUTED"
  }
 
 })

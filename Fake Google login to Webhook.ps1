@@ -2,7 +2,7 @@
 ====================== Google Sign in to Discord =========================
 
 SYNOPNIS
-Google Sign in to Webhook.
+Uses Powershell and HTML to create a fake google login page which catches login credentials and sends them to a webhook.
 
 SETUP
 1. Replace YOUR_WEBBHOOK_HERE with your webhook.

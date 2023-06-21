@@ -1,5 +1,5 @@
 <#
-===================================== Mon's Simple Netcat Agent With Added Functions ==================================================
+===================================== beige's Simple Netcat Agent With Added Functions ==================================================
 
 SYNOPSIS
 This Script opens a netcat agent on a target machine
@@ -17,7 +17,7 @@ USAGE
 Function Options{
 Start-Sleep 1
 Write-Output "==================================================================================================================="
-Write-Output "========================                    MONTOOLS MODULES                             =========================="
+Write-Output "=======================                    BEIGETOOLS MODULES                             ========================="
 Write-Output "==================================================================================================================="
 Write-Output "Commands list - "
 Write-Output "================================================"

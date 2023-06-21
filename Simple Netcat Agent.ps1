@@ -1,6 +1,6 @@
 ﻿
 <#
-========================= Mon's Simple Netcat Agent ============================
+========================= beige's Simple Netcat Agent ============================
 
 USAGE
 1. Download Ncat For windows. https://nmap.org/download#windows

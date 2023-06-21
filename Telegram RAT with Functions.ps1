@@ -71,7 +71,7 @@ exit
 Function Options{
 Start-Sleep 1
 Write-Output "=============================================="
-Write-Output "============= MONTOOLS EXTRAS ==============="
+Write-Output "============ BEIGETOOLS EXTRAS =============="
 Write-Output "=============================================="
 Write-Output "Commands list - "
 Write-Output "=============================================="

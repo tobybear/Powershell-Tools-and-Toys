@@ -41,7 +41,7 @@ if ($currentX -ne $prevX) {
 
     if ($idleTime -ge $idleThreshold) {
         if ($isActive) {
-            Write-Host "$lastActivityTime : Mouse has been inactive for 30 seconds"
+            Write-Host "$lastActivityTime : Mouse has been inactive for 60 seconds"
             "$lastActivityTime : Mouse has been inactive for 30 seconds" | Out-File -FilePath $outpath -Encoding ASCII -Append
             $isActive = $false
             $iActive = $true

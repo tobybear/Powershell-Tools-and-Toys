@@ -1,4 +1,16 @@
-﻿$url = "https://media3.giphy.com/media/tJqyalvo9ahykfykAj/giphy.gif?ep=v1_gifs_search" # example GIF (replace with your own link)
+
+<#
+
+========================= beigeworm's Gif Player ===========================
+
+This Script downloads a GIF from Giphy and plays it in a GUI window.
+
+USAGE
+1. Run this script in powershell
+
+#>
+ 
+$url = "https://media3.giphy.com/media/tJqyalvo9ahykfykAj/giphy.gif?ep=v1_gifs_search" # example GIF (replace with your own link)
 $gifPath = "$env:temp/g.gif"
 iwr -Uri $url -OutFile $gifPath
 $ErrorActionPreference = 'Stop'

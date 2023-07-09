@@ -1,4 +1,3 @@
-
 $token='YOUR_BOT_TOKEN_FOR_TELEGRAM'
 $ChatID = "BOT_CHAT_ID"
 

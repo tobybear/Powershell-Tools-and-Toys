@@ -12,40 +12,63 @@ USAGE
 
 #>
 
-$outpath = "$env:temp\activity.txt"
-$prevX = [System.Windows.Forms.Cursor]::Position.X
+$signature = @'
+[DllImport("user32.dll")]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool GetCursorPos(out POINT lpPoint);
+
+[StructLayout(LayoutKind.Sequential)]
+public struct POINT
+{
+    public int X;
+    public int Y;
+}
+
+
+'@ 
+
+
+$timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+$outpath = "$env:temp\info.txt"
+$cursorType = Add-Type -MemberDefinition $signature -Name "CursorPos" -Namespace "Win32" -PassThru
+$prevX = 0
 $idleThreshold = New-TimeSpan -Seconds 60
 $lastActivityTime = [System.DateTime]::Now
 $isActive = $true
+$iActive = $true
+sleep 1
+
 while ($true) {
-    $currentX = [System.Windows.Forms.Cursor]::Position.X
+    $cursorPos = New-Object Win32.CursorPos+POINT
+    [Win32.CursorPos]::GetCursorPos([ref]$cursorPos) | Out-Null
+    $currentX = $cursorPos.X
     $currentTime = [System.DateTime]::Now
-    $idleTime = $currentTime - $lastActivityTime
 
-
-if ($currentX -ne $prevX) {
-    if ($iActive) {
+    if ($currentX -ne $prevX) {
+        if ($iActive) {
         $prevX = $currentX
         $lastActivityTime = $currentTime
+        
         if ($idleTime -lt $idleThreshold) {
-        Write-Host "$lastActivityTime : Mouse is active"
-        "$lastActivityTime : Mouse is active" | Out-File -FilePath $outpath -Encoding ASCII -Append
+        Write-Host "Mouse active"
+        "[$timestamp] : Mouse is active" | Out-File -FilePath $outpath -Encoding ASCII -Append
         }
         $iActive = $false
     }
 }
-    else {
+else {
         $iActive = $true
     }
 
 
+    $idleTime = $currentTime - $lastActivityTime
+
     if ($idleTime -ge $idleThreshold) {
         if ($isActive) {
-            Write-Host "$lastActivityTime : Mouse has been inactive for 60 seconds"
-            "$lastActivityTime : Mouse has been inactive for 30 seconds" | Out-File -FilePath $outpath -Encoding ASCII -Append
+            Write-Host "Mouse was active in the past 60 seconds"
+            "[$timestamp] : Mouse has been inactive for 60 seconds" | Out-File -FilePath $outpath -Encoding ASCII -Append
             $isActive = $false
             $iActive = $true
-           
         }
         else {
         }
@@ -53,6 +76,6 @@ if ($currentX -ne $prevX) {
     else {
         $isActive = $true
     }
-
-    Start-Sleep -Milliseconds 100
+    Start-Sleep -Milliseconds 60
 }
+

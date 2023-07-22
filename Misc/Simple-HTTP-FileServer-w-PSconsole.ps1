@@ -2,7 +2,7 @@
 ============================== Beigeworm's Simple HTTP File Server ===============================
 
 SYNOPSIS
-This script serves the contents the folder it is ran in.
+This script serves the contents the folder it is ran in. Also comes combined with a powershell console in the webpage :)
 
 
 INSTRUCTIONS

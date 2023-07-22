@@ -1,5 +1,5 @@
 ﻿<#
-============================== Beigeworm's Simple HTTP File Server ===============================
+============================== Beigeworm's HTTP File Server with Powershell console ===============================
 
 SYNOPSIS
 This script serves the contents the folder it is ran in. Also comes combined with a powershell console in the webpage :)

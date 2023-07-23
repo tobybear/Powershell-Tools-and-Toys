@@ -47,12 +47,12 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     }
 }
 
-New-NetFirewallRule -DisplayName "AllowWebServer" -Direction Inbound -Protocol TCP –LocalPort 5000 -Action Allow
-$loip = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Wi-Fi" | Select-Object -ExpandProperty IPAddress
+New-NetFirewallRule -DisplayName "AllowWebServer" -Direction Inbound -Protocol TCP -LocalPort 5000 -Action Allow
+$loip = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Wi*" | Select-Object -ExpandProperty IPAddress
 $hpath = Get-Content -Path "$env:temp/homepath.txt"
 cd "$hpath"
 Write-Host "Server Starting at > http://localhost:5000/"
-Write-Host ("Other Network Devices Can Reach it at > http://"+$loip+":5000")
+Write-Host ("Other Network Devices Can Reach it at : http://"+$loip+":5000")
 $httpsrvlsnr = New-Object System.Net.HttpListener;
 
 $httpsrvlsnr.Prefixes.Add("http://"+$loip+":5000/");
@@ -152,14 +152,15 @@ while ($httpsrvlsnr.IsListening) {
                 $ctx.Response.ContentLength64 = $buffer.Length;
                 $ctx.Response.OutputStream.WriteAsync($buffer, 0, $buffer.Length)
             }
-        }
+        
        
 
     }
+    }
     catch [System.Net.HttpListenerException] {
         Write-Host ($_);
-    }
-}
-
+    }}
+    pause
 # <li><a href='/stop'>STOP SERVER</a></li>
 Write-Host "Server Stopped!" -ForegroundColor Green
+

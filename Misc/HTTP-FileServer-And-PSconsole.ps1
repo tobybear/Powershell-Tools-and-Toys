@@ -51,8 +51,8 @@ New-NetFirewallRule -DisplayName "AllowWebServer" -Direction Inbound -Protocol T
 $loip = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Wi*" | Select-Object -ExpandProperty IPAddress
 $hpath = Get-Content -Path "$env:temp/homepath.txt"
 cd "$hpath"
-Write-Host "Server Starting at > http://localhost:5000/"
-Write-Host ("Other Network Devices Can Reach it at > http://"+$loip+":5000")
+Write-Host "Server Starting at : http://localhost:5000/"
+Write-Host ("Other Network Devices Can Reach it at : http://"+$loip+":5000")
 $httpsrvlsnr = New-Object System.Net.HttpListener;
 
 $httpsrvlsnr.Prefixes.Add("http://"+$loip+":5000/");

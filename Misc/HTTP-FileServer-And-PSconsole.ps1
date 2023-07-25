@@ -34,8 +34,6 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     Switch ($Prompt) {
         OK {
             Write-Host "This script will self elevate to run as an Administrator and continue."
-            $fpath = $PWD.Path
-            $fpath | Out-File -FilePath "$env:temp/homepath.txt"
             sleep 1
             Start-Process PowerShell.exe -ArgumentList ("-NoProfile -ExecutionPolicy Bypass -File `"{0}`"" -f $PSCommandPath) -Verb RunAs
             Exit
@@ -47,8 +45,33 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     }
 }
 
+$fpath = $env:USERPROFILE
+$fpath | Out-File -FilePath "$env:temp/homepath.txt"
+
+Write-Host "Detecting primary network interface."
+$networkInterfaces = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.InterfaceDescription -notmatch 'Virtual' }
+
+$filteredInterfaces = $networkInterfaces | Where-Object { $_.Name -contains 'Wi-Fi' -or  $_.Name -contains 'Ethernet'}
+
+$primaryInterface = $filteredInterfaces | Select-Object -First 1
+
+if ($primaryInterface) {
+    if ($primaryInterface.Name -contains 'Wi-Fi') {
+        Write-Output "Wi-Fi is the primary internet connection."
+        $loip = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Wi*" | Select-Object -ExpandProperty IPAddress
+    } elseif ($primaryInterface.Name -contains 'Ethernet') {
+        Write-Output "Ethernet is the primary internet connection."
+        $loip = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Eth*" | Select-Object -ExpandProperty IPAddress
+    } else {
+        Write-Output "Unknown primary internet connection."
+    }
+} else {
+    Write-Output "No primary internet connection found."
+}
+
+
 New-NetFirewallRule -DisplayName "AllowWebServer" -Direction Inbound -Protocol TCP –LocalPort 5000 -Action Allow
-$loip = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias "Wi*" | Select-Object -ExpandProperty IPAddress
+
 $hpath = Get-Content -Path "$env:temp/homepath.txt"
 cd "$hpath"
 Write-Host "Server Starting at : http://localhost:5000/"

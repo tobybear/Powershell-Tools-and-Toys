@@ -34,6 +34,8 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     Switch ($Prompt) {
         OK {
             Write-Host "This script will self elevate to run as an Administrator and continue."
+            $fpath = $PWD.Path
+            $fpath | Out-File -FilePath "$env:temp/homepath.txt"
             sleep 1
             Start-Process PowerShell.exe -ArgumentList ("-NoProfile -ExecutionPolicy Bypass -File `"{0}`"" -f $PSCommandPath) -Verb RunAs
             Exit
@@ -45,8 +47,14 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     }
 }
 
-$fpath = $env:USERPROFILE
-$fpath | Out-File -FilePath "$env:temp/homepath.txt"
+else{
+        if (-Not (Test-Path -Path "$env:temp/homepath.txt")) {
+        $fpath = Read-Host "Input the local path for the folder you want to host "
+        $fpath | Out-File -FilePath "$env:temp/homepath.txt"
+        }
+        else{
+        }
+}
 
 Write-Host "Detecting primary network interface."
 $networkInterfaces = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.InterfaceDescription -notmatch 'Virtual' }

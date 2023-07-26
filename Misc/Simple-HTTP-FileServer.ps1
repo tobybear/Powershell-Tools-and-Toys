@@ -61,6 +61,16 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     }
 }
 
+else{
+        if (-Not (Test-Path -Path "$env:temp/homepath.txt")) {
+        $fpath = Read-Host "Input the local path for the folder you want to host "
+        $fpath | Out-File -FilePath "$env:temp/homepath.txt"
+        }
+        else{
+        break
+        }
+}
+
 Write-Host "Detecting primary network interface."
 $networkInterfaces = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.InterfaceDescription -notmatch 'Virtual' }
 

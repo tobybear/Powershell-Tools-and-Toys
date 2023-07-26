@@ -67,7 +67,6 @@ else{
         $fpath | Out-File -FilePath "$env:temp/homepath.txt"
         }
         else{
-        break
         }
 }
 

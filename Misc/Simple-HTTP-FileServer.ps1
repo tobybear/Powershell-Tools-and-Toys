@@ -22,6 +22,7 @@ Run script and input given URL in a browser.
 #============================================================ OPEN MESSAGE ====================================================================
 $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
+
 Write-Host "=======================================================================================" -ForegroundColor Green -BackgroundColor Black
 Write-Host "============================= Simple HTTP File Server =================================" -ForegroundColor Green -BackgroundColor Black
 Write-Host "=======================================================================================`n" -ForegroundColor Green -BackgroundColor Black
@@ -138,7 +139,7 @@ Function DisplayWebpage {
     $html += "<ul><table>"
     $html += "<thead><tr><th> FOLDERS</th></tr></thead><tbody>"
     foreach ($file in $files) {
-        $fileUrl = $file.FullName -replace [regex]::Escape($PWD.Path), ''
+        $fileUrl = $file.FullName.Replace(' ', '%20') -replace [regex]::Escape($PWD.Path.Replace(' ', '%20')), ''
         $fileDetails = "<td>$(Format-FileSize $file.Length)</td><td>$($file.Extension)</td><td>$($file.CreationTime)</td><td>$($file.LastWriteTime)</td>"
         if ($file.PSIsContainer) {
             $html += "<tr><td><a href='/browse$fileUrl'><button>Open Folder</button></a><a>$file</a></td></tr>"
@@ -149,7 +150,7 @@ Function DisplayWebpage {
     $html += "<ul><table>"
     $html += "<thead><tr><th> FILES</th><th>Size</th><th>Type</th><th>Created</th><th>Last Modified</th></tr></thead><tbody>"
     foreach ($file in $files) {
-        $fileUrl = $file.FullName -replace [regex]::Escape($PWD.Path), ''
+        $fileUrl = $file.FullName.Replace(' ', '%20') -replace [regex]::Escape($PWD.Path.Replace(' ', '%20')), ''
         $fileDetails = "<td>$(Format-FileSize $file.Length)</td><td>$($file.Extension)</td><td>$($file.CreationTime)</td><td>$($file.LastWriteTime)</td>"
         if ($file.PSIsContainer){} 
         else {
@@ -175,7 +176,7 @@ while ($httpsrvlsnr.IsListening){try {$ctx = $httpsrvlsnr.GetContext();
         Remove-PSDrive -Name webroot -PSProvider FileSystem;
     }
     elseif ($ctx.Request.RawUrl -match "^/download/.+") {
-        $filePath = Join-Path -Path $PWD.Path -ChildPath ($ctx.Request.RawUrl -replace "^/download", "")
+    $filePath = Join-Path -Path $PWD.Path -ChildPath ($ctx.Request.RawUrl.Replace('%20', ' ') -replace "^/download", "")
         if ([System.IO.File]::Exists($filePath)) {
         $ctx.Response.ContentType = 'application/octet-stream'
         $ctx.Response.ContentLength64 = (Get-Item -Path $filePath).Length
@@ -186,7 +187,7 @@ while ($httpsrvlsnr.IsListening){try {$ctx = $httpsrvlsnr.GetContext();
         $fileStream.Close()
         }}
     elseif ($ctx.Request.RawUrl -match "^/browse/.+") {
-        $folderPath = Join-Path -Path $PWD.Path -ChildPath ($ctx.Request.RawUrl -replace "^/browse", "")
+        $folderPath = Join-Path -Path $PWD.Path -ChildPath ($ctx.Request.RawUrl.Replace('%20', ' ') -replace "^/browse", "")
         if ([System.IO.Directory]::Exists($folderPath)) {
         $files = Get-ChildItem -Path $folderPath -Force
         DisplayWebpage
@@ -198,4 +199,5 @@ while ($httpsrvlsnr.IsListening){try {$ctx = $httpsrvlsnr.GetContext();
 
 Write-Host "Server Stopped!" -ForegroundColor Green
 Sleep 1
+
 

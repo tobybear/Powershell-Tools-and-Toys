@@ -20,14 +20,6 @@ Run script and input given URL in a browser.
 #>
 
 #============================================================ OPEN MESSAGE ====================================================================
-
-Write-Host "=======================================================================================" -ForegroundColor Green -BackgroundColor Black
-Write-Host "██╗  ██╗████████╗████████╗██████╗     ███████╗███████╗██████╗ ██╗   ██╗███████╗██████╗ " -ForegroundColor Green -BackgroundColor Black
-Write-Host "██║  ██║╚══██╔══╝╚══██╔══╝██╔══██╗    ██╔════╝██╔════╝██╔══██╗██║   ██║██╔════╝██╔══██╗" -ForegroundColor Green -BackgroundColor Black
-Write-Host "███████║   ██║      ██║   ██████╔╝    ███████╗█████╗  ██████╔╝██║   ██║█████╗  ██████╔╝" -ForegroundColor Green -BackgroundColor Black
-Write-Host "██╔══██║   ██║      ██║   ██╔═══╝     ╚════██║██╔══╝  ██╔══██╗╚██╗ ██╔╝██╔══╝  ██╔══██╗" -ForegroundColor Green -BackgroundColor Black
-Write-Host "██║  ██║   ██║      ██║   ██║         ███████║███████╗██║  ██║ ╚████╔╝ ███████╗██║  ██║" -ForegroundColor Green -BackgroundColor Black
-Write-Host "╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝         ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝" -ForegroundColor Green -BackgroundColor Black
 Write-Host "=======================================================================================" -ForegroundColor Green -BackgroundColor Black
 Write-Host "============================= Simple HTTP File Server =================================" -ForegroundColor Green -BackgroundColor Black
 Write-Host "=======================================================================================`n" -ForegroundColor Green -BackgroundColor Black

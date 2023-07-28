@@ -205,6 +205,3 @@ while ($httpsrvlsnr.IsListening){try {$ctx = $httpsrvlsnr.GetContext();
 Write-Host "Server Stopped!" -ForegroundColor Green
 Sleep 1
 
-
-# <li><a href='/stop'>STOP SERVER</a></li>
-Write-Host "Server Stopped!" -ForegroundColor Green

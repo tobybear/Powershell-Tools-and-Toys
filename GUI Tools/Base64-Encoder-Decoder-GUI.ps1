@@ -100,13 +100,13 @@ Function Add-OutputBoxLine{
     $OutputBox.ScrollToCaret()
 }
 
+$b64 = $TextInput.Text
 
-$plainText = $TextInput.Text
+$decodedFile = [System.Convert]::FromBase64String($b64);$decodedText = [System.Text.Encoding]::UTF8.GetString($decodedFile);$decodedText | Out-File -FilePath "$env:temp/a.ps1" -Append
 
-$decodedText = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($plainText))
+$outstring = Get-Content -Path "$env:temp/a.ps1"
 
-Add-OutputBoxLine -Outfeed "$decodedText"
-
+Add-OutputBoxLine -Outfeed "$outstring"
 })
 
 

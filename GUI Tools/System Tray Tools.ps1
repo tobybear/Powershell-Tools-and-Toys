@@ -41,7 +41,7 @@ $traytitle = $contextmenu.Items.Add("IPv4 Address: $iptaxt");
 $traytitle_Picture =[System.Drawing.Icon]::ExtractAssociatedIcon("C:\Windows\System32\newdev.exe")
 $traytitle.Image = $traytitle_Picture
 
-$social = $contextmenu.Items.Add("Social Search");
+$social = $contextmenu.Items.Add("Username Search");
 $social_Picture = [System.Drawing.Icon]::ExtractAssociatedIcon("C:\Windows\System32\EhStorAuthn.exe")	
 $social.Image = $social_Picture
 

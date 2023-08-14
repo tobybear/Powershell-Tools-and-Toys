@@ -11,11 +11,11 @@ SETUP INSTRUCTIONS
 4. add chat ID for the chat bot (use this below to find the chat id) 
 
 ---------------------------------------------------
-$token='YOUR_TOKEN' #Replace this with your bot Token
-$URL='https://api.telegram.org/bot{0}' -f $Token
-$inMessage=Invoke-RestMethod -Method Get -Uri ($URL +'/getUpdates') -ErrorAction Stop
-$inMessage.result.message | write-output
-$inMessage.result.message | get-member
+$Token = "Token_Here" # Your Telegram Bot Token 
+$url = 'https://api.telegram.org/bot{0}' -f $Token
+$updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
+if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
+if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id;Write-Host "Chat ID: $chatID"}}
 -----------------------------------------------------
 
 Finally

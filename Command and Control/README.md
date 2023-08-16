@@ -7,11 +7,13 @@ Using a Telegram Bot's Chat to Act as a Command and Control Platform.
 
 Telegram Bots are able to both receive AND send messages. so can you use it as a C2? ....Enter my proof of concept :)
 
+
 **INFORMATION**
 
 This script will wait until it is called in chat by the computer name to take commands from telegram.
 
 A list of Modules can be accessed by typing 'options' in chat, or you can use the chat to act simply as a reverse shell.
+
 
 **FEATURES**
 
@@ -36,20 +38,24 @@ Toggle Error Messaging - Turn On or Off returning error messages to the chat. (O
 Killswitch             - Any Modules such as "KeyCapture" and "Exfiltrate" can be killed by typing "KILL" into chat
                          (this returns the session so it can accept further commands (does not kill the connection.))
 
+
 **SETUP INSTRUCTIONS**
+
 1. visit https://t.me/botfather, click open in telegram and make a bot.
-2. 
-3. add your new bot API TOKEN to this script.
-4. 
-5. search for bot in top left box in telegram and start a chat then type /start.
-6. 
-7. Run Script on target System
-8. 
-9. Check telegram chat for 'waiting to connect' message.
-10. 
-11. type in the computer name from that message into telegram bot chat to open the session.
+  
+2. add your new bot API TOKEN to this script.
+   
+3. search for bot in top left box in telegram and start a chat then type /start.
+   
+4. Run Script on target System
+   
+5. Check telegram chat for 'waiting to connect' message.
+    
+6. type in the computer name from that message into telegram bot chat to open the session.
+
 
 **MODULES INFORMATION**
+
 Kill              : Killswitch for 'KeyCapture' and 'Exfiltrate' commands
 
 ExtraInfo         : Extra command information and examples
@@ -87,5 +93,6 @@ Exfiltrate        : Sends files (see below for info)
  FOLDERS = Documents, Desktop, Downloads, OneDrive, Pictures, Videos
  
  FILETYPES = log, db, txt, doc, pdf, jpg, jpeg, png, wdoc, xdoc, cer, key, xls, xlsx, cfg, conf, docx, rft
+
 
  # If you like my work please leave a star. ⭐

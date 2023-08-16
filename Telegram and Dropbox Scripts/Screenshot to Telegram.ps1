@@ -1,5 +1,5 @@
 <#
-============================================= Beigeworm's Telegram Screenshot ========================================================
+============================================= Beigeworm's Telegram Screenshot =======================================================
 
 SYNOPSIS
 This script uses powershell to take a screenshot of the desktop and send it to a telegram bot.

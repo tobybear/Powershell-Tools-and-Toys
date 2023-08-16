@@ -44,7 +44,7 @@ A list of Modules can be accessed by typing 'options' in chat, or you can use th
 **Reverse shell**          - apart from running the modules, once connected the chat can act as a reverse shell.
 
 **Killswitch**             - Any Modules such as "KeyCapture" and "Exfiltrate" can be killed by typing "KILL" into chat
-                         (this returns the session so it can accept further commands (does not kill the connection.))
+                         (this returns the session so it can accept further commands (does not kill the current session.))
                          
 -----------------------------------------------------------------------------------------------------------------------------
 

@@ -2,16 +2,19 @@
 ![telec2](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/58ec957d-4792-4d5a-9f06-ced4ccc3408d)
 
 **SYNOPSIS**
+
 Using a Telegram Bot's Chat to Act as a Command and Control Platform.
 
 Telegram Bots are able to both receive AND send messages. so can you use it as a C2? ....Enter my proof of concept :)
 
 **INFORMATION**
+
 This script will wait until it is called in chat by the computer name to take commands from telegram.
 
 A list of Modules can be accessed by typing 'options' in chat, or you can use the chat to act simply as a reverse shell.
 
 **FEATURES**
+
 Session Queue          - While running, this script waits for a start phrase (the computer name) before connecting, allowing multiple computers to wait for interaction.
 
 Botnet Mode            - Add simultaneous sessions to control multiple computers at once. (enter computer names one after the other into chat)

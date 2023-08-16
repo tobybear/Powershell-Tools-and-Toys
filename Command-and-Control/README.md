@@ -50,6 +50,7 @@ A list of Modules can be accessed by typing 'options' in chat, or you can use th
 
 **SETUP INSTRUCTIONS**
 ----------------------
+ 0. Install Telegram and make an account if you haven't already.
 
  1. Visit https://t.me/botfather and make a bot.
  

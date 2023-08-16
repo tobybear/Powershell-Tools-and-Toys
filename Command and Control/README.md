@@ -64,7 +64,7 @@ A list of Modules can be accessed by typing 'options' in chat, or you can use th
 6. type in the computer name from that message into telegram bot chat to open the session.
 
 7. Click either "enter commands" or "options" to begin the session and use these commands below.
-8. 
+
 -----------------------------------------------------------------------------------------------------------------------------
 
 **MODULES INFORMATION**

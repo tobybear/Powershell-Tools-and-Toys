@@ -62,7 +62,7 @@ A list of Modules can be accessed by typing 'options' in chat, or you can use th
  
  6. This script has a feature to wait until you start the session from Telegram.
  
- 7. Type in the computer name from that message into telegram bot chat to connect to that computer.
+ 7. Type the computer name from the 'waiting' message into Telegram bot chat to connect to that computer.
  
  8. Replace TELEGRAM_BOT_API_TOKEN_HERE Below with your Telegram Bot API Token
 

@@ -50,13 +50,11 @@ A list of Modules can be accessed by typing 'options' in chat, or you can use th
 
 **SETUP INSTRUCTIONS**
 ----------------------
- 0. Install Telegram and make an account if you haven't already.
+ 1. Install Telegram and make an account if you haven't already.
 
- 1. Visit https://t.me/botfather and make a bot.
+ 2. Visit https://t.me/botfather and make a bot.
  
- 2. Click provided link to open the chat E.G. "t.me/****bot" then type or click /start)
- 
- 3. And add the provided bot api token to the script.
+ 3. Click provided link to open the chat E.G. "t.me/****bot" then type or click /start)
  
  4. Run Script on target System
  

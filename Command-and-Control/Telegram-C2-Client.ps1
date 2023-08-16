@@ -56,7 +56,7 @@ LET THE 500 LINES OF CODE BEGIN!
 #>
 #---------------------------------------------- SCRIPT SETUP -----------------------------------------------
 # Define User Variables
-$Token = "6642262638:AAHtOUcxGK-b6X6TLFlZSHMcuzkKFYEA4ks"  # Your Telegram Bot Token
+$Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
 #-----------------------------------------------------------------------------------------------------------
 
 # Define Connection Variables

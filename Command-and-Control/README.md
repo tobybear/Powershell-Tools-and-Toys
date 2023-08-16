@@ -5,7 +5,7 @@
 
 Using a Telegram Bot's Chat to Act as a Command and Control Platform.
 
-Telegram Bots are able to both receive AND send messages. so can you use it as a C2? ....Enter a proof of concept :)
+Telegram Bots are able to both receive AND send messages. so can you use it as a C2? ....Enter a fun proof of concept :)
 
 ![telec2](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/58ec957d-4792-4d5a-9f06-ced4ccc3408d)
 

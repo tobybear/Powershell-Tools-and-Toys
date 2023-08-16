@@ -51,19 +51,21 @@ A list of Modules can be accessed by typing 'options' in chat, or you can use th
 **SETUP INSTRUCTIONS**
 ----------------------
 
-1. visit https://t.me/botfather, click open in telegram and make a bot.
-  
-2. add your new bot API TOKEN to this script.
-   
-3. search for bot in top left box in telegram and start a chat then type /start.
-   
-4. Run Script on target System
-   
-5. Check telegram chat for 'waiting to connect' message.
-    
-6. type in the computer name from that message into telegram bot chat to open the session.
-
-7. Click either "enter commands" or "options" to begin the session and use these commands below.
+ 1. Visit https://t.me/botfather and make a bot.
+ 
+ 2. Click provided link to open the chat E.G. "t.me/****bot" then type or click /start)
+ 
+ 3. And add the provided bot api token to the script.
+ 
+ 4. Run Script on target System
+ 
+ 5. Check telegram chat for 'waiting to connect' message.
+ 
+ 6. this script has a feature to wait until you start the session from telegram.
+ 
+ 7. type in the computer name from that message into telegram bot chat to connect to that computer.
+ 
+ 8. Replace TELEGRAM_BOT_API_TOKEN_HERE Below with your Telegram Bot API Token
 
 -----------------------------------------------------------------------------------------------------------------------------
 

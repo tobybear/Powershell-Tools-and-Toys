@@ -5,7 +5,7 @@
 
 Using a Telegram Bot's Chat to Act as a Command and Control Platform.
 
-Telegram Bots are able to both receive AND send messages. so can you use it as a C2? ....Enter a fun proof of concept :)
+Telegram Bots are able to both receive AND send messages. so can you use it as a C2?
 
 ![telec2](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/58ec957d-4792-4d5a-9f06-ced4ccc3408d)
 
@@ -113,5 +113,7 @@ Exfiltrate        : Searches for, and sends, files to the chat as zip files spli
  FILETYPES = log, db, txt, doc, pdf, jpg, jpeg, png, wdoc, xdoc, cer, key, xls, xlsx, cfg, conf, docx, rft
  
 -----------------------------------------------------------------------------------------------------------------------------
+
+Confirmed working on a variety of systems over a week or so of testing, (Win 10 Laptop, Win 11 Laptop, 2 Win 11 Desktops, 2 Win10 Desktops, Win 10 VM, AtlasOS Win 10 Laptop. ReviOS Win 10 Macbook w/ Bootcamp) will add more in future...
 
 # If you like my work please leave a star. ⭐

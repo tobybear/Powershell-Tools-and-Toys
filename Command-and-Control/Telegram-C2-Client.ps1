@@ -13,7 +13,7 @@ SEE README FOR MORE INFO
 #>
 #---------------------------------------------- SCRIPT SETUP -----------------------------------------------
 # Define User Variables
-$Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
+$Token = "$tg"  # REPLACE $tg WITH YOUR TELEGRAM BOT API TOKEN!
 #-----------------------------------------------------------------------------------------------------------
 
 # Define Connection Variables

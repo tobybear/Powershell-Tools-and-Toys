@@ -8,7 +8,7 @@ USAGE
 Run this script and input the relevant info, then click build and run the exe on a target system.
 
 NOTES
-AV will likely flag the exe file (not to mention smartscan warnings etc..)  
+AV will likely flag the exe file (not to mention smartscan warnings for unsigned executables etc..)  
 
 #>
 

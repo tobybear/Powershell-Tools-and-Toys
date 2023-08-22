@@ -18,6 +18,8 @@ This script will wait until it is called in chat by the computer name to take co
 
 A list of Modules can be accessed by typing 'options' in chat, or you can use the chat to act simply as a reverse shell.
 
+*Confirmed working with no detections on a variety of Windows systems over a week or so of testing 14/08/23 (Win 10 Laptop, Win 11 Laptop, 2 Win 11 Desktops, 2 Win10 Desktops, Win 10 VM, AtlasOS Win 10 Laptop. ReviOS Win 10 Macbook w/ Bootcamp) will add more in future...*
+
 -----------------------------------------------------------------------------------------------------------------------------
 
 **FEATURES**
@@ -114,6 +116,5 @@ Exfiltrate        : Searches for, and sends, files to the chat as zip files spli
  
 -----------------------------------------------------------------------------------------------------------------------------
 
-Confirmed working on a variety of systems over a week or so of testing, (Win 10 Laptop, Win 11 Laptop, 2 Win 11 Desktops, 2 Win10 Desktops, Win 10 VM, AtlasOS Win 10 Laptop. ReviOS Win 10 Macbook w/ Bootcamp) will add more in future...
 
 # If you like my work please leave a star. ⭐

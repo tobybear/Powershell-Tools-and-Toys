@@ -20,9 +20,9 @@ A list of Modules can be accessed by typing 'options' in chat, or you can use th
 
 -----------------------------------------------------------------------------------------------------------------------------
 
-*Confirmed working with no Microsoft AV detections, on a variety of Windows systems over a week or so of testing 14/08/23*
+Confirmed working with no Microsoft AV detections, on a variety of Windows systems over a week or so of testing 14/08/23
 
-(Win 10 Laptop, Win 11 Laptop, 2 Win 11 Desktops, 2 Win10 Desktops, Win 10 VM, AtlasOS Win 10 Laptop. ReviOS Win 10 Macbook w/ Bootcamp) will add more in future...
+(*Win 10 Laptop, Win 11 Laptop, 2 Win 11 Desktops, 2 Win10 Desktops, Win 10 VM, AtlasOS Win 10 Laptop. ReviOS Win 10 Macbook w/ Bootcamp*) will add more in future...
 
 -----------------------------------------------------------------------------------------------------------------------------
 

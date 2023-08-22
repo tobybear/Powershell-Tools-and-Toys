@@ -4,10 +4,13 @@
 SYNOPSIS
 This is an easy to use builder application for the c2 client payload - Creates your own EXE file payload for windows systems.
 
-Simply run this script and input the relevant info, then click build and run the exe on a target system.
+USAGE
+Run this script and input the relevant info, then click build and run the exe on a target system.
+
+NOTES
+AV will likely flag the exe file (not to mention smartscan warnings etc..)  
 
 #>
-
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing

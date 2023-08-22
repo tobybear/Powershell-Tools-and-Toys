@@ -534,8 +534,6 @@ Write-Output "Done."
 Function Disable-HID{
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Disable()
-    $PNPMice.Delete()
-    $PNPMice = ''
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
     $PNPKeyboard.Disable()
     Write-Output "Done."
@@ -544,8 +542,6 @@ Function Disable-HID{
 Function Enable-HID{
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Enable()
-    $PNPMice.Delete()
-    $PNPMice = ''
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
     $PNPKeyboard.Enable()
     Write-Output "Done."

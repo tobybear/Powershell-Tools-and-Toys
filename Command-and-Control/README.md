@@ -62,7 +62,7 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
  
  3. Click the provided link to open the chat E.G. "t.me/****bot" then type or click /start)
 
- 4. In the Script - Replace TELEGRAM_BOT_API_TOKEN_HERE with your Telegram Bot API Token
+ 4. At the start off the the Script - Replace `$tg` with your Telegram Bot API Token
  
  5. Run the script on target system
  

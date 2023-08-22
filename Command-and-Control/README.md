@@ -18,6 +18,7 @@ This script will wait until it is called in chat by the computer name to take co
 
 A list of Modules can be accessed by typing 'options' in chat, or you can use the chat to act simply as a reverse shell.
 
+-----------------------------------------------------------------------------------------------------------------------------
 
 *Confirmed working with no Microsoft AV detections, on a variety of Windows systems over a week or so of testing 14/08/23*
 

@@ -7,8 +7,6 @@ Using a Telegram Bot's Chat to Act as a Command and Control Platform.
 
 Telegram Bots are able to both receive AND send messages. so can you use it as a C2 Server?
 
-![telec2](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/58ec957d-4792-4d5a-9f06-ced4ccc3408d)
-
 -----------------------------------------------------------------------------------------------------------------------------
 
 **INFORMATION**
@@ -71,6 +69,15 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
  7. This script has a feature to wait until you start the session from Telegram.
  
  8. Type the computer name from the 'waiting' message into Telegram bot chat to connect to that computer's session.
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+Telegram Chat example
+![telec2](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/58ec957d-4792-4d5a-9f06-ced4ccc3408d)
+
+Builder GUI example
+![Screenshot_1](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/5424ba95-d4bd-4667-a2b5-cf681f049698)
 
 
 -----------------------------------------------------------------------------------------------------------------------------

@@ -4,16 +4,13 @@
 SYNOPSIS
 Start up a HTTP server and stream the desktop to a browser window.
 
-
 USAGE
 1. Run this script on target computer and note the URL provided
 2. on another device on the same network, enter the provided URL in a browser window
 
-
 #>
 
-
-$HideWindow = "true"   # 1 = HIDE WINDOW  /   0 = SHOW WINDOW
+$HideWindow = "true"   #     true = HIDE WINDOW  /   false = SHOW WINDOW
 
 $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
@@ -22,7 +19,6 @@ $height = 30
 [Console]::SetWindowSize($width, $height)
 $windowTitle = "HTTP Screenshare"
 [Console]::Title = $windowTitle
-
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
@@ -41,6 +37,7 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     Exit
     }
 }
+
 Write-Host "Detecting primary network interface." -ForegroundColor DarkGray
 $networkInterfaces = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.InterfaceDescription -notmatch 'Virtual' }
 $filteredInterfaces = $networkInterfaces | Where-Object { $_.Name -match 'Wi*' -or  $_.Name -match 'Eth*'}

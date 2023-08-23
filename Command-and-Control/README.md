@@ -125,7 +125,7 @@ Builder GUI example
  
  FILETYPES = log, db, txt, doc, pdf, jpg, jpeg, png, wdoc, xdoc, cer, key, xls, xlsx, cfg, conf, docx, rft
 
-`Message`           : Send a message in a pop-up window to connected computer `Message [MESSAGE_HERE]`
+`Message`           : Send a message in a pop-up window to connected computer `Message "Your Message Here!"`
  
 **ADMIN ONLY FUNCTIONS**
 

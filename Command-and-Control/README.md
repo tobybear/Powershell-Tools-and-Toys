@@ -82,33 +82,33 @@ Options           : Show a menu in chat listing all the below functions
 
 Kill              : Killswitch for 'KeyCapture' and 'Exfiltrate' commands (can take a few seconds to kill.)
 
-ExtraInfo         : Extra command information and examples sent to the chat
+Extra-Info         : Extra command information and examples sent to the chat
 
 Close             : Close the Session completely
 
-PauseSession      : Kills this session and restarts a new instance of the script
+Pause-Session      : Kills this session and restarts a new instance of the script
 
-ToggleErrors      : Toggle error messages to the chat ON or OFF and returns the current state to chat
+Toggle-Errors      : Toggle error messages to the chat ON or OFF and returns the current state to chat
 
-FolderTree        : Gets Directory trees for User folders and sends it zipped to the chat
+Folder-Tree        : Gets Directory trees for User folders and sends it zipped to the chat
 
 Screenshot        : Sends a screenshot of the desktop as a png file
 
-Keycapture        : Capture Keystrokes and send them (collected keystrokes are only sent after 10 seconds of keyboard inactivity)
+Key-capture        : Capture Keystrokes and send them (collected keystrokes are only sent after 10 seconds of keyboard inactivity)
 
-Systeminfo        : Send System info as text file (system, user, hardware, ip information and more)
+System-info        : Send System info as text file (system, user, hardware, ip information and more)
 
-Softwareinfo      : Send Software info as text file (installed programs, services, drivers and other software info)
+Software-info      : Send Software info as text file (installed programs, services, drivers and other software info)
 
-Historyinfo       : Send History info as text file (browser and powershell history, clipoard contents)
+History-info       : Send History info as text file (browser and powershell history, clipoard contents)
 
-AddPersistance    : Add Telegram C2 to Startup (Copy the script to a default windows location and a vbs script to the startup folder)
+Add-Persistance    : Add Telegram C2 to Startup (Copy the script to a default windows location and a vbs script to the startup folder)
 
-RemovePersistance : Remove Startup Persistance (Remove the ps1 script and vbs file)
+Remove-Persistance : Remove Startup Persistance (Remove the ps1 script and vbs file)
 
-IsAdmin           : Checks if session has admin Privileges and returns the result
+Is-Admin           : Checks if session has admin Privileges and returns the result
 
-AttemptElevate    : Send user a prompt to grant Administrator privilages in a new session. (if the user accepts the prompt)
+Attempt-Elevate    : Send user a prompt to grant Administrator privilages in a new session. (if the user accepts the prompt)
 
 Exfiltrate        : Searches for, and sends, files to the chat as zip files split into 50mb each (Telegram max upload limit.)
 
@@ -117,6 +117,16 @@ Exfiltrate        : Searches for, and sends, files to the chat as zip files spli
  FOLDERS = Documents, Desktop, Downloads, OneDrive, Pictures, Videos
  
  FILETYPES = log, db, txt, doc, pdf, jpg, jpeg, png, wdoc, xdoc, cer, key, xls, xlsx, cfg, conf, docx, rft
+
+Message           : Send a message to connected computer
+ 
+**ADMIN ONLY FUNCTIONS**
+
+Disable-AV        : Attempt to exclude C:/ from Defender
+
+Disable-HID       : Disable Mice and Keyboards
+
+Enable-HID        : Enable Mice and Keyboards
  
 -----------------------------------------------------------------------------------------------------------------------------
 

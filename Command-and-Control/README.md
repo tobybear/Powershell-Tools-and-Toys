@@ -72,16 +72,6 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
 
 -----------------------------------------------------------------------------------------------------------------------------
 
-
-Telegram Chat example
-![telec2](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/58ec957d-4792-4d5a-9f06-ced4ccc3408d)
-
-Builder GUI example
-![Screenshot_1](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/5424ba95-d4bd-4667-a2b5-cf681f049698)
-
-
------------------------------------------------------------------------------------------------------------------------------
-
 **MODULES INFORMATION**
 -----------------------
 
@@ -136,7 +126,16 @@ Builder GUI example
 `Enable-HID`        : Enable Mice and Keyboards on the target system
 
 *(Commands are not case sensitive)*
- 
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Builder GUI example
+![Screenshot_1](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/5424ba95-d4bd-4667-a2b5-cf681f049698)
+
+Telegram Chat example
+![telec2](https://github.com/beigeworm/Powershell-Tools-and-Toys/assets/93350544/58ec957d-4792-4d5a-9f06-ced4ccc3408d)
+
+
 -----------------------------------------------------------------------------------------------------------------------------
 
 If you like my work, Please leave a star ⭐

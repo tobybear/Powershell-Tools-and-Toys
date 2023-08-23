@@ -60,7 +60,7 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
  
  3. Click the provided link to open the chat E.G. "t.me/****bot" then type or click /start)
 
- 4. At the start off the the Script - Replace `$tg` with your Telegram Bot API Token (only when running ps1 directly (not changed using Flipper, VBScript etc as it should be pre-defined there eg. `$tg = '****TOKEN****'`))
+ 4. At the start off the the Script - Replace `$tg` with your Telegram Bot API Token (only when running ps1 directly (not changed using Flipper, VBScript etc as it should be pre-defined there.. eg. `$tg = 'TOKEN'`))
  
  5. Run the script on target system
  

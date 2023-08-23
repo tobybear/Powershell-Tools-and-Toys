@@ -125,15 +125,15 @@ Builder GUI example
  
  FILETYPES = log, db, txt, doc, pdf, jpg, jpeg, png, wdoc, xdoc, cer, key, xls, xlsx, cfg, conf, docx, rft
 
-`Message`           : Send a message to connected computer
+`Message`           : Send a message in a pop-up window to connected computer
  
 **ADMIN ONLY FUNCTIONS**
 
-`Disable-AV`        : Attempt to exclude C:/ from Defender
+`Disable-AV`        : Attempt to exclude C:/ from Defender Scanning (Crude disable method)
 
-`Disable-HID`       : Disable Mice and Keyboards
+`Disable-HID`       : Disable Mice and Keyboards on the target system
 
-`Enable-HID`        : Enable Mice and Keyboards
+`Enable-HID`        : Enable Mice and Keyboards on the target system
 
 *(Commands are not case sensitive)*
  

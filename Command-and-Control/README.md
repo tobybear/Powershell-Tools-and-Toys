@@ -131,6 +131,3 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
 *(Commands are not case sensitive)*
  
 -----------------------------------------------------------------------------------------------------------------------------
-
-
-# If you like my work please leave a star. ⭐

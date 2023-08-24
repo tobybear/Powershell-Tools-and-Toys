@@ -12,9 +12,9 @@ Telegram Bots are able to both receive AND send messages. so can you use it as a
 **INFORMATION**
 ---------------
 
-This script will wait until it is called in chat by the computer name to take commands from telegram.
+This script will wait until it is called in the telegram chat by it's host computer name (eg. DESKTOP-WG65HY) to accept commands from telegram.
 
-A list of Modules can be accessed by typing 'options' in chat, or you can use the chat to act simply as a reverse shell.
+A list of Modules can be accessed by typing 'options' in chat. Or you can use the chat to act simply as a reverse shell with standard powrshell commands.
 
 -----------------------------------------------------------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
                          
 -----------------------------------------------------------------------------------------------------------------------------
 
-**SETUP INSTRUCTIONS**
+**TELEGRAM SETUP INSTRUCTIONS**
 ----------------------
  1. Install Telegram and make an account if you haven't already.
 

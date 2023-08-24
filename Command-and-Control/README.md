@@ -14,7 +14,7 @@ Telegram Bots are able to both receive AND send messages. so can you use it as a
 
 This script will wait until it is called in the Telegram chat by it's host computer name (eg. DESKTOP-WG65HY). Then Click 'Enter Commands' or 'Options' to begin the session and accept commands from Telegram chat. 
 
-During a connected session, A list of Modules can be accessed by typing 'options' in chat. Or you can use the chat to act simply as a reverse shell with standard powrshell commands.
+During a connected session, A list of Modules can be accessed by typing 'options' in chat. Or you can use the chat to act simply as a reverse shell with standard PowerShell commands.
 
 -----------------------------------------------------------------------------------------------------------------------------
 

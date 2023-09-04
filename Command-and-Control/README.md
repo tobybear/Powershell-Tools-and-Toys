@@ -3,7 +3,7 @@
 **SYNOPSIS**
 -------------
 
-Using a Telegram Bot's Chat to Act as a Command and Control Platform.
+Using a Telegram Bot's Chat to Act as a Command and Control Server.
 
 Telegram Bots are able to both receive AND send messages. so can you use it as a C2 Server?
 

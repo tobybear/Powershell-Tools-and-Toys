@@ -22,8 +22,7 @@ class Glyph {
     [char]$Current
     [char]$Last 
     Glyph() {$this.Setup()}
-    [void]Setup()
-    {
+    [void]Setup(){
         $this.CurrentPosition = $script:rand.Next(-$script:ScreenHeight,.6*$script:ScreenHeight)
         $this.Velocity = 1
         $this.Intensity=0

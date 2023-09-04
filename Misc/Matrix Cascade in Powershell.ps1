@@ -43,7 +43,7 @@ class Glyph {
 $script:rand = [System.Random]::new()
 $script:ScreenWidth=$host.UI.RawUI.WindowSize.Width
 $script:ScreenHeight=$host.UI.RawUI.WindowSize.Height
-[char[]]$script:PossibleGlyphs="    ℤ℣⅀℥ⱥ℧ℭ+=!@#$%^&*()<>{}[]<>~ｻｶﾎﾖｦﾛｯβαγπΣθΩΞφµ".ToCharArray()
+[char[]]$script:PossibleGlyphs="    ℤ⅀℥ⱥ℧ℭ+=!@#%^&*()<>{}[]<>~ｻｶﾎﾖｦﾛｯβαγπΣθΩΞφµ".ToCharArray()
 $glyphCount = $script:PossibleGlyphs.Count
 $script:e=[char]27 #escape
 [Glyph[]]$AllGlyphs=[Glyph[]]::new($script:ScreenWidth)

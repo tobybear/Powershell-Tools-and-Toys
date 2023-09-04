@@ -404,7 +404,9 @@ $data | ForEach-Object {
 }
 $data | Export-Csv $FileOut -NoTypeInformation
 $results = Get-Content -Path $FileOut -Raw
-Write-Output "$results"
+$contents = "$results"
+$params = @{chat_id = $ChatID ;text = $contents}
+Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
 rm -Path $FileOut
 }
 

@@ -28,8 +28,7 @@ class Glyph {
         $this.Intensity=0
         $this.IntensityChange = ($script:rand.Next(1,10)/150)
         $this.Current=$script:PossibleGlyphs[$script:rand.Next($script:glyphCount+1)]
-        $this.Last=$script:PossibleGlyphs[$script:rand.Next($script:glyphCount+1)]
-        
+        $this.Last=$script:PossibleGlyphs[$script:rand.Next($script:glyphCount+1)]  
     }
     [void]Move(){
         $this.LastPosition=$this.CurrentPosition

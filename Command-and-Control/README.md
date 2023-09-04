@@ -99,6 +99,8 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
 
 `History-info`       : Send History info as text file (browser and powershell history, clipoard contents)
 
+`Enumerate-LAN`      : find info on other network devices (IPv4, MAC address, Hostname, Manufacturer) (eg. `Enumerate-LAN -prefix 192.168.1`)
+
 `Add-Persistance`    : Add Telegram C2 to Startup (Copy the script to a default windows location and a vbs script to the startup folder)
 
 `Remove-Persistance` : Remove Startup Persistance (Remove the ps1 script and vbs file)

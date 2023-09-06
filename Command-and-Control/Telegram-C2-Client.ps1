@@ -138,6 +138,7 @@ if (Test-Path -Path $path){
         $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [System.IO.Path]::GetFileName($path))
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::CreateFromDirectory($path, $FilePath)
+        sleep 1
         Post-File; Rm -Path $FilePath -Recurse -Force
         Write-Output "File Upload Complete: $path"
     }else{

@@ -67,7 +67,7 @@ Toggle-Errors    : Toggle error messages to chat
 Folder-Tree    : Gets Dir tree and sends it zipped
 Screenshot   : Sends a screenshot of the desktop
 Key-Capture    : Capture Keystrokes and send
-Exfiltrate   : Sends files (see below for info)
+Exfiltrate   : Sends files (see 'Extra-Info' for more)
 Upload      : Uploads a specific file (use -path)
 System-Info   : Send System info as text file
 Software-Info   : Send Software info as text file

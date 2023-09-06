@@ -313,8 +313,7 @@ $FilePath = "$env:temp\SystemInfo.txt"
 "HDD Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
 ($Hdds| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
 "USB Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
-($COMDevices| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append\
-Sleep 1
+($COMDevices| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
 Post-File ;rm -Path $FilePath -Force
 }
 

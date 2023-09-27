@@ -418,7 +418,7 @@ Write-Output "Uninstalled."
 }
 
 Function Pause-Session{
-$contents = "$env:COMPUTERNAME $pause Pausing Session.."
+$contents = "$env:COMPUTERNAME $pause Session Paused. $pause (Re-Enter password to resume..)"
 Post-Message | Out-Null
 $script:AcceptedSession=""
 }

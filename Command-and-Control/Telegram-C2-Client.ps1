@@ -1,4 +1,4 @@
-/<# ============================================= Beigeworm's Telegram C2 Client ========================================================
+<# ============================================= Beigeworm's Telegram C2 Client ========================================================
 
 SYNOPSIS
 Using a Telegram Bot's Chat to Act as a Command and Control Platform.

@@ -3,6 +3,12 @@
 
 SYNOPSIS
 Minecraft Server Scanning and Enumeration in Powershell.
+You can:
+1. Receive details on a Minecraft Server using an IP and Port.
+2. Download and run masscan.exe to find server ip addresses and add them to a file
+3. Use a file from masscan to retrieve Server info for many servers at once.
+
+Info displayed: IP Address, Port, Version, Server Software, MOTD, Players Online, Player Names.
 
 USAGE
 1. Run script

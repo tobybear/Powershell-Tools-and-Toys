@@ -45,9 +45,19 @@ function Remove-MostRecentLine {
     $Host.UI.RawUI.CursorPosition = $cursorPosition
 }
 
+Function Logo{
+Write-Output "========================================================"
+Write-Output "=   __  __   ___  ___                                  ="
+Write-Output "=  |  \/  | / __|/ __| __  __ _  _ _   _ _   ___  _ _  ="
+Write-Output "=  | |\/| || (__ \__ \/ _|/ _` || ' \ | ' \ / -_)| '_| ="
+Write-Output "=  |_|  |_| \___||___/\__|\__/_||_||_||_||_|\___||_|   ="
+Write-Output "========================================================"
+}
+
 # Display the menu
 do {
     Clear-Host
+    Logo
     Write-Host "Beigeworm's Minecraft Server Info `n`nPlease select an option:`n"
     for ($i = 0; $i -lt $menu.Count; $i++) {
         Write-Host "$($i + 1). $($menu[$i])"
@@ -56,6 +66,7 @@ do {
     # Get user input
     $choice = Read-Host "`nSelect an Option "
     Clear-Host
+    Logo
     # Use a switch statement to perform actions based on user input
     switch ($choice) {
         1 {

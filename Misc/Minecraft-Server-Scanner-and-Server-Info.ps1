@@ -33,9 +33,9 @@ $windowTitle = "Minecraft Server Information"
 
 # Define the menu options
 $menu = @(
+    "Download masscan.exe and scan for IP addresses",
+    "Enumerate server details using an IP and Port",
     "Enumerate results from a masscan xml file",
-    "Search for details of a server using an IP address and Port",
-    "Get masscan.exe and scan for IP addresses",
     "Exit"
 )
 
@@ -61,7 +61,7 @@ Write-Output "========================================================"
 do {
     Clear-Host
     Logo
-    Write-Host "Beigeworm's Minecraft Server Info `n`nPlease select an option:`n"
+    Write-Host "Beigeworm's Minecraft Server Info `n`nPlease select from one of the options below`n"
     for ($i = 0; $i -lt $menu.Count; $i++) {
         Write-Host "$($i + 1). $($menu[$i])"
     }
@@ -72,7 +72,52 @@ do {
     Logo
     # Use a switch statement to perform actions based on user input
     switch ($choice) {
-        1 {
+      1 {
+            # Download masscan64.exe 
+            iwr -uri https://github.com/Arryboom/MasscanForWindows/blob/master/masscan64.exe?raw=true -OutFile masscan64.exe
+            Write-Host "masscan.exe download complete."
+            $answer = Read-Host "Do you want to run a masscan now? (y/n) "
+            Remove-MostRecentLine
+            Remove-MostRecentLine
+            if ($answer -eq "y"){
+                # Define user inputs
+                $startip = Read-Host "Enter Start of IP Range (eg. 10.10.0.0)"
+                Remove-MostRecentLine
+                $endip = Read-Host "Enter End of IP Range (eg. 100.100.255.255)"
+                Remove-MostRecentLine
+                $outxml = Read-Host "Enter Output File Name (.xml) "
+                Remove-MostRecentLine
+                # Run masscan
+                $answer2 = Read-Host "Do you want to run masscan at full speed? (can be hard on your router!) (y/n) "
+                Remove-MostRecentLine
+                if ($answer2 -eq "y"){./masscan64.exe -p25565 $startip-$endip --exclude 255.255.255.255 --rate=100000 -oX $outxml}
+                else{./masscan64.exe -p25565 $startip-$endip --exclude 255.255.255.255 --rate=1000 -oX $outxml}
+                }
+        }
+        2 {
+
+            $Ip = Read-Host "Input an IP Address "
+            $Port = Read-Host "Input a Port Number "
+            
+            if ($Port.Length -eq 0){$port = 25565}
+
+            # Make the web request and convert the JSON response
+            $response = Invoke-WebRequest -Uri "https://api.mcstatus.io/v2/status/java/$Ip`:$Port"
+            $data = $response.Content | ConvertFrom-Json
+            
+            # Display the formatted output
+            Write-Host "Server Information:"
+            Write-Host "-------------------"
+            Write-Host "IP Address: $($ip)"
+            Write-Host "Port: $($data.port)"
+            Write-Host "Version: $($data.version)"
+            Write-Host "Server Software: $($data.software)"
+            Write-Host "MOTD: $($data.motd.clean)"
+            Write-Host "Players Online: $($data.players.online)/$($data.players.max)"
+            Write-Host "Player List: $($data.players.list.name_clean)"
+        
+        }        
+        3 {
             $outfile = Read-Host "Enter a name for the output file (.txt) "
             Remove-MostRecentLine
             New-Item -Path $outfile -Force | Out-Null
@@ -115,52 +160,6 @@ do {
                         }
                 }
             
-        }
-
-        2 {
-
-            $Ip = Read-Host "Input an IP Address "
-            $Port = Read-Host "Input a Port Number "
-            
-            if ($Port.Length -eq 0){$port = 25565}
-
-            # Make the web request and convert the JSON response
-            $response = Invoke-WebRequest -Uri "https://api.mcstatus.io/v2/status/java/$Ip`:$Port"
-            $data = $response.Content | ConvertFrom-Json
-            
-            # Display the formatted output
-            Write-Host "Server Information:"
-            Write-Host "-------------------"
-            Write-Host "IP Address: $($ip)"
-            Write-Host "Port: $($data.port)"
-            Write-Host "Version: $($data.version)"
-            Write-Host "Server Software: $($data.software)"
-            Write-Host "MOTD: $($data.motd.clean)"
-            Write-Host "Players Online: $($data.players.online)/$($data.players.max)"
-            Write-Host "Player List: $($data.players.list.name_clean)"
-        
-        }
-        3 {
-            # Download masscan64.exe 
-            iwr -uri https://github.com/Arryboom/MasscanForWindows/blob/master/masscan64.exe?raw=true -OutFile masscan64.exe
-            Write-Host "masscan.exe download complete."
-            $answer = Read-Host "Do you want to run a masscan now? (y/n) "
-            Remove-MostRecentLine
-            Remove-MostRecentLine
-            if ($answer -eq "y"){
-                # Define user inputs
-                $startip = Read-Host "Enter Start of IP Range (eg. 10.10.0.0)"
-                Remove-MostRecentLine
-                $endip = Read-Host "Enter End of IP Range (eg. 100.100.255.255)"
-                Remove-MostRecentLine
-                $outxml = Read-Host "Enter Output File Name (.xml) "
-                Remove-MostRecentLine
-                # Run masscan
-                $answer2 = Read-Host "Do you want to run masscan at full speed? (can be hard on your router!) (y/n) "
-                Remove-MostRecentLine
-                if ($answer2 -eq "y"){./masscan64.exe -p25565 $startip-$endip --exclude 255.255.255.255 --rate=100000 -oX $outxml}
-                else{./masscan64.exe -p25565 $startip-$endip --exclude 255.255.255.255 --rate=1000 -oX $outxml}
-                }
         }
         4 {
             # Exit the loop and the script

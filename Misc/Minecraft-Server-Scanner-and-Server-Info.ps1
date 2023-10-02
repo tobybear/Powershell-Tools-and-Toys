@@ -16,6 +16,9 @@ USAGE
 (Using Option 3 will download masscan.exe from here - https://github.com/Arryboom/MasscanForWindows)
 You may need to allow 'Potentially Unwanted App Found' for Microsoft Defender.
 
+masscan example IP ranges:
+start of the range : 135.148.0.0 ,end 135.148.255.255 (will take 60 secoonds)
+start of the range : 10.0.0.0 ,end 255.255.255.255 (will take DAYS and scan the entire internet)
 #>
 
 

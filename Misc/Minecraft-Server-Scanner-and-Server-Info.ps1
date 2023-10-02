@@ -1,5 +1,4 @@
-﻿<#
-========================== Minecraft Server Scanning and Enumeration in Powershell =================================
+﻿<# ========================== Minecraft Server Scanning and Enumeration in Powershell =================================
 
 SYNOPSIS
 Minecraft Server Scanning and Enumeration in Powershell.

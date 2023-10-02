@@ -151,7 +151,7 @@ do {
         4 {
             # Exit the loop and the script
             Write-Host "Exiting..."
-            return
+            exit
         }
         default {
             Write-Host "Invalid choice. Please select a valid option."

@@ -118,6 +118,8 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
  FILETYPES = log, db, txt, doc, pdf, jpg, jpeg, png, wdoc, xdoc, cer, key, xls, xlsx, cfg, conf, docx, rft
 
 `Message`           : Send a message in a pop-up window to connected computer `Message "Your Message Here!"`
+
+`Take-Picture`       : take a picture with any connected camera and upload to chat.
  
 **ADMIN ONLY FUNCTIONS**
 

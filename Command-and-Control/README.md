@@ -83,7 +83,7 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
 
 `Close`             : Close the Session completely
 
-`Pause-Session`      : Kills this session and restarts a new instance of the script
+`Pause-Session`      : Pauses the session (to reconnect type in the computer name again)
 
 `Toggle-Errors`      : Toggle error messages to the chat ON or OFF and returns the current state to chat
 

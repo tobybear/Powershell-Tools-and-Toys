@@ -119,7 +119,7 @@ Confirmed working with no Microsoft AV detections, on a variety of Windows syste
 
 `Message`           : Send a message in a pop-up window to connected computer `Message "Your Message Here!"`
 
-`Take-Picture`       : take a picture with any connected camera and upload to chat.
+`Take-Picture`       : Take a picture with any connected camera/webcam and upload to chat.
  
 **ADMIN ONLY FUNCTIONS**
 

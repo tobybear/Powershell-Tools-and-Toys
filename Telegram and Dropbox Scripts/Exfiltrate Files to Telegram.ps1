@@ -9,15 +9,6 @@ SETUP INSTRUCTIONS
 1. visit https://t.me/botfather and make a bot.
 2. add bot api to script.
 3. search for bot in top left box in telegram and start a chat then type /start.
-4. add chat ID for the chat bot (use this below to find the chat id) 
-
----------------------------------------------------
-$Token = "Token_Here" # Your Telegram Bot Token 
-$url = 'https://api.telegram.org/bot{0}' -f $Token
-$updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
-if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
-if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id;Write-Host "Chat ID: $chatID"}}
------------------------------------------------------
 
 Finally
 6. Run Script on target System

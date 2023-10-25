@@ -27,11 +27,14 @@ New-Item -ItemType Directory -Path $rootFolderName -Force | Out-Null
 for ($i = 1; $i -le 20; $i++) {
     $subFolderName = Join-Path -Path $rootFolderName -ChildPath (Get-RandomName)
     New-Item -ItemType Directory -Path $subFolderName -Force | Out-Null
-
-    $fileCount = Get-Random -Minimum 1 -Maximum 101
+    $words = Get-RandomName
+    $index = 0
+    while($index -lt 100){$words+= Get-RandomName;$words+= "`n";$index++}
+    $fileCount = Get-Random -Minimum 10 -Maximum 101
     for ($j = 1; $j -le $fileCount; $j++) {
         $fileName = Join-Path -Path $subFolderName -ChildPath ((Get-RandomName) + (Get-RandomFileExtension))
         New-Item -ItemType File -Path $fileName -Force | Out-Null
+        $words | Out-File -FilePath $fileName -Encoding utf8 -Append
     }
 }
 

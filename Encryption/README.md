@@ -21,6 +21,7 @@ THIS IS A PROOF OF CONCEPT TO WRITE RANSOMWARE IN POWERSHELL AND IS FOR EDUCATIO
 4. Use the decryptor to decrypt the files.
 
 **CREDIT**
+
 Credit and kudos to InfosecREDD for the idea of writing ransomware in Powershell
 
 this is my interpretation of his non publicly available script used in this Talking Sasquatch video.

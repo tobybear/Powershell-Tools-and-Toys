@@ -26,7 +26,7 @@ https://youtu.be/IwfoHN2dWeE
 #>
 
 # Uncomment below if not using a stager (base64 script, flipper etc)
- $dc = 'https://discord.com/api/webhooks/1112134673930403872/mT5SgQWfTVccwe8xy8jAL6HAOCo1dRd65jvSSQMlqeAs7P91pzGf6T9K2z2gtQE8IZBg'
+ $dc = 'WEBHOOK_HERE'
 
 # Setup for the console
 $Host.UI.RawUI.BackgroundColor = "Black"

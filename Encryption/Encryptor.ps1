@@ -32,9 +32,7 @@ https://youtu.be/IwfoHN2dWeE
 # Setup for the console
 $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
-$width = 1
-$height = 1
-[Console]::SetWindowSize($width, $height)
+[Console]::SetWindowSize(1, 1)
 
 # ENCRYPT FILE CONTENTS
 # Define setup variables

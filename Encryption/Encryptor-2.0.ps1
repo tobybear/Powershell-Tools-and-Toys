@@ -90,6 +90,6 @@ $VbsPath = "$env:tmp\v.vbs"
 $ToVbs | Out-File -FilePath $VbsPath -Force
 # Start pop-up window
 & $VbsPath
-sleep 1
+sleep 4
 # Clean up
 rm -Path $VbsPath -Force

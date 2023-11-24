@@ -55,6 +55,6 @@ while ($true) {
         $form2.Location = New-Object System.Drawing.Point((Get-Random -Minimum 0 -Maximum 1000), (Get-Random -Minimum 0 -Maximum 1000))
         $form2.Show()
     }
-    $random = (Get-Random -Minimum 0 -Maximum 3)
+    $random = (Get-Random -Minimum 0 -Maximum 2)
     Sleep $random
 }

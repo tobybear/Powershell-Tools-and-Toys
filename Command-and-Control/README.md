@@ -1,3 +1,6 @@
+# [THIS REPOSITORY IS DEPRICATED!]
+**UPDATED REPO HERE -** https://github.com/beigeworm/PoshGram-C2
+
 # Beigeworm's Telegram C2 Client 
 
 **SYNOPSIS**

@@ -187,7 +187,7 @@ $a=[int]$startip.text
 $b=[int]$endip.text
 
 $a..$b|ForEach-Object{
-    Start-Process -WindowStyle Hidden ping.exe -Argumentlist "-n 1 -l 0 -f -i 2 -w 1 -4 $SubNet$_"
+    Start-Process -WindowStyle Hidden ping.exe -Argumentlist "-n 1 -l 0 -f -i 2 -w 100 -4 $SubNet$_"
 }
 $Computers = (arp.exe -a | Select-String "$SubNet.*dynam") -replace ' +',','|
   ConvertFrom-Csv -Header Computername,IPv4,MAC,x,Vendor|

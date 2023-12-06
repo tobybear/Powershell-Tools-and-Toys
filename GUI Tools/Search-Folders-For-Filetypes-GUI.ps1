@@ -176,12 +176,17 @@ $processButton.Add_Click({
 
     $selectedFileTypes = $fileTypes | Where-Object { $checkBoxes[$_].Checked }
     $operation = if ($moveRadioButton.Checked) { 'M' } else { 'C' }
-
     # Create folders
     foreach ($fileType in $selectedFileTypes) {
-        $scriptPath = Split-Path -Parent $PSCommandPath
-        $folderPathForExtension = Join-Path $scriptPath $fileType
-        New-Item -ItemType Directory -Path $folderPathForExtension -Force
+    
+        if($PSCommandPath.Length -eq 0){    
+            $scriptPath = Split-Path -Parent $pwd.Path
+        }
+        else{
+            $scriptPath = Split-Path -Parent $PSCommandPath
+        }
+            $folderPathForExtension = Join-Path $scriptPath $fileType
+            New-Item -ItemType Directory -Path $folderPathForExtension -Force
     }
     sleep 1
 

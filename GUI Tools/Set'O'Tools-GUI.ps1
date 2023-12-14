@@ -17,6 +17,15 @@ Any background/hidden scripts eg. C2 clients will keep running.
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
+Add-Type -AssemblyName Microsoft.VisualBasic
+[System.Windows.Forms.Application]::EnableVisualStyles()
+
+$hidewindow = 1
+If ($HideWindow -gt 0){
+$Import = '[DllImport("user32.dll")] public static extern bool ShowWindow(int handle, int state);';
+add-type -name win -member $Import -namespace native;
+[native.win]::ShowWindow(([System.Diagnostics.Process]::GetCurrentProcess() | Get-Process).MainWindowHandle, 0);
+}
 
 $imageUrl = "https://i.ibb.co/ZGrt8qb/b-min.png"
 $client = New-Object System.Net.WebClient

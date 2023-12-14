@@ -14,14 +14,6 @@ Closing this script will NOT close any scripts that were started from this scrip
 Any background/hidden scripts eg. C2 clients will keep running.
 
 #>
-$WebhookInput = New-Object System.Windows.Forms.TextBox
-$WebhookInput.Text = "https://discord.com/api/webhooks/..." # you can set this now for efficiency (optional)
-$TGTokenInput = New-Object System.Windows.Forms.TextBox
-$TGTokenInput.Text = "Ex4mP137eLeGr4m_4pI-B0t_T0k3N"  # you can set this now for efficiency (optional)
-$netcatInput = New-Object System.Windows.Forms.TextBox
-$netcatInput.Text = "192.168.0.1" # you can set this now for efficiency (optional)
-$PastebinInput = New-Object System.Windows.Forms.TextBox
-$PastebinInput.Text = "https://pastebin.com/raw/......." # you can set this now for efficiency (optional)
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -63,6 +55,15 @@ $form.Size = New-Object System.Drawing.Size(660,500)
 $form.Font = 'Microsoft Sans Serif,10'
 $form.BackgroundImage = [System.Drawing.Image]::FromStream($ms, $true)
 $form.BackColor = "#242424"
+
+$WebhookInput = New-Object System.Windows.Forms.TextBox
+$WebhookInput.Text = "https://discord.com/api/webhooks/..." # you can set this now for efficiency (optional)
+$TGTokenInput = New-Object System.Windows.Forms.TextBox
+$TGTokenInput.Text = "Ex4mP137eLeGr4m_4pI-B0t_T0k3N"  # you can set this now for efficiency (optional)
+$netcatInput = New-Object System.Windows.Forms.TextBox
+$netcatInput.Text = "192.168.0.1" # you can set this now for efficiency (optional)
+$PastebinInput = New-Object System.Windows.Forms.TextBox
+$PastebinInput.Text = "https://pastebin.com/raw/......." # you can set this now for efficiency (optional)
 
 $dropdownHeader = New-Object System.Windows.Forms.Label
 $dropdownHeader.Text = "Select Tool Here"

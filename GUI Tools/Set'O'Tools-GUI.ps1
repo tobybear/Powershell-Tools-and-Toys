@@ -14,6 +14,14 @@ Closing this script will NOT close any scripts that were started from this scrip
 Any background/hidden scripts eg. C2 clients will keep running.
 
 #>
+$WebhookInput = New-Object System.Windows.Forms.TextBox
+$WebhookInput.Text = "https://discord.com/api/webhooks/..." # you can set this now for efficiency (optional)
+$TGTokenInput = New-Object System.Windows.Forms.TextBox
+$TGTokenInput.Text = "Ex4mP137eLeGr4m_4pI-B0t_T0k3N"  # you can set this now for efficiency (optional)
+$netcatInput = New-Object System.Windows.Forms.TextBox
+$netcatInput.Text = "192.168.0.1" # you can set this now for efficiency (optional)
+$PastebinInput = New-Object System.Windows.Forms.TextBox
+$PastebinInput.Text = "https://pastebin.com/raw/......." # you can set this now for efficiency (optional)
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -80,17 +88,15 @@ $WebhookInputHeader.Height = 10
 $WebhookInputHeader.Location = New-Object System.Drawing.Point(20, 60)
 $form.Controls.Add($WebhookInputHeader)
 
-$WebhookInput = New-Object System.Windows.Forms.TextBox
 $WebhookInput.Location = New-Object System.Drawing.Point(20, 80)
 $WebhookInput.BackColor = "#eeeeee"
 $WebhookInput.Width = 600
 $WebhookInput.Height = 40
-$WebhookInput.Text = "https://discord.com/api/webhooks/..."
 $WebhookInput.Multiline = $false
 $form.Controls.Add($WebhookInput)
 
 $TokenInputHeader = New-Object System.Windows.Forms.Label
-$TokenInputHeader.Text = "Telegram API Token..."
+$TokenInputHeader.Text = "Telegram API Token"
 $TokenInputHeader.ForeColor = "#bcbcbc"
 $TokenInputHeader.AutoSize = $true
 $TokenInputHeader.Width = 25
@@ -98,12 +104,10 @@ $TokenInputHeader.Height = 10
 $TokenInputHeader.Location = New-Object System.Drawing.Point(20, 110)
 $form.Controls.Add($TokenInputHeader)
 
-$TGTokenInput = New-Object System.Windows.Forms.TextBox
 $TGTokenInput.Location = New-Object System.Drawing.Point(20, 130)
 $TGTokenInput.BackColor = "#eeeeee"
 $TGTokenInput.Width = 600
 $TGTokenInput.Height = 40
-$TGTokenInput.Text = "Ex4mP137eLeGr4m_4pI-B0t_T0k3N"
 $TGTokenInput.Multiline = $false
 $form.Controls.Add($TGTokenInput)
 
@@ -116,12 +120,10 @@ $PastebinInputHeader.Height = 10
 $PastebinInputHeader.Location = New-Object System.Drawing.Point(20, 160)
 $form.Controls.Add($PastebinInputHeader)
 
-$PastebinInput = New-Object System.Windows.Forms.TextBox
 $PastebinInput.Location = New-Object System.Drawing.Point(20, 180)
 $PastebinInput.BackColor = "#eeeeee"
 $PastebinInput.Width = 600
 $PastebinInput.Height = 40
-$PastebinInput.Text = "https://pastebin.com/raw/......."
 $PastebinInput.Multiline = $false
 $form.Controls.Add($PastebinInput)
 
@@ -134,12 +136,10 @@ $NetcatHeader.Height = 10
 $NetcatHeader.Location = New-Object System.Drawing.Point(20, 210)
 $form.Controls.Add($NetcatHeader)
 
-$netcatInput = New-Object System.Windows.Forms.TextBox
 $netcatInput.Location = New-Object System.Drawing.Point(20, 230)
 $netcatInput.BackColor = "#eeeeee"
 $netcatInput.Width = 600
 $netcatInput.Height = 40
-$netcatInput.Text = "192.168.0.1"
 $netcatInput.Multiline = $false
 $form.Controls.Add($netcatInput)
 

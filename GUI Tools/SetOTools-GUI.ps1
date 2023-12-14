@@ -1,5 +1,5 @@
 <#
-======================================= Beigeworm's Toolset ==========================================
+======================================= Beigeworm's Toolset GUI ==========================================
 
 SYNOPSIS
 All useful tools in one place.
@@ -7,7 +7,7 @@ A selection of Powershell tools from this repo can be ran from this script.
 
 USAGE
 1. Replace the URLS and TOKENS below. (they can also be added by running the script)
-2. Run the script and follow options in the console
+2. Run the script and follow options in the GUI
 
 INFO
 Closing this script will NOT close any scripts that were started from this script.
@@ -65,15 +65,6 @@ $form.Font = 'Microsoft Sans Serif,10'
 $form.BackgroundImage = [System.Drawing.Image]::FromStream($ms, $true)
 $form.BackColor = "#242424"
 
-$WebhookInput = New-Object System.Windows.Forms.TextBox
-$WebhookInput.Text = "https://discord.com/api/webhooks/..." # you can set this now for efficiency (optional)
-$TGTokenInput = New-Object System.Windows.Forms.TextBox
-$TGTokenInput.Text = "Ex4mP137eLeGr4m_4pI-B0t_T0k3N"  # you can set this now for efficiency (optional)
-$netcatInput = New-Object System.Windows.Forms.TextBox
-$netcatInput.Text = "192.168.0.1" # you can set this now for efficiency (optional)
-$PastebinInput = New-Object System.Windows.Forms.TextBox
-$PastebinInput.Text = "https://pastebin.com/raw/......." # you can set this now for efficiency (optional)
-
 $dropdownHeader = New-Object System.Windows.Forms.Label
 $dropdownHeader.Text = "Select Tool Here"
 $dropdownHeader.ForeColor = "#bcbcbc"
@@ -98,6 +89,8 @@ $WebhookInputHeader.Height = 10
 $WebhookInputHeader.Location = New-Object System.Drawing.Point(20, 60)
 $form.Controls.Add($WebhookInputHeader)
 
+$WebhookInput = New-Object System.Windows.Forms.TextBox
+$WebhookInput.Text = "https://discord.com/api/webhooks/..." # you can set this now for efficiency (optional)
 $WebhookInput.Location = New-Object System.Drawing.Point(20, 80)
 $WebhookInput.BackColor = "#eeeeee"
 $WebhookInput.Width = 600
@@ -114,6 +107,8 @@ $TokenInputHeader.Height = 10
 $TokenInputHeader.Location = New-Object System.Drawing.Point(20, 110)
 $form.Controls.Add($TokenInputHeader)
 
+$TGTokenInput = New-Object System.Windows.Forms.TextBox
+$TGTokenInput.Text = "Ex4mP137eLeGr4m_4pI-B0t_T0k3N"  # you can set this now for efficiency (optional)
 $TGTokenInput.Location = New-Object System.Drawing.Point(20, 130)
 $TGTokenInput.BackColor = "#eeeeee"
 $TGTokenInput.Width = 600
@@ -130,6 +125,8 @@ $PastebinInputHeader.Height = 10
 $PastebinInputHeader.Location = New-Object System.Drawing.Point(20, 160)
 $form.Controls.Add($PastebinInputHeader)
 
+$PastebinInput = New-Object System.Windows.Forms.TextBox
+$PastebinInput.Text = "https://pastebin.com/raw/......." # you can set this now for efficiency (optional)
 $PastebinInput.Location = New-Object System.Drawing.Point(20, 180)
 $PastebinInput.BackColor = "#eeeeee"
 $PastebinInput.Width = 600
@@ -146,6 +143,8 @@ $NetcatHeader.Height = 10
 $NetcatHeader.Location = New-Object System.Drawing.Point(20, 210)
 $form.Controls.Add($NetcatHeader)
 
+$netcatInput = New-Object System.Windows.Forms.TextBox
+$netcatInput.Text = "192.168.0.1" # you can set this now for efficiency (optional)
 $netcatInput.Location = New-Object System.Drawing.Point(20, 230)
 $netcatInput.BackColor = "#eeeeee"
 $netcatInput.Width = 600

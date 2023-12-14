@@ -20,6 +20,11 @@ Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName Microsoft.VisualBasic
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
+if ($hookurl.Length -eq 0){$hookurl = "https://discord.com/api/webhooks/..."} # Change this to open GUI with your details
+if ($ghurl.Length -eq 0){$ghurl = "https://pastebin.com/raw/......."} # Change this to open GUI with your details
+if ($tg.Length -eq 0){$tg = "Ex4mP137eLeGr4m_4pI-B0t_T0k3N"} # Change this to open GUI with your details
+if ($NCurl.Length -eq 0){$NCurl = "192.168.0.1"} # Change this to open GUI with your details
+
 $hidewindow = 1
 If ($HideWindow -gt 0){
 $Import = '[DllImport("user32.dll")] public static extern bool ShowWindow(int handle, int state);';
@@ -90,7 +95,7 @@ $WebhookInputHeader.Location = New-Object System.Drawing.Point(20, 60)
 $form.Controls.Add($WebhookInputHeader)
 
 $WebhookInput = New-Object System.Windows.Forms.TextBox
-$WebhookInput.Text = "https://discord.com/api/webhooks/..." # you can set this now for efficiency (optional)
+$WebhookInput.Text = "$hookurl" # you can set this now for efficiency (optional)
 $WebhookInput.Location = New-Object System.Drawing.Point(20, 80)
 $WebhookInput.BackColor = "#eeeeee"
 $WebhookInput.Width = 600
@@ -108,7 +113,7 @@ $TokenInputHeader.Location = New-Object System.Drawing.Point(20, 110)
 $form.Controls.Add($TokenInputHeader)
 
 $TGTokenInput = New-Object System.Windows.Forms.TextBox
-$TGTokenInput.Text = "Ex4mP137eLeGr4m_4pI-B0t_T0k3N"  # you can set this now for efficiency (optional)
+$TGTokenInput.Text = "$tg"  # you can set this now for efficiency (optional)
 $TGTokenInput.Location = New-Object System.Drawing.Point(20, 130)
 $TGTokenInput.BackColor = "#eeeeee"
 $TGTokenInput.Width = 600
@@ -126,7 +131,7 @@ $PastebinInputHeader.Location = New-Object System.Drawing.Point(20, 160)
 $form.Controls.Add($PastebinInputHeader)
 
 $PastebinInput = New-Object System.Windows.Forms.TextBox
-$PastebinInput.Text = "https://pastebin.com/raw/......." # you can set this now for efficiency (optional)
+$PastebinInput.Text = "$ghurl" # you can set this now for efficiency (optional)
 $PastebinInput.Location = New-Object System.Drawing.Point(20, 180)
 $PastebinInput.BackColor = "#eeeeee"
 $PastebinInput.Width = 600
@@ -144,7 +149,7 @@ $NetcatHeader.Location = New-Object System.Drawing.Point(20, 210)
 $form.Controls.Add($NetcatHeader)
 
 $netcatInput = New-Object System.Windows.Forms.TextBox
-$netcatInput.Text = "192.168.0.1" # you can set this now for efficiency (optional)
+$netcatInput.Text = "$NCurl" # you can set this now for efficiency (optional)
 $netcatInput.Location = New-Object System.Drawing.Point(20, 230)
 $netcatInput.BackColor = "#eeeeee"
 $netcatInput.Width = 600
@@ -296,3 +301,4 @@ $infoButton.Add_Click({
     Add-OutputBoxLine -Outfeed "$selectedItem URL : $url"
 })
 [Windows.Forms.Application]::Run($form)
+

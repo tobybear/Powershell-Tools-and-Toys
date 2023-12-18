@@ -6,8 +6,9 @@ Waits for a new USB Storage device to be connected and then copies many user fil
 USAGE
 1. Run the script.
 2. Choose if you want to hide the console window (silent mode)
-3. Connect a USB Drive to the computer 
-4. 'Completed' message will appear when finished (hidden mode only)
+3. Connect a USB Drive to the computer
+4. Copying files will automatically begin to the newly connected drive
+5. 'Completed' message will appear when finished (hidden mode only)
 #>
 
 [Console]::BackgroundColor = "Black"

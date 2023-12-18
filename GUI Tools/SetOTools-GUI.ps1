@@ -61,7 +61,7 @@ $items = @(
 "Windows 10 Lockscreen"    
 "Windows 11 Lockscreen"    
 "Dummy Folder Creator"
-"Exfiltrate to USB"
+"Exfiltrate to USB in console"
 )
 
 $form = New-Object System.Windows.Forms.Form
@@ -245,7 +245,7 @@ $startButton.Add_Click({
         "Windows 10 Lockscreen"    {$url = "$BaseURL/Fake-Windows-10-Lockscreen-to-Webhook.ps1"}
         "Windows 11 Lockscreen"    {$url = "$BaseURL/Fake-Windows-11-Lockscreen-to-Webhook.ps1"}
         "Dummy Folder Creator"     {$url = "$BaseURL/Dummy-Folder-Creator.ps1"}
-        "Exfiltrate to USB"        {$url = "$BaseURL/ExfiltrateToUSB.ps1"}
+        "Exfiltrate to USB in console"{$url = "$BaseURL/ExfiltrateToUSB.ps1"}
     }
     Add-OutputBoxLine -Outfeed "$selectedItem URL : $url"
     if(($hiddenbox.Checked) -and ($selectedItem -notlike "*Console*") -and ($selectedItem -notlike "*LAN*")){
@@ -291,7 +291,7 @@ $infoButton.Add_Click({
         "Windows 10 Lockscreen"    {$url = "$BaseURL/Fake-Windows-10-Lockscreen-to-Webhook.ps1"}
         "Windows 11 Lockscreen"    {$url = "$BaseURL/Fake-Windows-11-Lockscreen-to-Webhook.ps1"}
         "Dummy Folder Creator"     {$url = "$BaseURL/Dummy-Folder-Creator.ps1"}
-        "Exfiltrate to USB"        {$url = "$BaseURL/ExfiltrateToUSB.ps1"}
+        "Exfiltrate to USB in console"{$url = "$BaseURL/ExfiltrateToUSB.ps1"}
     }
     $fileContent = Invoke-RestMethod -Uri $Url
     $pattern = '(?s)<#(.*?)#>'

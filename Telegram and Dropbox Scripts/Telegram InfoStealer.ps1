@@ -40,6 +40,7 @@ $systemLocale = Get-WinSystemLocale;$systemLanguage = $systemLocale.Name
 $userLanguageList = Get-WinUserLanguageList;$keyboardLayoutID = $userLanguageList[0].InputMethodTips[0]
 $computerPubIP=(Invoke-WebRequest ipinfo.io/ip -UseBasicParsing).Content
 $systemInfo = Get-WmiObject -Class Win32_OperatingSystem
+$ver = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion
 $processorInfo = Get-WmiObject -Class Win32_Processor
 $computerSystemInfo = Get-WmiObject -Class Win32_ComputerSystem
 $userInfo = Get-WmiObject -Class Win32_UserAccount
@@ -79,6 +80,7 @@ Keyboard Layout : $keyboardLayoutID
 Other Accounts  : $users
 Public IP       : $computerPubIP
 Current OS      : $OSString
+Build           : $ver
 Hardware Info
 --------------------------------------------------------
 $systemString"

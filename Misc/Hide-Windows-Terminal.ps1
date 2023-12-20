@@ -2,6 +2,8 @@
 
 Windows 11 22H2 and onwards, powershell opens with windows terminal by default.
 This script hides any powershell OR terminal window.
+
+Short URL - https://is.gd/HidePS
 #>
 
 $Async = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'

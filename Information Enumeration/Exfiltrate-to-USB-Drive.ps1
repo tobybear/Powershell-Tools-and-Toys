@@ -26,6 +26,10 @@ While (($count -eq $removableDrives.count) -or ($i -gt 0)){
     Write-Host "Connect a Device.. ($i)" -ForegroundColor Yellow
     $removableDrives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 }
     sleep 1
+    if (!($count -eq $removableDrives.count)){
+        Write-Host "USB Drive Connected!" -ForegroundColor Green
+        break
+    }
     $i--
     if ($i -eq 0 ){
         Write-Host "Timeout! Exiting" -ForegroundColor Red
@@ -51,9 +55,18 @@ if (-not (Test-Path -Path $destinationPath)) {
 If ($hidden -eq 'y'){
     Write-Host "Hiding the Window.."  -ForegroundColor Red
     sleep 1
-    $Import = '[DllImport("user32.dll")] public static extern bool ShowWindow(int handle, int state);';
-    add-type -name win -member $Import -namespace native;
-    [native.win]::ShowWindow(([System.Diagnostics.Process]::GetCurrentProcess() | Get-Process).MainWindowHandle, 0);
+    $Async = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'
+    $Type = Add-Type -MemberDefinition $Async -name Win32ShowWindowAsync -namespace Win32Functions -PassThru
+    $hwnd = (Get-Process -PID $pid).MainWindowHandle
+    if($hwnd -ne [System.IntPtr]::Zero){
+        $Type::ShowWindowAsync($hwnd, 0)
+    }
+    else{
+        $Host.UI.RawUI.WindowTitle = 'hideme'
+        $Proc = (Get-Process | Where-Object { $_.MainWindowTitle -eq 'hideme' })
+        $hwnd = $Proc.MainWindowHandle
+        $Type::ShowWindowAsync($hwnd, 0)
+    }
 }
 
 foreach ($folder in $foldersToSearch) {

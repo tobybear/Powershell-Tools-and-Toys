@@ -10,7 +10,7 @@ Write-Host "====================================================================
 Write-Host "============================= BeigeTools | Filetype Organizer =================================" -ForegroundColor Green
 Write-Host "=======================================================================================`n" -ForegroundColor Green
 Write-Host "More info at : https://github.com/beigeworm" -ForegroundColor DarkGray
-Write-Host "Starts a GUI window to select a folder, then search for every file with a selected filetype and output to respective named files in the root folder.`n"
+Write-Host "Search for every file with a selected filetype and output to respective named files in the root folder.`n"
 
 # Get the directory of the script
 $scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition

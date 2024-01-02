@@ -2,8 +2,11 @@
 #                                      WEBHOOK TEST TOOL
 #============================================================================================
 
-# Define the Webhook address URL
-$url = "https://discord.com/api/webhooks/.........."
+# Define the Webhook address URL (Optional - it can be shortened)
+$hookurl = "https://t.ly/shortlink"
+
+# shortened URL Detection
+if ($hookurl.Length -ne 121){$hookurl = irm $hookurl | select -ExpandProperty url}
 
 # Define the body of the message and convert it to JSON
 $body = @{"username" = "Webhook Test Tool" ;"content" = "The webhook works!"} | ConvertTo-Json

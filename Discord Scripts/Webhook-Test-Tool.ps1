@@ -6,9 +6,9 @@
 $hookurl = "https://t.ly/shortlink"
 
 # shortened URL Detection
-if ($hookurl.Length -ne 121){
+if ($hookurl.Ln -ne 121){
 write-host "Short URL Detected.."
-$hookurl = irm $hookurl | select -ExpandProperty url
+$hookurl = (irm $hookurl).url
 }
 
 # Define the body of the message and convert it to JSON

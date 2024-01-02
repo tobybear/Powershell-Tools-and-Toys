@@ -173,7 +173,6 @@ while ($runcheck -gt 0){
     
     # Use Select-String to find all matches
     Write-Host "Searching API response for matching webhooks.." -ForegroundColor Yellow
-    Write-Host "Search #$runcheck" -ForegroundColor Yellow
     $matches = $response | Select-String -Pattern $urlPattern -AllMatches | ForEach-Object { $_.Matches.Value }
     
     # Filter and display matches based on character count

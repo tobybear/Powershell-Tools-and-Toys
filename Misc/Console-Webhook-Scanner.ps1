@@ -51,9 +51,9 @@ $timestamp = Get-Date -Format "dd/MM/yyyy  @  HH:mm"
 
 $Continuous = Read-Host "Continuous Search (Y/N) "
 if ($Continuous -eq 'Y'){
-    $SleepMins = Read-Host "How many minutes in-between searches? "
+    $SleepMins = Read-Host "How many minutes in-between searches > "
     $SleepSecs = [int]$SleepMins * 60
-    [int]$runcheck = Read-Host "How many total searches? "
+    [int]$runcheck = Read-Host "How many total searches > "
 }
 else{
     $runcheck = 1

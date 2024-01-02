@@ -48,7 +48,16 @@ $context = "context:global"
 $webhookPattern = "https://discord.com/api/webhooks/"
 $timestamp = Get-Date -Format "dd/MM/yyyy  @  HH:mm"
 # delay between searches
-$sleeptimer = 300
+
+$Continuous = Read-Host "Continuous Search (Y/N) "
+if ($Continuous -eq 'Y'){
+    $SleepMins = Read-Host "How many minutes in-between searches? "
+    $SleepSecs = [int]$SleepMins * 60
+    [int]$runcheck = Read-Host "How many total searches? "
+}
+else{
+    $runcheck = 1
+}
 
 # Create found webhooks file
 $filePath = "Found-Webhooks.txt"
@@ -146,8 +155,7 @@ if ($hookurl.Length -eq 121){
     Irm -Uri $hookurl -Method Post -Body $jsonString -ContentType 'application/json'
 }
 
-while ($true){
-    Write-Host "Sleep timer set to $sleeptimer Seconds" -ForegroundColor Yellow
+while ($runcheck -gt 0){
     
     # Encode the query for the URL
     $encodedQuery = [uri]::EscapeDataString($context)
@@ -165,6 +173,7 @@ while ($true){
     
     # Use Select-String to find all matches
     Write-Host "Searching API response for matching webhooks.." -ForegroundColor Yellow
+    Write-Host "Search #$runcheck" -ForegroundColor Yellow
     $matches = $response | Select-String -Pattern $urlPattern -AllMatches | ForEach-Object { $_.Matches.Value }
     
     # Filter and display matches based on character count
@@ -207,9 +216,13 @@ while ($true){
     } 
     catch{Write-Host "Error: $_"}
 
-Write-Host "Sleeping for 5 minutes...`n" -ForegroundColor Yellow
-Sleep $sleeptimer
-Header
+    if ($Continuous -eq 'Y'){
+        Write-Host "Sleeping for $SleepMins minute(s) / $runcheck searches remaining" -ForegroundColor Yellow
+        Sleep $SleepSecs
+        Write-Host "Restarting Search..`n" -ForegroundColor Green
+        Header
+    }
+    $runcheck--
 }
 # Hold the script to view results before closing
 pause

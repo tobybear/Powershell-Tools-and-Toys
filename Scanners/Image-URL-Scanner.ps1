@@ -17,7 +17,7 @@ USAGE
 $hookurl = ""
 # shortened URL Detection
 if ($hookurl.Ln -ne 121){
-$hookurl = (irm $hookurl).url
+    $hookurl = (irm $hookurl).url
     Write-Host "Full Webhook : $hookurl" -ForegroundColor DarkGray
     sleep 1
 }

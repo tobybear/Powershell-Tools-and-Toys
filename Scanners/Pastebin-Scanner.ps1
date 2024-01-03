@@ -16,7 +16,11 @@ USAGE
 # Webhook Setup (Optional)
 $hookurl = ""
 # shortened URL Detection
-if ($hookurl.Ln -ne 121){$hookurl = (irm $hookurl).url}
+if ($hookurl.Ln -ne 121){
+    $hookurl = (irm $hookurl).url
+    Write-Host "Full Webhook : $hookurl" -ForegroundColor DarkGray
+    sleep 1
+}
 
 # Console Setup
 [Console]::SetWindowSize(120, 55)

@@ -15,12 +15,6 @@ USAGE
 
 # Webhook Setup (Optional)
 $hookurl = ""
-# shortened URL Detection
-if ($hookurl.Ln -ne 121){
-    $hookurl = (irm $hookurl).url
-    Write-Host "Full Webhook : $hookurl" -ForegroundColor DarkGray
-    sleep 1
-}
 
 # Console Setup
 [Console]::SetWindowSize(125, 55)
@@ -33,6 +27,13 @@ cls
 $ratelimit = 0
 $found = 0
 Write-Host "Starting Image URL Scanner.." -ForegroundColor Yellow
+
+# shortened URL Detection
+if ($hookurl.Ln -ne 121){
+    $hookurl = (irm $hookurl).url
+    Write-Host "Full Webhook : $hookurl" -ForegroundColor DarkGray
+    sleep 1
+}
 
 # Header for console
 Function Header{

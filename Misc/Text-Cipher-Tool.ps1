@@ -10,7 +10,7 @@ USAGE
 [Console]::BackgroundColor = "Black"
 Clear-Host
 [Console]::SetWindowSize(70, 25)
-[Console]::Title = " Cypher Tool"
+[Console]::Title = " Cipher / Decipher Tool"
 
 function Cipher-Text {
     param ([string]$text,[string]$key)

@@ -30,9 +30,9 @@ foreach ($dir in $matchingDirectories) {
         }
 
         $seperator = ("=" * 60)
+        $SMseperator = ("-" * 60)
         $seperator | Out-File -FilePath $outpath -Append
         $filename = $fullFilePath.Name
-        $filename | Out-File -FilePath $outpath -Append
         $contents = [System.IO.File]::ReadAllBytes($fullFilePath.FullName)
         $isSavedFile = $contents[3]
 
@@ -40,12 +40,16 @@ foreach ($dir in $matchingDirectories) {
             $lengthOfFilename = $contents[4]
             $filenameEnding = 5 + $lengthOfFilename * 2
             $originalFilename = [System.Text.Encoding]::Unicode.GetString($contents[5..($filenameEnding - 1)])
-            "Found saved file : $originalFilename" | Out-File -FilePath "$env:TMP\NP.txt" -Append
+            "Found saved file : $originalFilename" | Out-File -FilePath $outpath -Append
+            $filename | Out-File -FilePath $outpath -Append
+            $SMseperator | Out-File -FilePath $outpath -Append
+            Get-Content -Path $originalFilename -Raw | Out-File -FilePath $outpath -Append
+
 
         } else {
-            "Found an unsaved tab!" | Out-File -FilePath "$env:TMP\NP.txt" -Append
-            $SMseperator = ("-" * 60)
-            $SMseperator | Out-File -FilePath "$env:TMP\NP.txt" -Append
+            "Found an unsaved tab!" | Out-File -FilePath $outpath -Append
+            $filename | Out-File -FilePath $outpath -Append
+            $SMseperator | Out-File -FilePath $outpath -Append
             $filenameEnding = 0
             $delimeterStart = [array]::IndexOf($contents, 0, $filenameEnding)
             $delimeterEnd = [array]::IndexOf($contents, 1, $filenameEnding)
@@ -56,6 +60,7 @@ foreach ($dir in $matchingDirectories) {
             $originalFileContents = [System.Text.Encoding]::Unicode.GetString($contents[($delimeterEnd + 4 + $fileMarker.Length)..($contents.Length - 6)])
             $originalFileContents | Out-File -FilePath $outpath -Append
         }
+     "`n" | Out-File -FilePath $outpath -Append
     }
 }
 

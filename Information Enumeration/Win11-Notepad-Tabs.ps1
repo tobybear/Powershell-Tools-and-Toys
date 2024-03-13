@@ -1,3 +1,12 @@
+<# ===================== Recover Windows 11 Notepad Tabs =======================
+SYNOPSIS
+Recover Windows 11 Notepad Tabs information within.
+
+USAGE
+1. run script on target.
+2. check generated 'notepad.txt' log.
+#>
+
 $outpath = "notepad.txt"
 $appDataDir = [Environment]::GetFolderPath('LocalApplicationData')
 $directoryRelative = "Packages\Microsoft.WindowsNotepad_*\LocalState\TabState"

@@ -1,5 +1,6 @@
-﻿<# ======================== COLSOLE QR CODE GENERATOR ===================================
 
+<# ======================== COLSOLE QR CODE GENERATOR ==================================
+ 
 SYNOPSIS
 Use 'chart.googleapis.com' to create a qrcode then represent the qrcode in the console!
 

@@ -8,9 +8,7 @@ USAGE
 2. Enter text or url to generate
 3. Choose invert colors or not
 4. Check console for results
-
 #>
-
 
 Add-Type -AssemblyName System.Drawing
 [Console]::BackgroundColor = "Black"

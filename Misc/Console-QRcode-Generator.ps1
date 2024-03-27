@@ -27,6 +27,7 @@ function Generate-QRCodeURL {
 }
 
 $URL = read-host "Text or URL to encode "
+$highC = Read-Host "High contrast (y/n)"
 $inverse = Read-Host "Invert colors (y/n)"
 $QRCodeURL = Generate-QRCodeURL -URL $URL
 
@@ -42,10 +43,18 @@ $QRCodeImageFile = Download-QRCodeImage -QRCodeURL $QRCodeURL
 $QRCodeImage = [System.Drawing.Image]::FromFile($QRCodeImageFile)
 $Bitmap = New-Object System.Drawing.Bitmap($QRCodeImage)
 
-if ($inverse -eq 'y'){
-$Chars = @('░', '█')
-}else{
-$Chars = @('█', '░')
+if (($highC -eq 'n') -and ($inverse -eq 'y')){
+    $Chars = @('░', '█')
+}
+elseif (($highC -eq 'n') -and ($inverse -eq 'n')){
+    $Chars = @('█', '░')
+}
+
+if (($highC -eq 'y') -and ($inverse -eq 'y')){
+$Chars = @(' ', '█')
+}
+elseif (($highC -eq 'y') -and ($inverse -eq 'n')){
+$Chars = @('█', ' ')
 }
 
 for ($y = 0; $y -lt $Bitmap.Height; $y += 2) {

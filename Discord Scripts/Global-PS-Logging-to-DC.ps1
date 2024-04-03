@@ -18,7 +18,7 @@ if ($dc.Length -eq 0){
 $dc = "YOUR_WEBHOOK_HERE"
 }
 
-$hideWindow = 1 # 1 = Hidden
+$hideWindow = 0 # 1 = Hidden
 
 [Console]::BackgroundColor = "Black"
 [Console]::SetWindowSize(60, 20)

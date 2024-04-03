@@ -42,6 +42,8 @@ if ($ps1Files.Count -gt 0) {
     Write-Host "Removing Powershell logging" -ForegroundColor Green
     Get-ChildItem -Path $directory -Filter *.ps1 | Remove-Item -Force
     sleep 3
+    Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\PowerShell" -Name "EnableModuleLogging" -Value 0
+    Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\PowerShell" -Name "EnableScriptBlockLogging" -Value 0
     exit
 }
 

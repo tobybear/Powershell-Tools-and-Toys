@@ -115,7 +115,8 @@ $encodedCommand
 ================================
 " -ForegroundColor Yellow
 
-    $encoded = (pwsh_obfuscate $encodedCommand)
+    $encodedsuffix = (pwsh_obfuscate $encodedCommand)
+    $encoded = "Start-Process PowerShell.exe -ArgumentList (`"-ep bypass -w h -e $encodedsuffix`")"
 }
 else{
     Write-Host "Original Command

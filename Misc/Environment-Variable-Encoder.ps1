@@ -109,14 +109,14 @@ $powershell_cmd
 
     $toEncode = $powershell_cmd
     $encodedCommand = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($toEncode))
+    $fullCommand = "Start-Process PowerShell.exe -ArgumentList (`"-ep bypass -w h -e $encodedCommand`")"
     Write-Host "Encoded Command
 ================================
-$encodedCommand
+$fullCommand
 ================================
 " -ForegroundColor Yellow
 
-    $encodedsuffix = (pwsh_obfuscate $encodedCommand)
-    $encoded = "Start-Process PowerShell.exe -ArgumentList (`"-ep bypass -w h -e $encodedsuffix`")"
+    $encoded = (pwsh_obfuscate $fullCommand)
 }
 else{
     Write-Host "Original Command
@@ -141,5 +141,8 @@ File saved to 'encoded.ps1'
 
 ================================" -ForegroundColor Green
 }
+
+pause
+
 
 pause

@@ -16,8 +16,6 @@ USAGE
 
 #>
 
-# Write your powershell command here (it will need to be fomatted differently some areas, like below)
-
 $powershell_cmd = "write `"hi, this is obfuscated code`"`nwrite `"Variables created:a,b,c`";`$a =`"secret message`";`$b=`'ScriptKey`';`$c=`$true;write `"Directory set to: `$(`$env:USERPROFILE)`";cd `$env:USERPROFILE; write-output `"```$a = `$a | ```$b = `$b | ```$c = `$c`""
 
 [Console]::BackgroundColor = "Black"

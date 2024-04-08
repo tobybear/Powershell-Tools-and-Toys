@@ -22,18 +22,14 @@ Clear-Host
 $windowTitle = "Powershell Environment Variable Encoder"
 [Console]::Title = $windowTitle
 
-$powershell_cmd = Read-Host "Enter your Powershell code here (leave empty to specify a ps1 file instead) "
+$powershell_cmd = Read-Host "Enter your Powershell code (leave empty to specify a ps1 file instead) "
 
 if ($powershell_cmd.Length -eq 0){
-
-$ps1File = Read-Host "Enter the path to your file "
-
-$powershell_cmd = Get-Content -Path $ps1File -Raw
-
+    $ps1File = Read-Host "Enter the path to your file "
+    $powershell_cmd = Get-Content -Path $ps1File -Raw
 }
 
 $commandPreEncode = Read-Host "Pre encode the command? (helpful if your command has ' or `" or $ characters) [y/n]"
-
 $outToFile = Read-Host "Save Output to file? (this file will run your original command) [y/n]"
 
 $env_vars = @(
@@ -53,8 +49,6 @@ $env_vars = @(
 )
 
 $env_mapping = @{}
-
-
 foreach ($var in $env_vars) {
     $value = [Environment]::GetEnvironmentVariable($var)
     if (-not [string]::IsNullOrEmpty($value)) {
@@ -71,10 +65,7 @@ foreach ($var in $env_vars) {
 }
 
 function envhide_obfuscate {
-    param (
-        [string]$string
-    )
-    
+    param ([string]$string) 
     $obf_code = @()
     foreach ($c in $string.ToCharArray()) {
         $options = $env_mapping[$c].Keys
@@ -82,7 +73,6 @@ function envhide_obfuscate {
             $obf_code += "[char]$( [int][char]$c )"
             continue
         }
-
         $chosen = $options | Get-Random
         $possible_indices = $env_mapping[$c][$chosen]
         $chosen_index = $possible_indices | Get-Random
@@ -90,23 +80,17 @@ function envhide_obfuscate {
         $pwsh_syntax = "`$env:$($chosen)[$($chosen_index)]"
         $obf_code += $pwsh_syntax
     }
-
     return $obf_code
 }
 
 function pwsh_obfuscate {
-    param (
-        [string]$string
-    )
-
+    param ([string]$string)
     $iex = envhide_obfuscate "iex"
     $pieces = envhide_obfuscate $string
     $iex_stage = "($( $iex -join ',' ) -Join `$($null))"
     $payload_stage = "($( $pieces -join ',' ) -Join `$($null))"
-
     return "& $iex_stage $payload_stage"
 }
-
 if ($commandPreEncode -eq 'y'){
     Write-Host "Original Command
 ================================
@@ -133,6 +117,7 @@ $powershell_cmd
 " -ForegroundColor DarkGray
     $encoded = (pwsh_obfuscate $powershell_cmd)
 }
+
 
 Write-Host "FINAL Encoded Command
 ================================

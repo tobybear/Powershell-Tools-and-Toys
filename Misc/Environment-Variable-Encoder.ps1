@@ -18,7 +18,7 @@ USAGE
 
 [Console]::BackgroundColor = "Black"
 Clear-Host
-[Console]::SetWindowSize(90, 30)
+[Console]::SetWindowSize(120, 40)
 $windowTitle = "Powershell Environment Variable Encoder"
 [Console]::Title = $windowTitle
 

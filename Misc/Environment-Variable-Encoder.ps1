@@ -28,7 +28,6 @@ $commandPreEncode = Read-Host "Pre encode the command? (helpful if your command 
 
 $outToFile = Read-Host "Save Output to file? (this file will run your original command) [y/n]"
 
-
 $env_vars = @(
     "ALLUSERSPROFILE", 
     "CommonProgramFiles",
@@ -46,17 +45,19 @@ $env_vars = @(
 )
 
 $env_mapping = @{}
-foreach ($character in [char[]][System.String]::Printable) {
-    $env_mapping[$character] = @{}
-    foreach ($var in $env_vars) {
-        $value = [Environment]::GetEnvironmentVariable($var)
-        if ($value -match $character) {
-            $env_mapping[$character][$var] = @()
-            for ($i = 0; $i -lt $value.Length; $i++) {
-                if ($character -eq $value[$i]) {
-                    $env_mapping[$character][$var] += $i
-                }
+
+
+foreach ($var in $env_vars) {
+    $value = [Environment]::GetEnvironmentVariable($var)
+    if (-not [string]::IsNullOrEmpty($value)) {
+        foreach ($character in $value.ToCharArray()) {
+            if (-not $env_mapping.ContainsKey($character)) {
+                $env_mapping[$character] = @{}
             }
+            if (-not $env_mapping[$character].ContainsKey($var)) {
+                $env_mapping[$character][$var] = @()
+            }
+            $env_mapping[$character][$var] += $value.IndexOf($character)
         }
     }
 }
@@ -141,6 +142,5 @@ File saved to 'encoded.ps1'
 }
 
 pause
-
 
 pause

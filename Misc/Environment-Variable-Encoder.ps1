@@ -12,17 +12,25 @@ USAGE
 
 # Example command (it will need to be fomatted differently some areas, like below)
 # "write `"hi, this is obfuscated code`"`nwrite `"Variables created:a,b,c`";`$a =`"secret message`";`$b=```'ScriptKey```';`$c=`$true;write `"Directory set to: `$(`$env:USERPROFILE)`";cd `$env:USERPROFILE; write-output `"```$a = `$a | ```$b = `$b | ```$c = `$c`""
-# OR use Pre-Encoding
-
+# OR you can use Pre-Encoding feature OR load from a .ps1file
+ 
 #>
-
-$powershell_cmd = "write `"hi, this is obfuscated code`"`nwrite `"Variables created:a,b,c`";`$a =`"secret message`";`$b=`'ScriptKey`';`$c=`$true;write `"Directory set to: `$(`$env:USERPROFILE)`";cd `$env:USERPROFILE; write-output `"```$a = `$a | ```$b = `$b | ```$c = `$c`""
 
 [Console]::BackgroundColor = "Black"
 Clear-Host
 [Console]::SetWindowSize(90, 30)
 $windowTitle = "Powershell Environment Variable Encoder"
 [Console]::Title = $windowTitle
+
+$powershell_cmd = Read-Host "Enter your Powershell code here (leave empty to specify a ps1 file instead) "
+
+if ($powershell_cmd.Length -eq 0){
+
+$ps1File = Read-Host "Enter the path to your file "
+
+$powershell_cmd = Get-Content -Path $ps1File -Raw
+
+}
 
 $commandPreEncode = Read-Host "Pre encode the command? (helpful if your command has ' or `" or $ characters) [y/n]"
 

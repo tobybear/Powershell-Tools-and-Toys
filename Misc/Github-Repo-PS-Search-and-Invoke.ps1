@@ -116,8 +116,8 @@ while ($true){
         $url = $($selectedScript.URL)
         Write-Host $url -ForegroundColor DarkGray
         Write-Host "You selected $($selectedScript.Name)" -ForegroundColor Green
-        $tg = "Enter a Telegram Bot Token (Optional) "
-        $dc = "Enter a Discord webhook (Optional) "
+        $tg = Read-Host "Enter a Telegram Bot Token (Optional) "
+        $dc = Read-Host "Enter a Discord webhook (Optional) "
 
         $fpath = $PWD.Path
         $HideURL = "https://raw.githubusercontent.com/beigeworm/assets/main/master/Hide-Powershell-Console.ps1"

@@ -9,8 +9,7 @@ USAGE
 
 #>
 
-
-$latitude = 73.7749  # Example latitude (Replace with your location)
+$latitude = 53.7749  # Example latitude (Replace with your location)
 $longitude = -3.4194  # Example longitude (Replace with your location)
 
 function Get-SunriseSunsetTimes {
@@ -52,14 +51,6 @@ function Get-DayNightState {
     }
 }
 
-$currentDate = Get-Date
-$sunriseTime, $sunsetTime = Get-SunriseSunsetTimes -date $currentDate -latitude $latitude -longitude $longitude
-$state = Get-DayNightState -currentTime $currentDate -sunriseTime $sunriseTime -sunsetTime $sunsetTime
-
-Write-Host "Sunrise Time : $sunriseTime"
-Write-Host "Sunset Time : $sunsetTime"
-Write-Host "Current state : $state"
-
 
 $nighturl = "https://github.com/beigeworm/assets/blob/main/WPchange/night.jpg?raw=true"
 $nightpath = "$env:temp\night.jpg"
@@ -87,17 +78,39 @@ public class Wallpaper {
 '@
 
 Add-Type -TypeDefinition $signature
-
 $SPI_SETDESKWALLPAPER = 0x0014
 $SPIF_UPDATEINIFILE = 0x01
 $SPIF_SENDCHANGE = 0x02
+$previousstate = 0
 
-if ($state -match 'Night'){
-    [Wallpaper]::SystemParametersInfo($SPI_SETDESKWALLPAPER, 0, $nightpath, $SPIF_UPDATEINIFILE -bor $SPIF_SENDCHANGE)
-    Write-Host "Set wallpaper to night"
-}
-else{
-    [Wallpaper]::SystemParametersInfo($SPI_SETDESKWALLPAPER, 0, $daypath, $SPIF_UPDATEINIFILE -bor $SPIF_SENDCHANGE)
-    Write-Host "Set wallpaper to day"
-}
+while ($true){
 
+    $currentDate = Get-Date
+    $sunriseTime, $sunsetTime = Get-SunriseSunsetTimes -date $currentDate -latitude $latitude -longitude $longitude
+    $state = Get-DayNightState -currentTime $currentDate -sunriseTime $sunriseTime -sunsetTime $sunsetTime
+    
+<#
+    Write-Host "Sunrise Time : $sunriseTime"
+    Write-Host "Sunset Time : $sunsetTime"
+    Write-Host "Current state : $state"
+#>
+    
+    if (!($state -match $previousstate)){
+        if ($state -match 'Night'){
+            [Wallpaper]::SystemParametersInfo($SPI_SETDESKWALLPAPER, 0, $nightpath, $SPIF_UPDATEINIFILE -bor $SPIF_SENDCHANGE)
+            Write-Host "Set wallpaper to night"
+            $previousstate = $state
+        }
+        else{
+            [Wallpaper]::SystemParametersInfo($SPI_SETDESKWALLPAPER, 0, $daypath, $SPIF_UPDATEINIFILE -bor $SPIF_SENDCHANGE)
+            Write-Host "Set wallpaper to day"
+            $previousstate = $state
+        }
+    }
+    else{
+        Write-Host "Day/Night State unchanged.."
+    
+    }
+    
+    Sleep 600
+}

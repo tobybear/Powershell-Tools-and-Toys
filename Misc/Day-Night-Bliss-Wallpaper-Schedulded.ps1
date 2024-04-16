@@ -1,4 +1,6 @@
-﻿<# ========================== DAY / NIGHT WALLPAPER CHANGER (BLISS) ===================================
+
+ 
+ <# ========================== DAY / NIGHT WALLPAPER CHANGER (BLISS) ===================================
 
 SYNOPSIS
 This script changes your wallpaper based on your your current locations day/night status

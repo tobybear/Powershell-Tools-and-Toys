@@ -13,7 +13,7 @@ $startup = 1
 $HideWindow = 1
 $latitude = 53.7749  # Example latitude (Replace with your location)
 $longitude = -3.4194  # Example longitude (Replace with your location)
-$parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Misc/Day-Night-Bliss-Wallpaper-Schedulded.ps1"
+$parent = "https://is.gd/bwwpchanger"
 
 function Get-SunriseSunsetTimes {
     param(

@@ -253,6 +253,68 @@ while ($true) {
 
 }
 
+# Negative Screen Glitches
+$job6 = {
+
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+$Filett = "$env:temp\SC.png"
+$Screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
+$Width = $Screen.Width
+$Height = $Screen.Height
+$Left = $Screen.Left
+$Top = $Screen.Top
+$bitmap = New-Object System.Drawing.Bitmap $Width, $Height
+$graphic = [System.Drawing.Graphics]::FromImage($bitmap)
+$graphic.CopyFromScreen($Left, $Top, 0, 0, $bitmap.Size)
+$bitmap.Save($Filett, [System.Drawing.Imaging.ImageFormat]::png)
+$savedImage = [System.Drawing.Image]::FromFile($Filett)
+$desktopHandle = [System.IntPtr]::Zero
+$graphics = [System.Drawing.Graphics]::FromHwnd($desktopHandle)
+$random = New-Object System.Random
+function Get-RandomSize {
+    return $random.Next(100, 500)
+}
+function Get-RandomPosition {
+    param (
+        [int]$rectWidth,
+        [int]$rectHeight
+    )
+    $x = $random.Next(0, $Width - $rectWidth)
+    $y = $random.Next(0, $Height - $rectHeight)
+    return [PSCustomObject]@{X = $x; Y = $y}
+}
+function Invert-Colors {
+    param (
+        [System.Drawing.Bitmap]$bitmap,
+        [System.Drawing.Rectangle]$rect
+    )
+    for ($x = $rect.X; $x -lt $rect.X + $rect.Width; $x++) {
+        for ($y = $rect.Y; $y -lt $rect.Y + $rect.Height; $y++) {
+            $pixelColor = $bitmap.GetPixel($x, $y)
+            $invertedColor = [System.Drawing.Color]::FromArgb(255, 255 - $pixelColor.R, 255 - $pixelColor.G, 255 - $pixelColor.B)
+            $bitmap.SetPixel($x, $y, $invertedColor)
+        }
+    }
+}
+while ($true) {
+
+    $rectWidth = Get-RandomSize
+    $rectHeight = Get-RandomSize
+    $srcX = $random.Next(0, $savedImage.Width - $rectWidth)
+    $srcY = $random.Next(0, $savedImage.Height - $rectHeight)
+    $destPosition = Get-RandomPosition -rectWidth $rectWidth -rectHeight $rectHeight
+    $srcRect = New-Object System.Drawing.Rectangle $srcX, $srcY, $rectWidth, $rectHeight
+    $destRect = New-Object System.Drawing.Rectangle $destPosition.X, $destPosition.Y, $rectWidth, $rectHeight
+    $srcBitmap = $savedImage.Clone($srcRect, $savedImage.PixelFormat)
+    Invert-Colors -bitmap $srcBitmap -rect (New-Object System.Drawing.Rectangle 0, 0, $rectWidth, $rectHeight)
+    $graphics.DrawImage($srcBitmap, $destRect)
+    $srcBitmap.Dispose()
+    Start-Sleep -Milliseconds 100
+}
+
+}
+
 # Start all jobs
 Start-Job -ScriptBlock $job0
 sleep 5
@@ -266,6 +328,8 @@ sleep 5
 Start-Job -ScriptBlock $job3
 sleep 5 
 Start-Job -ScriptBlock $job5
+sleep 5
+Start-Job -ScriptBlock $job6
 
 # keep script alive
 pause

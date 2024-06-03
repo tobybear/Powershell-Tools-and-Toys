@@ -1,16 +1,6 @@
-<# ================================================ WINDOWS IDIOT PRANK ========================================================
-
-SYNOPSIS
-This script is a powershell interpretation of the famous windows idiot virus.
-
-USAGE
-Run the script
-stop in task manager (when console is hidden)
-
-#>
-
 Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName System.Windows.Forms
+
 
 # Hide the Powershell console
 $hide = 1
@@ -30,13 +20,15 @@ if ($hide -eq 1){
     }
 }
 
+
 # Download sounds and images
 iwr -Uri 'https://i.ibb.co/RpFpd34/wh.png' -OutFile "$env:TEMP\white.png"
 iwr -Uri 'https://i.ibb.co/Nx16b06/bl.png' -OutFile "$env:TEMP\black.png" 
 iwr -Uri 'https://github.com/beigeworm/assets/raw/main/idiot.wav' -OutFile "$env:TEMP\sound.wav"
 sleep 1
 
-# Loop sound
+Function SpawnImage{
+
 $job1 = {
 
     while ($true){
@@ -46,7 +38,6 @@ $job1 = {
 
 }
 
-# Loop images
 $job2 = {  
     Add-Type -AssemblyName System.Drawing
     Add-Type -AssemblyName System.Windows.Forms
@@ -58,11 +49,11 @@ $job2 = {
     $desktopHandle = [System.IntPtr]::Zero
     $graphics = [System.Drawing.Graphics]::FromHwnd($desktopHandle)
     $random = New-Object System.Random
-    $x = 0
-    $y = 200
-    $dx = 15
+    $x = $random.Next(10, 400)
+    $y = $random.Next(10, 400)
+    $dx = $random.Next(10, 25)
     $dy = $random.Next(10, 25)
-    $imageSize = 400
+    $imageSize = 250
     $i = 1
     
     while ($true) { 
@@ -85,19 +76,26 @@ $job2 = {
     }
 }
 
-# Volume up repeatedly
-$job3 = {
-    $wshell = New-Object -ComObject wscript.shell
-    while ($true){
-        $wshell.SendKeys([char]175)
-        sleep -m 10
+Start-Job -ScriptBlock $job1
+Start-Job -ScriptBlock $job2
+
+}
+
+function MouseState {
+    $previousState = [Windows.Forms.Control]::MouseButtons
+    while ($true) {
+        $currentState = [Windows.Forms.Control]::MouseButtons
+        if ($previousState -ne $currentState) {
+            Write-Host "Mouse Click Detected!"
+            $previousState = $currentState
+            SpawnImage
+            break
+        }
+        Start-Sleep -Milliseconds 50
     }
 }
 
-# Start jobs
-Start-Job -ScriptBlock $job1
-Start-Job -ScriptBlock $job2
-Start-Job -ScriptBlock $job3
-sleep 17
-Start-Job -ScriptBlock $job2
-pause
+while ($true){
+    MouseState
+    Start-Sleep -Milliseconds 500
+}

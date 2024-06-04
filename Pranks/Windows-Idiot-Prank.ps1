@@ -1,3 +1,14 @@
+<# ================================================ WINDOWS IDIOT PRANK ========================================================
+
+SYNOPSIS
+This script is a powershell interpretation of the famous windows idiot virus.
+
+USAGE
+Run the script
+stop in task manager (when console is hidden)
+
+#>
+
 Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName System.Windows.Forms
 

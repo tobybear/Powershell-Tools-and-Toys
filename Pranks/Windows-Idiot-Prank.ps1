@@ -31,7 +31,6 @@ if ($hide -eq 1){
     }
 }
 
-
 # Download sounds and images
 iwr -Uri 'https://i.ibb.co/gDVfZ0L/white.jpg' -OutFile "$env:TEMP\white.png"
 iwr -Uri 'https://i.ibb.co/0nxjGzH/black.jpg' -OutFile "$env:TEMP\black.png"
@@ -56,8 +55,11 @@ $job2 = {
     
     $form = New-Object System.Windows.Forms.Form
     $form.Text = "Idiot.exe"
-    $form.Width = 400
-    $form.Height = 400
+    $form.Width = 350
+    $form.Height = 300
+    $form.TopMost = $true
+    $form.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon("C:\Windows\System32\DFDWiz.exe")
+    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
     
     $screen = [System.Windows.Forms.Screen]::PrimaryScreen
     $Width = $screen.Bounds.Width

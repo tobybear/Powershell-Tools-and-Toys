@@ -14,7 +14,7 @@ you can play it manually - Rightclick - 'Run with Powershell' then minimize the 
 #>
 
 Add-Type -AssemblyName System.Windows.Forms
-
+Add-Type -AssemblyName System.Drawing
 [Console]::BackgroundColor = "Black"
 Clear-Host
 [Console]::SetWindowSize(50, 20)
@@ -57,89 +57,110 @@ while ($true){
         
         public const int MOUSEEVENTF_LEFTDOWN = 0x02;
         public const int MOUSEEVENTF_LEFTUP = 0x04;
+        public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
+        public const int MOUSEEVENTF_RIGHTUP = 0x10;
+        public const int MOUSEEVENTF_WHEEL = 0x0800;
 
         public static void LeftClick() {
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-            System.Threading.Thread.Sleep(30);
+            System.Threading.Thread.Sleep(10);
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
         }
-        public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
-        public const int MOUSEEVENTF_RIGHTUP = 0x10;
 
         public static void RightClick() {
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
-            System.Threading.Thread.Sleep(30);
+            System.Threading.Thread.Sleep(10);
             mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
         }
 
+        public static void ScrollUp() {
+            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 120, 0);
+        }
+
+        public static void ScrollDown() {
+            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -120, 0);
+        }
     }
 "@' | Out-File -FilePath $sequencefile -Append -Force
         
         Write-Host "Setting up..." -ForegroundColor Yellow
         sleep 1
-        function MouseState {
-            $previousState = [System.Windows.Forms.Control]::MouseButtons
-            $lastClickTime = $null
-            $lastClickPosition = $null
-            $lastIntervalTime = $null
-            $singleClickDetected = $false
-            $intTime = Get-Date
-            while ($true) {
-                $currentState = [System.Windows.Forms.Control]::MouseButtons
-                $currentTime = Get-Date
-                if ($previousState -ne $currentState) {
-                    if ($currentState -ne [System.Windows.Forms.MouseButtons]::None) {
-                        $mousePosition = [System.Windows.Forms.Cursor]::Position
-                        $button = "Left"
-                        if ($currentState -eq [System.Windows.Forms.MouseButtons]::Right) {
-                            $button = "Right"
-                        }
-                        # DOUBLE
-                        if ($lastClickTime -ne $null -and ($currentTime - $lastClickTime).TotalSeconds -le 1) {
-                            $intTime = Get-Date
-                            $interval = ($intTime - $lastIntervalTime).TotalSeconds
-                            "Start-Sleep $interval" | Out-File -FilePath $sequencefile -Append -Force
-                            "[System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($($mousePosition.X), $($mousePosition.Y))" | Out-File -FilePath $sequencefile -Append -Force
-                            "Start-Sleep -Milliseconds 200" | Out-File -FilePath $sequencefile -Append -Force
-                            "[MouseSimulator]::${button}Click()" | Out-File -FilePath $sequencefile -Append -Force
-                            "Start-Sleep -Milliseconds 50" | Out-File -FilePath $sequencefile -Append -Force
-                            "[MouseSimulator]::${button}Click()" | Out-File -FilePath $sequencefile -Append -Force
-                            Write-Host "Interval Time: $interval seconds" -ForegroundColor DarkGray
-                            Write-Host "Double-Click Detected at X:$($mousePosition.X) Y:$($mousePosition.Y)!" -ForegroundColor DarkGray
-                            $lastClickTime = $currentTime
-                            $singleClickDetected = $false
-                        } else {
-                            # WAIT FOR DOUBLE
-                            $lastClickTime = $currentTime
-                            $lastClickPosition = $mousePosition
-                            $lastIntervalTime = $intTime
-                            $singleClickDetected = $true
-                        }
-                    }
-                    $previousState = $currentState
+function MouseState {
+    $previousState = [System.Windows.Forms.Control]::MouseButtons
+    $previousPosition = [System.Windows.Forms.Cursor]::Position
+    $lastClickTime = $null
+    $lastClickPosition = $null
+    $lastIntervalTime = $null
+    $singleClickDetected = $false
+    $intTime = Get-Date
+    $interval = 1000
+    while ($true) {
+        $currentState = [System.Windows.Forms.Control]::MouseButtons
+        $currentPosition = [System.Windows.Forms.Cursor]::Position
+        $currentTime = Get-Date
+
+        if ($previousState -ne $currentState) {
+            if ($currentState -ne [System.Windows.Forms.MouseButtons]::None) {
+                $mousePosition = [System.Windows.Forms.Cursor]::Position
+                $button = "Left"
+                if ($currentState -eq [System.Windows.Forms.MouseButtons]::Right) {
+                    $button = "Right"
                 }
-                elseif ($singleClickDetected -and ($currentState -eq [System.Windows.Forms.MouseButtons]::None)) {
-                    # SINGLE
-                    if (($currentTime - $lastClickTime).TotalSeconds -gt 1) {
-                        $intTime = Get-Date
-                        $interval = ($intTime - $lastIntervalTime).TotalSeconds
-                        "Start-Sleep $interval" | Out-File -FilePath $sequencefile -Append -Force
-                        "[System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($($mousePosition.X), $($mousePosition.Y))" | Out-File -FilePath $sequencefile -Append -Force
-                        "Start-Sleep -Milliseconds 200" | Out-File -FilePath $sequencefile -Append -Force
-                        "[MouseSimulator]::${button}Click()" | Out-File -FilePath $sequencefile -Append -Force
-                        Write-Host "Interval Time: $interval seconds" -ForegroundColor DarkGray
-                        Write-Host "Mouse Click Detected at X:$($lastClickPosition.X) Y:$($lastClickPosition.Y)! Button: $button" -ForegroundColor DarkGray
-                        $lastClickTime = $null
-                        $singleClickDetected = $false
-                    }
+                if ($lastClickTime -ne $null -and ($currentTime - $lastClickTime).TotalSeconds -le 1) {
+                    $intTime = Get-Date
+                    $interval = ($intTime - $lastIntervalTime).TotalSeconds
+                    "Start-Sleep $interval" | Out-File -FilePath $sequencefile -Append -Force
+                    "[System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($($mousePosition.X), $($mousePosition.Y))" | Out-File -FilePath $sequencefile -Append -Force
+                    "Start-Sleep -Milliseconds 200" | Out-File -FilePath $sequencefile -Append -Force
+                    "[MouseSimulator]::${button}Click()" | Out-File -FilePath $sequencefile -Append -Force
+                    "Start-Sleep -Milliseconds 50" | Out-File -FilePath $sequencefile -Append -Force
+                    "[MouseSimulator]::${button}Click()" | Out-File -FilePath $sequencefile -Append -Force
+                    Write-Host "Interval Time: $interval seconds" -ForegroundColor DarkGray
+                    Write-Host "Double-Click Detected at X:$($mousePosition.X) Y:$($mousePosition.Y)!" -ForegroundColor DarkGray
+                    $lastClickTime = $currentTime
+                    $singleClickDetected = $false
+                } else {
+                    $lastClickTime = $currentTime
+                    $lastClickPosition = $mousePosition
+                    $lastIntervalTime = $intTime
+                    $singleClickDetected = $true
                 }
-                Start-Sleep -Milliseconds 30
+            }
+            $previousState = $currentState
+        }
+        elseif ($singleClickDetected -and ($currentState -eq [System.Windows.Forms.MouseButtons]::None)) {
+            if (($currentTime - $lastClickTime).TotalSeconds -gt 1) {
+                $intTime = Get-Date
+                $interval = ($intTime - $lastIntervalTime).TotalSeconds
+                "Start-Sleep $interval" | Out-File -FilePath $sequencefile -Append -Force
+                "[System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($($mousePosition.X), $($mousePosition.Y))" | Out-File -FilePath $sequencefile -Append -Force
+                "Start-Sleep -Milliseconds 200" | Out-File -FilePath $sequencefile -Append -Force
+                "[MouseSimulator]::${button}Click()" | Out-File -FilePath $sequencefile -Append -Force
+                Write-Host "Interval Time: $interval seconds" -ForegroundColor DarkGray
+                Write-Host "Mouse Click Detected at X:$($lastClickPosition.X) Y:$($lastClickPosition.Y)! Button: $button" -ForegroundColor DarkGray
+                $lastClickTime = $null
+                $singleClickDetected = $false
             }
         }
-        Write-Host "Recording..." -ForegroundColor Red
-        while ($true) {
-            MouseState
-        }        
+
+        if ($previousPosition -ne $currentPosition) {
+            $intTime = Get-Date
+            $interval = ($intTime - $lastIntervalTime).Totalmilliseconds
+            $lastIntervalTime = $intTime
+            $previousPosition = $currentPosition
+            "Start-Sleep -Milliseconds $interval" | Out-File -FilePath $sequencefile -Append -Force
+            "[System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($($currentPosition.X), $($currentPosition.Y))" | Out-File -FilePath $sequencefile -Append -Force
+            Write-Host "Mouse Moved to X:$($currentPosition.X) Y:$($currentPosition.Y)" -ForegroundColor DarkGray
+        }
+
+        Start-Sleep -Milliseconds 20
+    }
+}
+
+Write-Host "Recording..." -ForegroundColor Red
+while ($true) {
+    MouseState
+}       
     }
     
     if ($option -eq 2){

@@ -159,8 +159,9 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
         }
         else{
             Write-Host "No valid option selected" -ForegroundColor Red 
+            break
         }
-        
+        break
 
     }
 sleep 1

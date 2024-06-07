@@ -70,10 +70,10 @@ $list = "=======================================================================
 
 Function EnterTokens{
     if (($hookurl.Length -eq 0) -or ($ch.Length -eq 0) -or ($tg.Length -eq 0) -or ($tk.Length -eq 0) -or ($NCurl.Length -eq 0)){Write-Host "Missing Entries Found." -ForegroundColor Red;sleep 1;cls;Header;Write-Host "Please enter the missing URLs and API Tokens" -ForegroundColor Yellow;Write-Host "You can leave these empty however functionality will be limited..`n" -ForegroundColor DarkGray;sleep 1}
-    if ($hookurl.Length -eq 0){$hookurl = Read-Host "Enter a Discord Webhook ";Write-Host "Webhook Set." -ForegroundColor Green}
-    if ($tk.Length -eq 0){$tk = Read-Host "Enter Discord Bot Token ";Write-Host "Pastebin URL Set." -ForegroundColor Green}
-    if ($ch.Length -eq 0){$ch = Read-Host "Enter a Discord Channel ID ";Write-Host "Pastebin URL Set." -ForegroundColor Green}
-    if ($tg.Length -eq 0){$tg = Read-Host "Enter a Telegram Bot API Token ";Write-Host "API Token Set." -ForegroundColor Green}
+    if ($hookurl.Length -eq 0){$hookurl = Read-Host "Enter a Discord Webhook ";Write-Host "Discord Webhook Set." -ForegroundColor Green}
+    if ($tk.Length -eq 0){$tk = Read-Host "Enter Discord Bot Token ";Write-Host "Discord Bot Token Set." -ForegroundColor Green}
+    if ($ch.Length -eq 0){$ch = Read-Host "Enter a Discord Channel ID ";Write-Host "Discord Channel ID Set." -ForegroundColor Green}
+    if ($tg.Length -eq 0){$tg = Read-Host "Enter a Telegram Bot API Token ";Write-Host "Telegram API Token Set." -ForegroundColor Green}
     if ($NCurl.Length -eq 0){$NCurl = Read-Host "Enter an IPv4 address for Netcat";Write-Host "IPv4 address Set." -ForegroundColor Green}
 }
 

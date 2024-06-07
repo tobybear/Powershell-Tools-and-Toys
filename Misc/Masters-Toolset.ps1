@@ -1,6 +1,8 @@
 <#
 ======================================= Beigeworm's Toolset ==========================================
 
+https://is.gd/bwtool
+
 SYNOPSIS
 All useful tools in one place.
 A selection of Powershell tools from this repo can be ran from this script.

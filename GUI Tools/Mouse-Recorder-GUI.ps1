@@ -128,11 +128,11 @@ public class MouseHook
             string message;
             if (delta > 0)
             {
-                message = "[MouseSimulator]::ScrollUp()";
+                message = "[MouseSimulator]::ScrollUp();Sleep -M 100";
             }
             else if (delta < 0)
             {
-                message = "[MouseSimulator]::ScrollDown()";
+                message = "[MouseSimulator]::ScrollDown();Sleep -M 100";
             }
             else
             {

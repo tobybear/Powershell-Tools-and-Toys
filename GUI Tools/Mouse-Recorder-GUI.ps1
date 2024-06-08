@@ -71,56 +71,6 @@ $recordButton.Add_Click({
     $stopButton.Enabled = $true
     $recordButton.Enabled = $false
 
-$job = {
-    Add-Type -AssemblyName System.Windows.Forms
-    Add-Type -AssemblyName System.Drawing
-    $global:recording = $true
-    $sequencefile = "$env:TEMP/sequence.ps1"
-    $fullPath = (Get-Item $sequencefile).FullName
-    $sequencefileforc = $fullPath -replace '\\', '\\'
-    
-    "# ===================================== CLICK SEQUENCER ========================================" | Out-File -FilePath $sequencefile -Force 
-    "Add-Type -AssemblyName System.Windows.Forms" | Out-File -FilePath $sequencefile -Append -Force
-
-'Add-Type @"
-    using System;
-    using System.Runtime.InteropServices;
-    public class MouseSimulator {
-        [DllImport("user32.dll",CharSet=CharSet.Auto, CallingConvention=CallingConvention.StdCall)]
-        public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
-        
-        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
-        public const int MOUSEEVENTF_LEFTUP = 0x04;
-        public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
-        public const int MOUSEEVENTF_RIGHTUP = 0x10;
-        public const int MOUSEEVENTF_WHEEL = 0x0800;
-
-        public static void LeftClick() {
-            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-            System.Threading.Thread.Sleep(10);
-            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-        }
-
-        public static void RightClick() {
-            mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
-            System.Threading.Thread.Sleep(10);
-            mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
-        }
-
-        public static void ScrollUp() {
-            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 120, 0);
-        }
-
-        public static void ScrollDown() {
-            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -120, 0);
-        }
-    }
-"@' | Out-File -FilePath $sequencefile -Append -Force
-        
-        Write-Host "Setting up..." -ForegroundColor Yellow
-        sleep 1
-
-
 Add-Type @"
 using System;
 using System.IO;
@@ -201,6 +151,55 @@ public class MouseHook
 "@
 
 [MouseHook]::Start()
+
+$job = {
+    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName System.Drawing
+    $global:recording = $true
+    $sequencefile = "$env:TEMP/sequence.ps1"
+    $fullPath = (Get-Item $sequencefile).FullName
+    $sequencefileforc = $fullPath -replace '\\', '\\'
+    
+    "# ===================================== CLICK SEQUENCER ========================================" | Out-File -FilePath $sequencefile -Force 
+    "Add-Type -AssemblyName System.Windows.Forms" | Out-File -FilePath $sequencefile -Append -Force
+
+'Add-Type @"
+    using System;
+    using System.Runtime.InteropServices;
+    public class MouseSimulator {
+        [DllImport("user32.dll",CharSet=CharSet.Auto, CallingConvention=CallingConvention.StdCall)]
+        public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
+        
+        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        public const int MOUSEEVENTF_LEFTUP = 0x04;
+        public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
+        public const int MOUSEEVENTF_RIGHTUP = 0x10;
+        public const int MOUSEEVENTF_WHEEL = 0x0800;
+
+        public static void LeftClick() {
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+            System.Threading.Thread.Sleep(10);
+            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+        }
+
+        public static void RightClick() {
+            mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
+            System.Threading.Thread.Sleep(10);
+            mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+        }
+
+        public static void ScrollUp() {
+            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 120, 0);
+        }
+
+        public static void ScrollDown() {
+            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -120, 0);
+        }
+    }
+"@' | Out-File -FilePath $sequencefile -Append -Force
+        
+        Write-Host "Setting up..." -ForegroundColor Yellow
+        sleep 1
 
 function MouseState {
     $previousState = [System.Windows.Forms.Control]::MouseButtons

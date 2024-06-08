@@ -273,7 +273,7 @@ Write-Host "Recording..." -ForegroundColor Red
 while ($recording -eq $true) {
     MouseState
 } 
-[MouseHook]::Stop()  
+ 
 }
 
 Start-Job -ScriptBlock $job -Name record
@@ -285,6 +285,7 @@ $stopButton.Add_Click({
     $global:recording = $false
     $stopButton.Enabled = $false
     $recordButton.Enabled = $true
+    [MouseHook]::Stop() 
 })
     
 $playButton.Add_Click({

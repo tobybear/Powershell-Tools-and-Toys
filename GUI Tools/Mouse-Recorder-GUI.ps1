@@ -76,6 +76,8 @@ $job = {
     Add-Type -AssemblyName System.Drawing
     $global:recording = $true
     $sequencefile = "$env:TEMP/sequence.ps1"
+    $fullPath = (Get-Item $sequencefile).FullName
+    $sequencefileforc = $fullPath -replace '\\', '\\'
     
     "# ===================================== CLICK SEQUENCER ========================================" | Out-File -FilePath $sequencefile -Force 
     "Add-Type -AssemblyName System.Windows.Forms" | Out-File -FilePath $sequencefile -Append -Force
@@ -117,6 +119,89 @@ $job = {
         
         Write-Host "Setting up..." -ForegroundColor Yellow
         sleep 1
+
+
+Add-Type @"
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+public class MouseHook
+{
+    public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hMod, uint dwThreadId);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+    public const int WH_MOUSE_LL = 14;
+    public const int WM_MOUSEWHEEL = 0x020A;
+
+    private static HookProc _proc = HookCallback;
+    private static IntPtr _hookID = IntPtr.Zero;
+
+    private static Encoding encoding = Encoding.Unicode;
+    private static string logFilePath = "$sequencefileforc";
+
+    public static void Start()
+    {
+        _hookID = SetHook(_proc);
+    }
+
+    public static void Stop()
+    {
+        UnhookWindowsHookEx(_hookID);
+    }
+
+    private static IntPtr SetHook(HookProc proc)
+    {
+        using (var curProcess = System.Diagnostics.Process.GetCurrentProcess())
+        using (var curModule = curProcess.MainModule)
+        {
+            return SetWindowsHookEx(WH_MOUSE_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
+        }
+    }
+
+    private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        if (nCode >= 0 && wParam == (IntPtr)WM_MOUSEWHEEL)
+        {
+            int delta = Marshal.ReadInt32(lParam, 8);
+            string message;
+            if (delta > 0)
+            {
+                message = "[MouseSimulator]::ScrollUp()";
+            }
+            else if (delta < 0)
+            {
+                message = "[MouseSimulator]::ScrollDown()";
+            }
+            else
+            {
+                return CallNextHookEx(_hookID, nCode, wParam, lParam);
+            }
+
+            using (StreamWriter writer = new StreamWriter(logFilePath, true, encoding))
+            {
+                writer.WriteLine(message);
+            }
+        }
+        return CallNextHookEx(_hookID, nCode, wParam, lParam);
+    }
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    private static extern IntPtr GetModuleHandle(string lpModuleName);
+}
+"@
+
+[MouseHook]::Start()
+
 function MouseState {
     $previousState = [System.Windows.Forms.Control]::MouseButtons
     $previousPosition = [System.Windows.Forms.Cursor]::Position
@@ -188,7 +273,7 @@ Write-Host "Recording..." -ForegroundColor Red
 while ($recording -eq $true) {
     MouseState
 } 
-  
+[MouseHook]::Stop()  
 }
 
 Start-Job -ScriptBlock $job -Name record

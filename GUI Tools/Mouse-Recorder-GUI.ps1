@@ -70,7 +70,9 @@ $recordButton.Add_Click({
 
     $stopButton.Enabled = $true
     $recordButton.Enabled = $false
-
+    $sequencefile = "$env:TEMP/sequence.ps1"
+    $fullPath = (Get-Item $sequencefile).FullName
+    $sequencefileforc = $fullPath -replace '\\', '\\'
 Add-Type @"
 using System;
 using System.IO;
@@ -157,8 +159,6 @@ $job = {
     Add-Type -AssemblyName System.Drawing
     $global:recording = $true
     $sequencefile = "$env:TEMP/sequence.ps1"
-    $fullPath = (Get-Item $sequencefile).FullName
-    $sequencefileforc = $fullPath -replace '\\', '\\'
     
     "# ===================================== CLICK SEQUENCER ========================================" | Out-File -FilePath $sequencefile -Force 
     "Add-Type -AssemblyName System.Windows.Forms" | Out-File -FilePath $sequencefile -Append -Force
@@ -291,7 +291,6 @@ $playButton.Add_Click({
     $playButton.Enabled = $false
     $sequencefile = "$env:TEMP/sequence.ps1"
     Get-Content -Path $sequencefile -Raw | iex
-    sleep 3
     $playButton.Enabled = $true
 })
     
@@ -299,7 +298,6 @@ $deleteButton.Add_Click({
     sleep 3
     $sequencefile = "$env:TEMP/sequence.ps1"
     rm -Path $sequencefile -Force
-    sleep 3
 })
 
 [void]$form.ShowDialog()

@@ -59,14 +59,15 @@ $list = "=======================================================================
 = 8.  Screen Recorder                      25. Text Cipher Tool              =
 = 9.  Network Enumeration                  26. System Information to File    =
 = 10. Microphone Muter                     27. Day/Night Bliss Wallpaper     =
-= 11. Webhook Spammer                                                        =
-= 12. Social Search                        Pranks                            =
-= 13. GDI effects                          28. Windows Idiot Prank           =
-= 14. Mouse Recorder GUI                   29. Memz in Powershell            =
+= 11. Webhook Spammer                      28. Environment Variable Encoder  =
+= 12. Social Search                                                          =
+= 13. GDI effects                          Pranks                            =
+= 14. Mouse Recorder                       28. Windows Idiot Prank           =
+= 15. System Metrics                       29. Memz in Powershell            =
 =                                          30. Persistant Goose              =
 = 99. Close Program                                                          =
 = 00. Token and URL setup                                                    =
-=                                                                            =
+=                                                                            = 
 ==============================================================================
 "
 
@@ -107,8 +108,8 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
     if ($Option -eq '12'){$url = "$BaseURL/GUI%20Tools/Social%20Search%20GUI.ps1"}
     if ($Option -eq '13'){$url = "$BaseURL/GUI%20Tools/Desktop-GDI-Efects-GUI.ps1"}
     if ($Option -eq '14'){$url = "$BaseURL/GUI%20Tools/Mouse-Recorder-GUI.ps1"}
-
-    if ($Option -eq '15'){$url = "$BaseURL/Misc/Environment-Variable-Encoder.ps1"}
+    if ($Option -eq '15'){$url = "$BaseURL/GUI%20Tools/System-Metrics-GUI.ps1"}
+    
     if ($Option -eq '16'){$url = "$BaseURL/Misc/Find%20Text%20string%20in%20Files.ps1"}
     if ($Option -eq '17'){$url = "$BaseURL/Misc/Minecraft-Server-Scanner-and-Server-Info.ps1"}
     if ($Option -eq '18'){$url = "$BaseURL/Misc/Console-Task-Manager.ps1"}
@@ -121,10 +122,11 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
     if ($Option -eq '25'){$url = "$BaseURL/Misc/Text-Cipher-Tool.ps1"}
     if ($Option -eq '26'){$url = "$BaseURL/Information%20Enumeration/Sys-Info-to-File.ps1"}
     if ($Option -eq '27'){$url = "$BaseURL/Misc/Day-Night-Bliss-Wallpaper-Schedulded.ps1"}
-
-    if ($Option -eq '28'){$url = "$BaseURL/Pranks/Windows-Idiot-Prank.ps1"}
-    if ($Option -eq '29'){$url = "$BaseURL/Pranks/PoshMEMZ-Prank.ps1"}
-    if ($Option -eq '30'){$url = "$BaseURL/Pranks/Persistant-Goose.ps1"}
+    if ($Option -eq '28'){$url = "$BaseURL/Misc/Environment-Variable-Encoder.ps1"}
+    
+    if ($Option -eq '29'){$url = "$BaseURL/Pranks/Windows-Idiot-Prank.ps1"}
+    if ($Option -eq '30'){$url = "$BaseURL/Pranks/PoshMEMZ-Prank.ps1"}
+    if ($Option -eq '31'){$url = "$BaseURL/Pranks/Persistant-Goose.ps1"}
 
 
     if ($Option -eq '99'){Write-Host "Closing Script";sleep 1; exit}

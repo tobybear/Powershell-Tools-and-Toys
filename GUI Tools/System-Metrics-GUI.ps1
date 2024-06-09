@@ -1,5 +1,19 @@
 Add-Type -AssemblyName PresentationCore, PresentationFramework
 
+
+$Async = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'
+$Type = Add-Type -MemberDefinition $Async -name Win32ShowWindowAsync -namespace Win32Functions -PassThru
+$hwnd = (Get-Process -PID $pid).MainWindowHandle
+if($hwnd -ne [System.IntPtr]::Zero){
+    $Type::ShowWindowAsync($hwnd, 0)
+}
+else{
+    $Host.UI.RawUI.WindowTitle = 'hideme'
+    $Proc = (Get-Process | Where-Object { $_.MainWindowTitle -eq 'hideme' })
+    $hwnd = $Proc.MainWindowHandle
+    $Type::ShowWindowAsync($hwnd, 0)
+}
+
 # Create WPF Window
 [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -96,7 +110,7 @@ Function Get-PerformanceMetrics {
         NetworkIO = "{0:F1}" -f $networkIO.CookedValue
         NetworkInterfaces = $networkInterfaces -join ", "
         Uptime = (Get-Date) - $uptime
-        CPUTemperature = if ($cpuTemp -ne "N/A") { "{0:F1} °C" -f $cpuTemp } else { "N/A" }
+        CPUTemperature = if ($cpuTemp -ne "N/A") { "{0:F1} Â°C" -f $cpuTemp } else { "N/A" }
         BatteryStatus = $batteryStatus
     }
 }

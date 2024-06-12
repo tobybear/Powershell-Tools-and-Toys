@@ -15,6 +15,7 @@ USAGE
 REQUIREMENTS
 Admin privlages are required for removing any suspected devices
 
+https://is.gd/badusbprotect
 #>
 
 # Hide the console after monitor starts

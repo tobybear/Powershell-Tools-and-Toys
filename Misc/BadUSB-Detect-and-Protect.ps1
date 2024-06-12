@@ -3,7 +3,7 @@
 SYNOPSIS
 This script runs passively in the background waiting for any new usb devices.
 When a new USB device is connected to the machine this script monitors keypresses for 30 seconds.
-If there are 15 or more keypresses detected within 200 milliseconds it will attempt to disable the most recently connected USB device
+If there are 13 or more keypresses detected within 200 milliseconds it will pause all input for 10 seconds and attempt to disable the most recently connected USB device
 
 USAGE
 1. Run the script and follow instructions
@@ -29,8 +29,9 @@ else{
     Write-Host "This script is running as Admin!"  -ForegroundColor Green
     New-Item -ItemType Directory -Path "$env:TEMP\usblogs\"
     cls
-    $enable = Read-Host "Re-enable All Devices? (y/n) "
-    $hidden = Read-Host "Hide This Window (y/n) "
+    $enable = Read-Host "Re-enable All Devices? [y/n] "
+    $hidden = Read-Host "Hide This Window [y/n] "
+    $DisableOnDetect = Read-Host "Disable detected devices (input will still be blocked) [y/n] "
 }
 
 
@@ -120,7 +121,6 @@ $API = Add-Type -MemberDefinition $API -Name 'Win32' -Namespace API -PassThru
 
 
 $balloon = {
-
 Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName System.Windows.Forms
 $notify = New-Object System.Windows.Forms.NotifyIcon
@@ -129,7 +129,14 @@ $notify.Visible = $true
 $balloonTipTitle = "WARNING"
 $balloonTipText = "Bad USB Device Intercepted!"
 $notify.ShowBalloonTip(30000, $balloonTipTitle, $balloonTipText, [System.Windows.Forms.ToolTipIcon]::WARNING)
+}
 
+$pausejob = {
+$s='[DllImport("user32.dll")][return: MarshalAs(UnmanagedType.Bool)]public static extern bool BlockInput(bool fBlockIt);'
+Add-Type -MemberDefinition $s -Name U -Namespace W
+[W.U]::BlockInput($true)
+sleep 10
+[W.U]::BlockInput($false)
 }
 
 function DisableDevices {
@@ -150,8 +157,7 @@ function DisableDevices {
     }
 }
 
-function MonitorKeys {
-    
+function MonitorKeys {  
     $startTime = $null
     $keypressCount = 0
     $initTime = Get-Date
@@ -168,21 +174,20 @@ function MonitorKeys {
                 }
                 $keypressCount++
             }
-        }
-        
+        }        
         if ($startTime -and (New-TimeSpan -Start $startTime).TotalMilliseconds -ge 200) {
-            if ($keypressCount -gt 14) {
+            if ($keypressCount -gt 12) {
                 $script:newUSBDeviceIDs = Get-Content "$env:TEMP\usblogs\ids.log"
+                Start-Job -ScriptBlock $pausejob -Name PauseInput
                 Start-Job -ScriptBlock $balloon -Name BallonIcon
-                DisableDevices -deviceIDs $script:newUSBDeviceIDs
-                
+                if ($DisableOnDetect -eq 'y'){
+                    DisableDevices -deviceIDs $script:newUSBDeviceIDs
+                }
             }
             $startTime = $null
-            $keypressCount = 0
-            
+            $keypressCount = 0            
         }
-    }
-    
+    }  
 }
 MonitorKeys
 }
@@ -200,7 +205,6 @@ function CheckNew {
             $newUSBDeviceIDs += $deviceID -split "," | Out-File -FilePath "$env:TEMP\usblogs\ids.log" -Append
         }
     }
-    
     $global:currentUSBDevices = $newUSBDevices
     $global:newUSBDeviceIDs = $newUSBDeviceIDs
 }
@@ -226,8 +230,5 @@ while ($true) {
         "false" | Out-File -FilePath "$env:TEMP\usblogs\monon.log"
         Start-Job -ScriptBlock $monitor -Name Monitor
     }
-    
     sleep -Milliseconds 500
-    
 }
-

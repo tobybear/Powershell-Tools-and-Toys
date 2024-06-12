@@ -299,6 +299,7 @@ $Menu_Exit.add_Click({
     Stop-Job -Name DeviceMonitor
     $Systray_Tool_Icon.Visible = $false
     $appContext.ExitThread()
+    sleep 2
     exit
     
 })

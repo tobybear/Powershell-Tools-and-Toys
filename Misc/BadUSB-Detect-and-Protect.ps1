@@ -2,18 +2,17 @@
 
 SYNOPSIS
 This script runs passively in the background waiting for any new usb devices.
-When a new USB device is connected to the machine this script monitors keypresses for 30 seconds.
-If there are 13 or more keypresses detected within 200 milliseconds it will pause all input for 10 seconds and attempt to disable the most recently connected USB device
+When a new USB device is connected to the machine this script monitors keypresses for 60 seconds.
+If there are 13 or more keypresses detected within 200 milliseconds it will pause all inputs for 20 seconds.
 
 USAGE
 1. Edit Options below (optional) and Run the script
 2. A pop up will appear when monitoring is active and if a 'BadUSB' device is detected
 3. logs are found in 'usblogs' folder in the temp directory.
-4. Re-enable any devices with the Re-enable option below.
 5. Close the monitor in the system tray
 
 REQUIREMENTS
-Admin privlages are required for removing any suspected devices
+Admin privlages are required for pausing keyboard and mouse inputs
 
 https://is.gd/badusbprotect
 #>
@@ -21,20 +20,13 @@ https://is.gd/badusbprotect
 # Hide the console after monitor starts
 $hidden = 'y'
 
-# Enable all devices 
-$enable = 'n'
-
-# Disable Detected Devices
-$DisableOnDetect = 'n'
-
 $Host.UI.RawUI.BackgroundColor = "Black"
 Clear-Host
-[Console]::SetWindowSize(80, 35)
+[Console]::SetWindowSize(50, 20)
 [Console]::Title = "BadUSB Detection Setup"
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
-Add-Type -AssemblyName Microsoft.VisualBasic
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 Write-Host "Checking User Permissions.." -ForegroundColor DarkGray
@@ -53,7 +45,7 @@ else{
 
 Function HideConsole{
     If ($hidden -eq 'y'){
-        Write-Host "Hiding the Window.."  -ForegroundColor Red
+        Write-Host "Minimizing the Window.."  -ForegroundColor Red
         sleep 1
         $Async = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'
         $Type = Add-Type -MemberDefinition $Async -name Win32ShowWindowAsync -namespace Win32Functions -PassThru
@@ -68,44 +60,6 @@ Function HideConsole{
             $Type::ShowWindowAsync($hwnd, 0)
         }
     }
-}
-
-function EnableDevices {
-    param (
-        [string[]]$deviceIDs
-    )
-
-    foreach ($deviceID in $deviceIDs) {
-        try {
-            Write-Host "Attempting to enable device with ID: $deviceID" -ForegroundColor Yellow
-            $pnpDevice = Get-PnpDevice -InstanceId $deviceID -ErrorAction Stop
-            if ($pnpDevice.Status -ne 'OK') {
-                Enable-PnpDevice -InstanceId $deviceID -Confirm:$false -ErrorAction Stop
-                Write-Host "Successfully enabled device with ID: $deviceID" -ForegroundColor Green
-            } else {
-                Write-Host "Device with ID: $deviceID is already enabled." -ForegroundColor Blue
-            }
-        } catch {
-            Write-Host "Error enabling device with ID: $deviceID. $_" -ForegroundColor Red
-        }
-    }
-}
-if ($enable -eq 'y'){
-    EnableDevices -deviceIDs $newUSBDevices
-    cls
-    Write-Host "All Devices Enabled!" -ForegroundColor Green
-    sleep 1
-    $2ndpass = Read-Host "Run Again? (sometimes required) [y/n]"
-    if ($2ndpass -eq 'y'){
-        EnableDevices -deviceIDs $newUSBDevices
-    }
-    pause
-    exit
-}
-else{
-    "" | Out-File -FilePath "$env:TEMP\usblogs\ids.log"
-    "" | Out-File -FilePath "$env:TEMP\usblogs\monon.log"
-    sleep 1
 }
 
 $DeviceMonitor = {
@@ -154,35 +108,18 @@ public static extern int ToUnicode(uint wVirtKey, uint wScanCode, byte[] lpkeyst
             $s='[DllImport("user32.dll")][return: MarshalAs(UnmanagedType.Bool)]public static extern bool BlockInput(bool fBlockIt);'
             Add-Type -MemberDefinition $s -Name U -Namespace W
             [W.U]::BlockInput($true)
-            sleep 10
+            sleep 20
             [W.U]::BlockInput($false)
-        }
-        
-        function DisableDevices {
-            param ([string[]]$deviceIDs)
-            foreach ($deviceID in $deviceIDs) {
-                try {
-                    "Attempting to disable device with ID: $deviceID" | Out-File -FilePath "$env:TEMP\usblogs\log.log" -Append
-                    $pnpDevice = Get-PnpDevice -InstanceId $deviceID -ErrorAction Stop
-                    if ($pnpDevice.Status -eq 'OK') {
-                        Disable-PnpDevice -InstanceId $deviceID -Confirm:$false -ErrorAction Stop
-                        "Successfully disabled device with ID: $deviceID" | Out-File -FilePath "$env:TEMP\usblogs\log.log" -Append
-                    } else {
-                        "Device with ID: $deviceID is not in an 'OK' state and cannot be disabled." | Out-File -FilePath "$env:TEMP\usblogs\log.log" -Append
-                    }
-                } catch {
-                    "Error disabling device with ID: $deviceID. $_" | Out-File -FilePath "$env:TEMP\usblogs\log.log" -Append
-                }
-            }
         }
         
         function MonitorKeys {
             $startTime = $null
             $keypressCount = 0
             $initTime = Get-Date
-            while ($MonitorTime -lt $initTime.AddSeconds(30)) {
+            while ($MonitorTime -lt $initTime.AddSeconds(60)) {
+                "Monitor Active for 60 seconds." | Out-File -FilePath "$env:TEMP\usblogs\log.log" -Append 
                 $stopjob = Get-Content "$env:TEMP\usblogs\monon.log"
-                if ($stopjob -eq 'true'){"killed monitoring for: $deviceID" | Out-File -FilePath "$env:TEMP\usblogs\log.log" -Append ;exit}
+                if ($stopjob -eq 'true'){"Restarting Monitor (New Device Detected)" | Out-File -FilePath "$env:TEMP\usblogs\log.log" -Append ;exit}
                 $MonitorTime = Get-Date
                 Start-Sleep -Milliseconds 10
                 for ($i = 8; $i -lt 256; $i++) {
@@ -199,14 +136,12 @@ public static extern int ToUnicode(uint wVirtKey, uint wScanCode, byte[] lpkeyst
                         $script:newUSBDeviceIDs = Get-Content "$env:TEMP\usblogs\ids.log"
                         Start-Job -ScriptBlock $pausejob -Name PauseInput
                         Start-Job -ScriptBlock $balloon -Name BallonIcon
-                        if ($DisableOnDetect -eq 'y'){
-                            DisableDevices -deviceIDs $script:newUSBDeviceIDs
-                        }
                     }
                     $startTime = $null
                     $keypressCount = 0     
                 }
             }
+            "Monitor set to idle." | Out-File -FilePath "$env:TEMP\usblogs\log.log" -Append 
         }
     MonitorKeys
     }
@@ -257,9 +192,6 @@ public static extern int ToUnicode(uint wVirtKey, uint wScanCode, byte[] lpkeyst
 }
 
 cls
-Write-Host "Monitor Started!" -ForegroundColor Green
-sleep 1 
-Write-Host "Setting Window To Background.."
 Write-Host "
 ===================================================
 **YOU CAN CLOSE THE MONITOR FROM THE SYSTEM TRAY**

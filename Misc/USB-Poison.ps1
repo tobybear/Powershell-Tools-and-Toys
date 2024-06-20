@@ -14,7 +14,11 @@ USAGE
 #>
 
 # Replace with your file direct download / raw link
-$fileURL = 'https://raw.githubusercontent.com/username/repo/main/folder/yourfile.exe'
+$fileURL = "$url"
+
+if ($url.length -eq 0){
+  $fileURL = read-host "Enter direct download file URL "
+}
 
 # Hidden Console (y/n)
 $hidden = 'y'

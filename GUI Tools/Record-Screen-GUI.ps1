@@ -148,8 +148,19 @@ $form.Controls.AddRange(@($Text,$fps,$frBox,$Text2,$sec,$tbox,$Text3,$ofx,$oxBox
 $Download.Add_Click{
 $Path = "$env:Temp\ffmpeg.exe"
 If (!(Test-Path $Path)){  
-$url = "https://cdn.discordapp.com/attachments/803285521908236328/1089995848223555764/ffmpeg.exe"
-iwr -Uri $url -OutFile $Path
+        $tempDir = "$env:temp"
+        $apiUrl = "https://api.github.com/repos/GyanD/codexffmpeg/releases/latest"
+        $response = Invoke-WebRequest -Uri $apiUrl -Headers @{ "User-Agent" = "PowerShell" } -UseBasicParsing
+        $release = $response.Content | ConvertFrom-Json
+        $asset = $release.assets | Where-Object { $_.name -like "*essentials_build.zip" }
+        $zipUrl = $asset.browser_download_url
+        $zipFilePath = Join-Path $tempDir $asset.name
+        $extractedDir = Join-Path $tempDir ($asset.name -replace '.zip$', '')
+        Invoke-WebRequest -Uri $zipUrl -OutFile $zipFilePath
+        Expand-Archive -Path $zipFilePath -DestinationPath $tempDir -Force
+        Move-Item -Path (Join-Path $extractedDir 'bin\ffmpeg.exe') -Destination $tempDir -Force
+        Remove-Item -Path $zipFilePath -Force
+        Remove-Item -Path $extractedDir -Recurse -Force
 }
 }
 

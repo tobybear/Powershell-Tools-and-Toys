@@ -5,7 +5,7 @@ Everytime the mouse cursor touches the screen edges the classic Minecraft Player
 
 USAGE
 1. Run the script
-2. Close in tray
+2. Close in tray (Shield Icon)
 
 (Runs hidden continuously)
 

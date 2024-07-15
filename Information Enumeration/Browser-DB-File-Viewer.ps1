@@ -7,7 +7,7 @@ Option 1
 Scrape this computer's browser directories for database files, extract information and display results
 
 Option 2
-Specify a .db OR .sqlite file to display information 
+Specify a .db OR .sqlite FILE to display the information - (remove any spaces in the filename)
 
 USAGE
 1. Run the script and follow instructions
@@ -89,7 +89,7 @@ function examinefile {
 
 $temppath = [System.IO.Path]::GetTempPath() 
 $tempFolder = Join-Path -Path $temppath -ChildPath "DB_Files"
-rm -Path $tempFolder -Force -Confirm:$false
+rm -Path $tempFolder -Recurse -Force
 New-Item -Path $tempFolder -ItemType Directory -Force | Out-Null
 $csvdir = Join-Path -Path $tempFolder -ChildPath 'CSV'
 New-Item -Path $csvdir -ItemType Directory -Force | Out-Null
@@ -130,11 +130,11 @@ examinefile -dbfile $edgedest -folder "edge" -db
 else{
     $filepath = Read-Host "Enter a filepath OR drag a file to this window "
 
-    $csvcopy = Join-Path -Path $csvdir -ChildPath 'copy'
+    $csvcopy = Join-Path -Path $csvdir -ChildPath 'files'
     New-Item -Path $csvcopy -ItemType Directory -Force
 
     if (Test-Path -Path $filepath) {
-        $copyfolder = Join-Path -Path $tempFolder -ChildPath 'copy'
+        $copyfolder = Join-Path -Path $tempFolder -ChildPath 'files'
         New-Item -Path $copyfolder -ItemType Directory -Force | Out-Null
         $destination = Join-Path -Path $copyfolder -ChildPath (Split-Path -Leaf $filepath)
         Copy-Item -Path $filepath -Destination $destination -Force | Out-Null
@@ -147,10 +147,10 @@ else{
 
     $fileExtension = [System.IO.Path]::GetExtension($filepath).ToLower()
     if ($fileExtension -like '.db'){
-        examinefile -dbfile $tempfolder -folder "copy" -db
+        examinefile -dbfile $tempfolder -folder "files" -db
     }
     if ($fileExtension -like '.sqlite'){
-        examinefile -dbfile $tempfolder -folder "copy"
+        examinefile -dbfile $tempfolder -folder "files"
     }
 
 }

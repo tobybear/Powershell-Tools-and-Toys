@@ -19,6 +19,9 @@ $number = "+1-800-123-1234"
 $key = "fuckscammers"
 # ---------------------------------------------------------
 
+# Delay invoke (to allow safe deployment)
+Sleep 180
+
 # required setup
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing

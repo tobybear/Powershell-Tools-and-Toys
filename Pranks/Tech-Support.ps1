@@ -15,7 +15,7 @@ this uses Powershell to create a similar effect ( seen here - https://youtube.co
 
 
 # ------------------ Edit these below ---------------------
-$number = "+1-800-123-1234"
+$number = "+0-800-126-129"
 $key = "fuckscammers"
 # ---------------------------------------------------------
 

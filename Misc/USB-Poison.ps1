@@ -26,7 +26,7 @@ if ($fileToCopy.length -eq 0){
 }
 
 # Hidden Console (y/n)
-$hidden = 'n'
+$hidden = 'y'
 
 If ($hidden -eq 'y'){
     Write-Host "Hiding the Window.."  -ForegroundColor Red

@@ -17,12 +17,16 @@ USAGE
 $fileURL = "$DLurl"
 $fileToCopy = "$File" # if zip is downloaded
 
-if ($DLurl.length -eq 0){
+if ($fileURL.length -eq 0){
   $fileURL = read-host "Enter direct download file URL "
 }
 
+if ($fileToCopy.length -eq 0){
+  $fileToCopy = read-host "Enter the filename (eg. stage.lnk) "
+}
+
 # Hidden Console (y/n)
-$hidden = 'y'
+$hidden = 'n'
 
 If ($hidden -eq 'y'){
     Write-Host "Hiding the Window.."  -ForegroundColor Red

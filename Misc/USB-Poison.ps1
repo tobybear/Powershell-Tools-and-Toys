@@ -77,7 +77,7 @@ function DownloadAndExtract-Zip {
     }
 }
 
-DownloadAndExtract-Zip
+DownloadAndExtract-Zip -fileURL $fileURL
 
 while($true){
     $tempDir = [System.IO.Path]::GetTempPath()

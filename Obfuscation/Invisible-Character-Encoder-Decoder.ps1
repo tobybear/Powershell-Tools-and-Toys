@@ -4,7 +4,7 @@ SYNOPSIS
     This script encodes and decodes secret messages by embedding them into a container string or file using invisible characters. These characters are not visible in most text editors or display interfaces, making the hidden messages difficult to detect.
 
 DESCRIPTION
-    The script allows the user to encode a payload (secret message) into a container string or file by converting the payload into a sequence of invisible characters. These characters are then appended to the container message or file, making the hidden message appear invisible. The script also supports decoding, where it reads the invisible characters from a string or file and reconstructs the original hidden message.
+    The script allows the user to encode a payload (or secret message) into a container string or file by converting the payload into a sequence of invisible characters. These characters are then appended to the container message or file, making the hidden message appear invisible. The script also supports decoding, where it reads the invisible characters from a string or file and reconstructs the original hidden message.
 
     The script also features a simple file selection GUI for file-based encoding and decoding.
 

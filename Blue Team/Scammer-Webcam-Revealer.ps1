@@ -1,4 +1,4 @@
-<# ================== Webcab Uncover Tool ==================
+<# ================== Webcam Uncover Tool ==================
 
 SYNOPSIS
 If a webcam device is found on the target system this script generates a cover screen and a fake error message

